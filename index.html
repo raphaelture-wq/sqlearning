@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Interactive SQL prep for data science interviews — lessons, drills, and a quick reference.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🗄️</text></svg>">
 <title>SQL Prep — Palantir DS</title>
 <style>
   :root {
@@ -26,8 +28,36 @@
 
   /* Layout */
   .app { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
-  .sidebar { background: var(--surface); border-right: 1px solid var(--border); padding: 1.5rem 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+  .sidebar { background: var(--surface); border-right: 1px solid var(--border); padding: 1.5rem 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; display: flex; flex-direction: column; }
   .main { padding: 2rem; max-width: 760px; }
+
+  /* Focus visibility (keyboard nav) */
+  a:focus-visible, button:focus-visible, .nav-item:focus-visible, textarea:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 2px;
+  }
+
+  /* Mobile menu toggle */
+  .menu-toggle {
+    display: none; position: fixed; top: 1rem; left: 1rem; z-index: 60;
+    width: 40px; height: 40px; align-items: center; justify-content: center;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    color: var(--text); font-size: 18px; cursor: pointer;
+  }
+  .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 40; }
+
+  @media (max-width: 860px) {
+    .app { grid-template-columns: 1fr; }
+    .menu-toggle { display: flex; }
+    .sidebar {
+      position: fixed; top: 0; left: 0; width: 260px; z-index: 50;
+      transform: translateX(-100%); transition: transform .2s ease;
+      box-shadow: 2px 0 24px rgba(0,0,0,.4);
+    }
+    .sidebar.open { transform: translateX(0); }
+    .sidebar-overlay.show { display: block; }
+    .main { padding: 4.5rem 1.25rem 2rem; max-width: 100%; }
+    .sql-table { display: block; overflow-x: auto; white-space: nowrap; }
+  }
 
   /* Sidebar */
   .sidebar-title { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; padding: 0 1.25rem; margin-bottom: 1rem; }
@@ -113,10 +143,13 @@
 </head>
 <body>
 
+<button class="menu-toggle" id="menu-toggle" onclick="toggleSidebar()" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
 <div class="app">
 
 <!-- SIDEBAR -->
-<nav class="sidebar">
+<nav class="sidebar" id="sidebar" aria-label="Lesson navigation">
   <div class="sidebar-title">SQL Prep · DS</div>
 
   <div class="progress-wrap">
@@ -125,6 +158,7 @@
       <span id="prog-label">0 / 7</span>
     </div>
     <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+    <div id="completion-msg" style="display:none;color:var(--success);font-size:11px;margin-top:.5rem">🎉 All lessons complete — nice work.</div>
   </div>
 
   <div class="nav-section">
@@ -142,6 +176,10 @@
     <div class="nav-label">Practice</div>
     <div class="nav-item" id="nav-drill" onclick="go('drill')"><div class="check" id="chk-drill"></div>Drill mode</div>
     <div class="nav-item" id="nav-ref" onclick="go('ref')"><div class="check" id="chk-ref"></div>Quick reference</div>
+  </div>
+
+  <div class="nav-section" style="margin-top:auto;padding-top:.5rem;border-top:1px solid var(--border)">
+    <div class="nav-item" id="nav-reset" onclick="resetProgress()" style="color:var(--danger)">↺ Reset progress</div>
   </div>
 </nav>
 
@@ -489,7 +527,7 @@
 
   <div style="display:flex;gap:.75rem;margin-bottom:1.25rem;flex-wrap:wrap">
     <span class="badge badge-blue" id="drill-count">Question 1</span>
-    <span class="badge badge-green" id="drill-score">Score: 0</span>
+    <span class="badge badge-green" id="drill-score">Score: 0 / 0</span>
   </div>
 
   <div class="drill-card">
@@ -582,15 +620,25 @@
 // Navigation
 const pages = ['l1','l2','l3','l4','l5','l6','l7','drill','ref'];
 const completed = new Set();
+const STORAGE_KEY = 'sqlprep_progress';
+let currentPage = 'l1';
 
 function go(id){
   pages.forEach(p=>{
     document.getElementById('page-'+p).classList.remove('active');
-    document.getElementById('nav-'+p)?.classList.remove('active');
+    const nav = document.getElementById('nav-'+p);
+    nav?.classList.remove('active');
+    nav?.removeAttribute('aria-current');
   });
   document.getElementById('page-'+id).classList.add('active');
-  document.getElementById('nav-'+id)?.classList.add('active');
+  const activeNav = document.getElementById('nav-'+id);
+  activeNav?.classList.add('active');
+  activeNav?.setAttribute('aria-current','page');
+  currentPage = id;
+  window.scrollTo({top:0, behavior:'instant'});
   if(id==='drill') loadDrill();
+  closeSidebarOnMobile();
+  saveProgress();
 }
 
 function complete(current, next){
@@ -608,7 +656,71 @@ function updateProgress(){
   const done = lessons.filter(l=>completed.has(l)).length;
   document.getElementById('prog-label').textContent = done+' / '+lessons.length;
   document.getElementById('prog-fill').style.width = (done/lessons.length*100)+'%';
+  document.getElementById('completion-msg').style.display = (done===lessons.length) ? 'block' : 'none';
+  saveProgress();
 }
+
+// Persistence — progress survives a refresh
+function saveProgress(){
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({completed:[...completed], last: currentPage}));
+  }catch(e){}
+}
+
+function loadProgress(){
+  let data;
+  try{ data = JSON.parse(localStorage.getItem(STORAGE_KEY)); }catch(e){ data = null; }
+  if(!data) return;
+  (data.completed||[]).forEach(id=>{
+    completed.add(id);
+    document.getElementById('chk-'+id)?.classList.add('done');
+    document.getElementById('nav-'+id)?.classList.add('done');
+  });
+  updateProgress();
+  if(data.last && pages.includes(data.last)) go(data.last);
+}
+
+function resetProgress(){
+  if(!confirm('Reset all progress? This clears completed lessons and drill score.')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  location.reload();
+}
+
+// Mobile sidebar
+function toggleSidebar(){
+  const open = document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebar-overlay').classList.toggle('show', open);
+  document.getElementById('menu-toggle').setAttribute('aria-expanded', open);
+}
+
+function closeSidebarOnMobile(){
+  if(window.innerWidth <= 860){
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sidebar-overlay').classList.remove('show');
+    document.getElementById('menu-toggle').setAttribute('aria-expanded','false');
+  }
+}
+
+// Keyboard accessibility for nav items (they're clickable divs)
+document.querySelectorAll('.nav-item').forEach(el=>{
+  el.setAttribute('tabindex','0');
+  el.setAttribute('role','button');
+  el.addEventListener('keydown', e=>{
+    if(e.key==='Enter' || e.key===' '){ e.preventDefault(); el.click(); }
+  });
+});
+
+// Ctrl/Cmd+Enter submits the focused answer box
+document.addEventListener('keydown', e=>{
+  if((e.metaKey||e.ctrlKey) && e.key==='Enter'){
+    const el = document.activeElement;
+    if(el && el.tagName==='TEXTAREA' && el.id.startsWith('q-')){
+      e.preventDefault();
+      const id = el.id.slice(2);
+      if(id==='drill') checkDrill(); else check(id);
+    }
+  }
+});
 
 // Answer checking
 const answers = {
@@ -623,11 +735,27 @@ const answers = {
   l7b: ['select ward, avg(wait_days) as avg_wait from appointments group by ward having avg(wait_days) > 20']
 };
 
-function normalise(s){ return s.toLowerCase().replace(/\s+/g,' ').replace(/;/g,'').trim(); }
+function normalise(s){
+  return s.toLowerCase()
+    .replace(/`/g, "'")
+    .replace(/"/g, "'")
+    .replace(/;/g, '')
+    .replace(/\(\s+/g, '(')
+    .replace(/\s+\)/g, ')')
+    .replace(/\s*,\s*/g, ', ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
 
 function check(id){
-  const input = normalise(document.getElementById('q-'+id).value);
+  const raw = document.getElementById('q-'+id).value;
   const fb = document.getElementById('fb-'+id);
+  if(!raw.trim()){
+    fb.className = 'feedback show wrong';
+    fb.textContent = 'Write a query first, then check it.';
+    return;
+  }
+  const input = normalise(raw);
   const correct = answers[id].some(a=>normalise(a)===input);
   fb.className = 'feedback show '+(correct?'correct':'wrong');
   if(correct){
@@ -689,12 +817,26 @@ const drills = [
   }
 ];
 
-let drillIdx = 0;
+// Shuffle so repeat visits to drill mode don't always start with the same question
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1; i>0; i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+let drillOrder = shuffle(drills.map((_,i)=>i));
+let drillPos = 0;
 let drillScore = 0;
-let drillCount = 0;
+let drillAttempts = 0;
+let drillAnswered = false;
+
+function currentDrill(){ return drills[drillOrder[drillPos % drillOrder.length]]; }
 
 function loadDrill(){
-  const d = drills[drillIdx % drills.length];
+  const d = currentDrill();
   document.getElementById('drill-domain').textContent = d.domain;
   document.getElementById('drill-concept').textContent = d.concept;
   document.getElementById('drill-q').textContent = d.q;
@@ -704,19 +846,29 @@ function loadDrill(){
   document.getElementById('fb-drill').className = 'feedback';
   document.getElementById('q-drill').value = '';
   document.getElementById('drill-next-wrap').style.display = 'none';
-  drillCount++;
-  document.getElementById('drill-count').textContent = 'Question '+drillCount;
+  drillAnswered = false;
+  document.getElementById('drill-count').textContent = 'Question '+(drillPos+1);
 }
 
 function checkDrill(){
-  const d = drills[drillIdx % drills.length];
-  const input = normalise(document.getElementById('q-drill').value);
-  const correct = d.answers.some(a=>normalise(a)===input);
+  const raw = document.getElementById('q-drill').value;
   const fb = document.getElementById('fb-drill');
+  if(!raw.trim()){
+    fb.className = 'feedback show wrong';
+    fb.textContent = 'Write a query first, then check it.';
+    return;
+  }
+  const d = currentDrill();
+  const input = normalise(raw);
+  const correct = d.answers.some(a=>normalise(a)===input);
   fb.className = 'feedback show '+(correct?'correct':'wrong');
+  if(!drillAnswered){
+    drillAnswered = true;
+    drillAttempts++;
+    if(correct) drillScore++;
+    document.getElementById('drill-score').textContent = 'Score: '+drillScore+' / '+drillAttempts;
+  }
   if(correct){
-    drillScore++;
-    document.getElementById('drill-score').textContent = 'Score: '+drillScore;
     fb.textContent = '✓ Correct.';
   } else {
     document.getElementById('hint-drill').classList.add('show');
@@ -730,9 +882,13 @@ function hintDrill(){
 }
 
 function nextDrill(){
-  drillIdx++;
+  drillPos++;
+  if(drillPos % drillOrder.length === 0) drillOrder = shuffle(drills.map((_,i)=>i));
   loadDrill();
 }
+
+// Restore saved progress, if any
+loadProgress();
 </script>
 </body>
 </html>
