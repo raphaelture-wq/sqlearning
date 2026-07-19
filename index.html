@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SQL Prep — Palantir DS</title>
+<style>
+  :root {
+    --bg: #0d0d0d;
+    --surface: #141414;
+    --surface2: #1a1a1a;
+    --border: #2a2a2a;
+    --text: #e8e8e8;
+    --muted: #666;
+    --accent: #4a9eff;
+    --accent-dim: rgba(74,158,255,0.12);
+    --success: #3ddc84;
+    --success-dim: rgba(61,220,132,0.12);
+    --danger: #ff4d4d;
+    --danger-dim: rgba(255,77,77,0.12);
+    --mono: 'JetBrains Mono', 'Courier New', monospace;
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--sans); min-height: 100vh; }
+
+  /* Layout */
+  .app { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+  .sidebar { background: var(--surface); border-right: 1px solid var(--border); padding: 1.5rem 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+  .main { padding: 2rem; max-width: 760px; }
+
+  /* Sidebar */
+  .sidebar-title { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; padding: 0 1.25rem; margin-bottom: 1rem; }
+  .nav-section { margin-bottom: 1.5rem; }
+  .nav-label { font-size: 10px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; padding: 0 1.25rem; margin-bottom: .4rem; }
+  .nav-item { display: flex; align-items: center; gap: .5rem; padding: .5rem 1.25rem; font-size: 13px; color: var(--muted); cursor: pointer; transition: all .15s; border-left: 2px solid transparent; }
+  .nav-item:hover { color: var(--text); background: var(--surface2); }
+  .nav-item.active { color: var(--accent); border-left-color: var(--accent); background: var(--accent-dim); }
+  .nav-item .check { width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid var(--border); flex-shrink: 0; }
+  .nav-item.done .check { background: var(--success); border-color: var(--success); }
+
+  /* Progress bar */
+  .progress-wrap { padding: 0 1.25rem; margin-bottom: 1.5rem; }
+  .progress-label { font-size: 11px; color: var(--muted); margin-bottom: .4rem; display: flex; justify-content: space-between; }
+  .progress-bar { height: 3px; background: var(--border); border-radius: 2px; }
+  .progress-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width .3s; }
+
+  /* Cards */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem; margin-bottom: 1.25rem; }
+  .card-label { font-size: 10px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; margin-bottom: .5rem; }
+  .card h2 { font-size: 20px; font-weight: 600; margin-bottom: .75rem; }
+  .card p { font-size: 14px; color: #aaa; line-height: 1.7; margin-bottom: .75rem; }
+  .card p:last-child { margin-bottom: 0; }
+
+  /* Code blocks */
+  .code-block { background: #0a0a0a; border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.25rem; font-family: var(--mono); font-size: 13px; line-height: 1.7; margin: .75rem 0; overflow-x: auto; }
+  .kw { color: #c792ea; }
+  .fn { color: #82aaff; }
+  .str { color: #c3e88d; }
+  .cm { color: #546e7a; font-style: italic; }
+  .num { color: #f78c6c; }
+
+  /* Table */
+  .sql-table { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 12px; margin: .75rem 0; }
+  .sql-table th { background: var(--surface2); color: var(--accent); padding: .5rem .75rem; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+  .sql-table td { padding: .4rem .75rem; border: 1px solid var(--border); color: #ccc; }
+  .sql-table tr:hover td { background: var(--surface2); }
+
+  /* Input */
+  textarea { width: 100%; background: #0a0a0a; border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: var(--mono); font-size: 13px; padding: 1rem; resize: vertical; min-height: 100px; outline: none; transition: border .15s; }
+  textarea:focus { border-color: var(--accent); }
+
+  /* Buttons */
+  .btn { padding: 8px 18px; font-size: 13px; font-weight: 500; border-radius: 7px; border: 1px solid var(--border); background: transparent; color: var(--text); cursor: pointer; font-family: var(--sans); transition: all .15s; }
+  .btn:hover { background: var(--surface2); }
+  .btn-primary { background: var(--accent); border-color: var(--accent); color: #000; }
+  .btn-primary:hover { opacity: .85; }
+  .btn-row { display: flex; gap: .75rem; margin-top: .75rem; flex-wrap: wrap; }
+
+  /* Feedback */
+  .feedback { border-radius: 8px; padding: 1rem 1.25rem; margin-top: .75rem; font-size: 13px; line-height: 1.6; display: none; }
+  .feedback.correct { background: var(--success-dim); border: 1px solid rgba(61,220,132,.3); color: var(--success); }
+  .feedback.wrong { background: var(--danger-dim); border: 1px solid rgba(255,77,77,.3); color: var(--danger); }
+  .feedback.show { display: block; }
+
+  /* Hint */
+  .hint { background: var(--accent-dim); border: 1px solid rgba(74,158,255,.2); border-radius: 8px; padding: .75rem 1rem; font-size: 13px; color: var(--accent); margin-top: .75rem; display: none; }
+  .hint.show { display: block; }
+
+  /* Badge */
+  .badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
+  .badge-blue { background: var(--accent-dim); color: var(--accent); }
+  .badge-green { background: var(--success-dim); color: var(--success); }
+  .badge-orange { background: rgba(255,165,0,.12); color: orange; }
+
+  /* Section header */
+  .section-header { margin-bottom: 1.5rem; }
+  .section-header h1 { font-size: 24px; font-weight: 600; margin-bottom: .4rem; }
+  .section-header p { font-size: 14px; color: var(--muted); }
+
+  /* Rule box */
+  .rule-box { background: var(--surface2); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; padding: .75rem 1rem; font-size: 13px; color: #aaa; margin: .75rem 0; font-style: italic; }
+
+  /* Drill mode */
+  .drill-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem; }
+  .drill-meta { display: flex; gap: .75rem; margin-bottom: 1rem; flex-wrap: wrap; }
+  .domain-tag { font-size: 11px; padding: 3px 10px; border-radius: 20px; border: 1px solid var(--border); color: var(--muted); }
+
+  /* Hidden */
+  .page { display: none; }
+  .page.active { display: block; }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-title">SQL Prep · DS</div>
+
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span>Progress</span>
+      <span id="prog-label">0 / 7</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Lessons</div>
+    <div class="nav-item active" id="nav-l1" onclick="go('l1')"><div class="check" id="chk-l1"></div>SELECT & FROM</div>
+    <div class="nav-item" id="nav-l2" onclick="go('l2')"><div class="check" id="chk-l2"></div>WHERE</div>
+    <div class="nav-item" id="nav-l3" onclick="go('l3')"><div class="check" id="chk-l3"></div>GROUP BY & Aggregates</div>
+    <div class="nav-item" id="nav-l4" onclick="go('l4')"><div class="check" id="chk-l4"></div>HAVING</div>
+    <div class="nav-item" id="nav-l5" onclick="go('l5')"><div class="check" id="chk-l5"></div>ORDER BY & LIMIT</div>
+    <div class="nav-item" id="nav-l6" onclick="go('l6')"><div class="check" id="chk-l6"></div>JOINs</div>
+    <div class="nav-item" id="nav-l7" onclick="go('l7')"><div class="check" id="chk-l7"></div>Read a Table → Answer</div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Practice</div>
+    <div class="nav-item" id="nav-drill" onclick="go('drill')"><div class="check" id="chk-drill"></div>Drill mode</div>
+    <div class="nav-item" id="nav-ref" onclick="go('ref')"><div class="check" id="chk-ref"></div>Quick reference</div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main class="main">
+
+<!-- L1: SELECT & FROM -->
+<div class="page active" id="page-l1">
+  <div class="section-header">
+    <div style="margin-bottom:.5rem"><span class="badge badge-blue">Lesson 1 of 7</span></div>
+    <h1>SELECT & FROM</h1>
+    <p>The two clauses you use in every single SQL query.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-label">The concept</div>
+    <p><strong style="color:var(--text)">SELECT</strong> tells SQL which columns you want to see. <strong style="color:var(--text)">FROM</strong> tells SQL which table to look in. That's it. Every query starts here.</p>
+    <div class="code-block">
+<span class="kw">SELECT</span> column_name, another_column<br>
+<span class="kw">FROM</span> table_name;
+    </div>
+    <p>To get everything from a table, use <code style="color:var(--accent)">*</code> (star):</p>
+    <div class="code-block">
+<span class="kw">SELECT</span> *<br>
+<span class="kw">FROM</span> rides;
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">The table you're working with</div>
+    <p>For the next few lessons, you have a table called <code style="color:var(--accent)">rides</code> — Forest bike ride data.</p>
+    <table class="sql-table">
+      <tr><th>ride_id</th><th>station_id</th><th>bike_id</th><th>unlock_time</th><th>duration_minutes</th><th>city</th></tr>
+      <tr><td>1</td><td>ST01</td><td>B001</td><td>08:12</td><td>14</td><td>London</td></tr>
+      <tr><td>2</td><td>ST01</td><td>B002</td><td>08:31</td><td>22</td><td>London</td></tr>
+      <tr><td>3</td><td>ST02</td><td>B003</td><td>09:05</td><td>8</td><td>London</td></tr>
+      <tr><td>4</td><td>ST03</td><td>B001</td><td>07:45</td><td>31</td><td>Manchester</td></tr>
+      <tr><td>5</td><td>ST02</td><td>B004</td><td>08:55</td><td>19</td><td>London</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice — write the query</div>
+    <p>Write a query that returns only the <code style="color:var(--accent)">station_id</code> and <code style="color:var(--accent)">duration_minutes</code> columns from the rides table.</p>
+    <textarea id="q-l1" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l1')">Check answer</button>
+      <button class="btn" onclick="hint('l1')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l1">You need SELECT with two column names separated by a comma, then FROM rides.</div>
+    <div class="feedback" id="fb-l1"></div>
+  </div>
+
+  <div class="btn-row"><button class="btn btn-primary" onclick="complete('l1','l2')">Next lesson →</button></div>
+</div>
+
+<!-- L2: WHERE -->
+<div class="page" id="page-l2">
+  <div class="section-header">
+    <div style="margin-bottom:.5rem"><span class="badge badge-blue">Lesson 2 of 7</span></div>
+    <h1>WHERE</h1>
+    <p>Filter which rows you get back.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-label">The concept</div>
+    <p>WHERE filters rows before anything else happens. Only rows that match the condition come through.</p>
+    <div class="code-block">
+<span class="kw">SELECT</span> *<br>
+<span class="kw">FROM</span> rides<br>
+<span class="kw">WHERE</span> city = <span class="str">'London'</span>;
+    </div>
+    <p>Common operators: <code style="color:var(--accent)">=</code> &nbsp; <code style="color:var(--accent)">!=</code> &nbsp; <code style="color:var(--accent)">&gt;</code> &nbsp; <code style="color:var(--accent)">&lt;</code> &nbsp; <code style="color:var(--accent)">&gt;=</code> &nbsp; <code style="color:var(--accent)">&lt;=</code></p>
+    <p>Combine conditions with <strong style="color:var(--text)">AND</strong> / <strong style="color:var(--text)">OR</strong>:</p>
+    <div class="code-block">
+<span class="kw">SELECT</span> *<br>
+<span class="kw">FROM</span> rides<br>
+<span class="kw">WHERE</span> city = <span class="str">'London'</span> <span class="kw">AND</span> duration_minutes > <span class="num">20</span>;
+    </div>
+  </div>
+
+  <div class="rule-box">"WHERE filters rows. You decide which rows survive before anything else runs."</div>
+
+  <div class="card">
+    <div class="card-label">Practice — write the query</div>
+    <p>Write a query that returns all columns for rides where the duration was more than 15 minutes.</p>
+    <textarea id="q-l2" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l2')">Check answer</button>
+      <button class="btn" onclick="hint('l2')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l2">SELECT * FROM rides WHERE duration_minutes > 15</div>
+    <div class="feedback" id="fb-l2"></div>
+  </div>
+
+  <div class="btn-row"><button class="btn btn-primary" onclick="complete('l2','l3')">Next lesson →</button></div>
+</div>
+
+<!-- L3: GROUP BY & Aggregates -->
+<div class="page" id="page-l3">
+  <div class="section-header">
+    <div style="margin-bottom:.5rem"><span class="badge badge-blue">Lesson 3 of 7</span></div>
+    <h1>GROUP BY & Aggregates</h1>
+    <p>Collapse rows into groups and calculate something about each group.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-label">The concept</div>
+    <p>Aggregate functions do a calculation across multiple rows: <strong style="color:var(--text)">COUNT</strong>, <strong style="color:var(--text)">SUM</strong>, <strong style="color:var(--text)">AVG</strong>, <strong style="color:var(--text)">MAX</strong>, <strong style="color:var(--text)">MIN</strong>.</p>
+    <p>GROUP BY collapses rows with the same value into one row, then runs the aggregate on each group.</p>
+    <div class="code-block">
+<span class="kw">SELECT</span> station_id, <span class="fn">COUNT</span>(ride_id) <span class="kw">AS</span> total_rides<br>
+<span class="kw">FROM</span> rides<br>
+<span class="kw">GROUP BY</span> station_id;
+    </div>
+    <p>The <code style="color:var(--accent)">AS</code> keyword gives your calculated column a name you can reference later.</p>
+    <div class="code-block">
+<span class="cm">-- Result:</span><br>
+<span class="cm">-- station_id | total_rides</span><br>
+<span class="cm">-- ST01       | 2</span><br>
+<span class="cm">-- ST02       | 2</span><br>
+<span class="cm">-- ST03       | 1</span>
+    </div>
+  </div>
+
+  <div class="rule-box">"GROUP BY is how you answer 'how many per X' or 'average Y per X' questions. Every column in SELECT must either be in GROUP BY or inside an aggregate function."</div>
+
+  <div class="card">
+    <div class="card-label">Practice — write the query</div>
+    <p>Write a query that shows each <code style="color:var(--accent)">station_id</code> and the average <code style="color:var(--accent)">duration_minutes</code> for rides at that station. Name the average column <code style="color:var(--accent)">avg_duration</code>.</p>
+    <textarea id="q-l3" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l3')">Check answer</button>
+      <button class="btn" onclick="hint('l3')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l3">SELECT station_id, AVG(duration_minutes) AS avg_duration FROM rides GROUP BY station_id</div>
+    <div class="feedback" id="fb-l3"></div>
+  </div>
+
+  <div class="btn-row"><button class="btn btn-primary" onclick="complete('l3','l4')">Next lesson →</button></div>
+</div>
+
+<!-- L4: HAVING -->
+<div class="page" id="page-l4">
+  <div class="section-header">
+    <div style="margin-bottom:.5rem"><span class="badge badge-blue">Lesson 4 of 7</span></div>
+    <h1>HAVING</h1>
+    <p>Filter groups after GROUP BY. The most commonly confused clause.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-label">The concept</div>
+    <p><strong style="color:var(--text)">WHERE</strong> filters rows before grouping. <strong style="color:var(--text)">HAVING</strong> filters groups after grouping. You cannot use WHERE to filter on an aggregate — that's what HAVING is for.</p>
+    <div class="code-block">
+<span class="cm">-- WRONG — can't use WHERE on an aggregate</span><br>
+<span class="kw">SELECT</span> station_id, <span class="fn">COUNT</span>(ride_id) <span class="kw">AS</span> total_rides<br>
+<span class="kw">FROM</span> rides<br>
+<span class="kw">GROUP BY</span> station_id<br>
+<span class="kw">WHERE</span> total_rides > <span class="num">1</span>; <span class="cm">-- ❌ error</span>
+    </div>
+    <div class="code-block">
+<span class="cm">-- CORRECT — use HAVING to filter groups</span><br>
+<span class="kw">SELECT</span> station_id, <span class="fn">COUNT</span>(ride_id) <span class="kw">AS</span> total_rides<br>
+<span class="kw">FROM</span> rides<br>
+<span class="kw">GROUP BY</span> station_id<br>
+<span class="kw">HAVING</span> <span class="fn">COUNT</span>(ride_id) > <span class="num">1</span>; <span class="cm">-- ✓</span>
+    </div>
+  </div>
+
+  <div class="rule-box">"WHERE = filter rows. HAVING = filter groups. If you're filtering on something you calculated with COUNT, SUM, or AVG — it's HAVING."</div>
+
+  <div class="card">
+    <div class="card-label">Practice — write the query</div>
+    <p>Write a query that shows only the stations where the average ride duration is greater than 15 minutes.</p>
+    <textarea id="q-l4" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l4')">Check answer</button>
+      <button class="btn" onclick="hint('l4')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l4">SELECT station_id, AVG(duration_minutes) AS avg_duration FROM rides GROUP BY station_id HAVING AVG(duration_minutes) > 15</div>
+    <div class="feedback" id="fb-l4"></div>
+  </div>
+
+  <div class="btn-row"><button class="btn btn-primary" onclick="complete('l4','l5')">Next lesson →</button></div>
+</div>
+
+<!-- L5: ORDER BY & LIMIT -->
+<div class="page" id="page-l5">
+  <div class="section-header">
+    <div style="margin-bottom:.5rem"><span class="badge badge-blue">Lesson 5 of 7</span></div>
+    <h1>ORDER BY & LIMIT</h1>
+    <p>Sort your results and cap how many rows come back.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-label">The concept</div>
+    <p><strong style="color:var(--text)">ORDER BY</strong> sorts results. <strong style="color:var(--text)">ASC</strong> = smallest first (default). <strong style="color:var(--text)">DESC</strong> = largest first.</p>
+    <p><strong style="color:var(--text)">LIMIT</strong> caps the number of rows returned.</p>
+    <div class="code-block">
+<span class="kw">SELECT</span> station_id, <span class="fn">COUNT</span>(ride_id) <span class="kw">AS</span> total_rides<br>
+<span class="kw">FROM</span> rides<br>
+<span class="kw">GROUP BY</span> station_id<br>
+<span class="kw">ORDER BY</span> total_rides <span class="kw">DESC</span><br>
+<span class="kw">LIMIT</span> <span class="num">3</span>;
+    </div>
+    <p>This returns the top 3 busiest stations.</p>
+  </div>
+
+  <div class="rule-box">"The full clause order: SELECT → FROM → WHERE → GROUP BY → HAVING → ORDER BY → LIMIT. You don't need all of them, but they must appear in this order when you do."</div>
+
+  <div class="card">
+    <div class="card-label">Practice — write the query</div>
+    <p>Write a query that returns the <strong>single bike</strong> with the highest total number of rides. Show the <code style="color:var(--accent)">bike_id</code> and the count, named <code style="color:var(--accent)">ride_count</code>.</p>
+    <textarea id="q-l5" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l5')">Check answer</button>
+      <button class="btn" onclick="hint('l5')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l5">SELECT bike_id, COUNT(ride_id) AS ride_count FROM rides GROUP BY bike_id ORDER BY ride_count DESC LIMIT 1</div>
+    <div class="feedback" id="fb-l5"></div>
+  </div>
+
+  <div class="btn-row"><button class="btn btn-primary" onclick="complete('l5','l6')">Next lesson →</button></div>
+</div>
+
+<!-- L6: JOINs -->
+<div class="page" id="page-l6">
+  <div class="section-header">
+    <div style="margin-bottom:.5rem"><span class="badge badge-blue">Lesson 6 of 7</span></div>
+    <h1>JOINs</h1>
+    <p>Connect two tables together using a shared column.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Two tables</div>
+    <p>You now have a second table: <code style="color:var(--accent)">stations</code>.</p>
+    <table class="sql-table">
+      <tr><th>station_id</th><th>station_name</th><th>borough</th></tr>
+      <tr><td>ST01</td><td>London Bridge</td><td>Southwark</td></tr>
+      <tr><td>ST02</td><td>Shoreditch High St</td><td>Hackney</td></tr>
+      <tr><td>ST03</td><td>Piccadilly</td><td>Westminster</td></tr>
+    </table>
+    <p style="margin-top:.75rem">Both tables share <code style="color:var(--accent)">station_id</code>. That's the key you JOIN on.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-label">INNER JOIN — only matching rows</div>
+    <div class="code-block">
+<span class="kw">SELECT</span> rides.ride_id, stations.station_name, rides.duration_minutes<br>
+<span class="kw">FROM</span> rides<br>
+<span class="kw">INNER JOIN</span> stations <span class="kw">ON</span> rides.station_id = stations.station_id;
+    </div>
+    <p>Only returns rows where station_id exists in both tables.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-label">LEFT JOIN — all rows from left table</div>
+    <div class="code-block">
+<span class="kw">SELECT</span> rides.ride_id, stations.station_name<br>
+<span class="kw">FROM</span> rides<br>
+<span class="kw">LEFT JOIN</span> stations <span class="kw">ON</span> rides.station_id = stations.station_id;
+    </div>
+    <p>Returns all rides — even if no matching station exists. Missing station values show as NULL.</p>
+  </div>
+
+  <div class="rule-box">"INNER JOIN = only where both sides match. LEFT JOIN = everything from the left table, matched or not."</div>
+
+  <div class="card">
+    <div class="card-label">Practice — write the query</div>
+    <p>Write a query that shows each ride's <code style="color:var(--accent)">ride_id</code>, the <code style="color:var(--accent)">station_name</code> it started from, and the <code style="color:var(--accent)">duration_minutes</code>. Use an INNER JOIN.</p>
+    <textarea id="q-l6" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l6')">Check answer</button>
+      <button class="btn" onclick="hint('l6')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l6">SELECT rides.ride_id, stations.station_name, rides.duration_minutes FROM rides INNER JOIN stations ON rides.station_id = stations.station_id</div>
+    <div class="feedback" id="fb-l6"></div>
+  </div>
+
+  <div class="btn-row"><button class="btn btn-primary" onclick="complete('l6','l7')">Next lesson →</button></div>
+</div>
+
+<!-- L7: Read a table → answer -->
+<div class="page" id="page-l7">
+  <div class="section-header">
+    <div style="margin-bottom:.5rem"><span class="badge badge-orange">Lesson 7 of 7 — most important</span></div>
+    <h1>Read a Table → Answer a Business Question</h1>
+    <p>This is the exact format of the Palantir CodePair round.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-label">The skill</div>
+    <p>In the interview you'll be given a data table and a business question. Your job: read the table, identify what it contains, write a query that answers the question, and explain your reasoning out loud.</p>
+    <p>The interviewer is watching three things: do you understand what the data represents, do you write the right query, and do you narrate your thinking.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-label">NHS scenario — the table</div>
+    <p>You are working with an NHS trust. Here is a table of patient appointments:</p>
+    <table class="sql-table">
+      <tr><th>appointment_id</th><th>patient_id</th><th>ward</th><th>appointment_date</th><th>attended</th><th>wait_days</th></tr>
+      <tr><td>A001</td><td>P01</td><td>Cardiology</td><td>2024-01-10</td><td>1</td><td>12</td></tr>
+      <tr><td>A002</td><td>P02</td><td>Oncology</td><td>2024-01-11</td><td>0</td><td>28</td></tr>
+      <tr><td>A003</td><td>P03</td><td>Cardiology</td><td>2024-01-12</td><td>1</td><td>8</td></tr>
+      <tr><td>A004</td><td>P04</td><td>Neurology</td><td>2024-01-13</td><td>0</td><td>45</td></tr>
+      <tr><td>A005</td><td>P05</td><td>Oncology</td><td>2024-01-14</td><td>1</td><td>31</td></tr>
+      <tr><td>A006</td><td>P06</td><td>Cardiology</td><td>2024-01-15</td><td>0</td><td>19</td></tr>
+    </table>
+    <p style="margin-top:.75rem;font-size:13px;color:var(--muted)"><code style="color:var(--accent)">attended</code>: 1 = attended, 0 = did not attend (DNA)</p>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Business question 1</div>
+    <p>The trust director wants to know which ward has the highest DNA (did not attend) rate. Write the query.</p>
+    <textarea id="q-l7a" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l7a')">Check answer</button>
+      <button class="btn" onclick="hint('l7a')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l7a">You need to COUNT appointments per ward, then COUNT where attended = 0, then calculate a ratio. Or simpler: SELECT ward, SUM(CASE WHEN attended = 0 THEN 1 ELSE 0 END) AS dna_count FROM appointments GROUP BY ward ORDER BY dna_count DESC LIMIT 1</div>
+    <div class="feedback" id="fb-l7a"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Business question 2</div>
+    <p>Which wards have an average wait time of more than 20 days? Show the ward and average wait, named <code style="color:var(--accent)">avg_wait</code>.</p>
+    <textarea id="q-l7b" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l7b')">Check answer</button>
+      <button class="btn" onclick="hint('l7b')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l7b">SELECT ward, AVG(wait_days) AS avg_wait FROM appointments GROUP BY ward HAVING AVG(wait_days) > 20</div>
+    <div class="feedback" id="fb-l7b"></div>
+  </div>
+
+  <div class="btn-row"><button class="btn btn-primary" onclick="complete('l7','drill')">Go to drill mode →</button></div>
+</div>
+
+<!-- DRILL MODE -->
+<div class="page" id="page-drill">
+  <div class="section-header">
+    <h1>Drill Mode</h1>
+    <p>Random questions across Palantir-relevant domains. Write the query, check your answer, keep going.</p>
+  </div>
+
+  <div style="display:flex;gap:.75rem;margin-bottom:1.25rem;flex-wrap:wrap">
+    <span class="badge badge-blue" id="drill-count">Question 1</span>
+    <span class="badge badge-green" id="drill-score">Score: 0</span>
+  </div>
+
+  <div class="drill-card">
+    <div class="drill-meta">
+      <span class="domain-tag" id="drill-domain">NHS</span>
+      <span class="domain-tag" id="drill-concept">GROUP BY</span>
+    </div>
+    <p style="font-size:15px;font-weight:500;color:var(--text);margin-bottom:1rem" id="drill-q">Loading...</p>
+    <div id="drill-table-wrap"></div>
+    <textarea id="q-drill" placeholder="Write your SQL here..." style="margin-top:.75rem"></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="checkDrill()">Check answer</button>
+      <button class="btn" onclick="hintDrill()">Hint</button>
+      <button class="btn" onclick="nextDrill()">Skip →</button>
+    </div>
+    <div class="hint" id="hint-drill"></div>
+    <div class="feedback" id="fb-drill"></div>
+    <div style="margin-top:1rem;display:none" id="drill-next-wrap">
+      <button class="btn btn-primary" onclick="nextDrill()">Next question →</button>
+    </div>
+  </div>
+</div>
+
+<!-- REFERENCE -->
+<div class="page" id="page-ref">
+  <div class="section-header">
+    <h1>Quick Reference</h1>
+    <p>Everything you need on one page. Print this or keep it open.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Clause order — always in this sequence</div>
+    <div class="code-block">
+<span class="kw">SELECT</span>   <span class="cm">-- what columns</span><br>
+<span class="kw">FROM</span>     <span class="cm">-- which table</span><br>
+<span class="kw">JOIN</span>     <span class="cm">-- connect another table</span><br>
+<span class="kw">WHERE</span>    <span class="cm">-- filter rows (before grouping)</span><br>
+<span class="kw">GROUP BY</span> <span class="cm">-- collapse into groups</span><br>
+<span class="kw">HAVING</span>   <span class="cm">-- filter groups (after grouping)</span><br>
+<span class="kw">ORDER BY</span> <span class="cm">-- sort results</span><br>
+<span class="kw">LIMIT</span>    <span class="cm">-- cap number of rows</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Aggregate functions</div>
+    <div class="code-block">
+<span class="fn">COUNT</span>(column)  <span class="cm">-- number of rows</span><br>
+<span class="fn">SUM</span>(column)    <span class="cm">-- total</span><br>
+<span class="fn">AVG</span>(column)    <span class="cm">-- average</span><br>
+<span class="fn">MAX</span>(column)    <span class="cm">-- highest value</span><br>
+<span class="fn">MIN</span>(column)    <span class="cm">-- lowest value</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">WHERE vs HAVING</div>
+    <div class="code-block">
+<span class="cm">-- WHERE filters rows (use before GROUP BY)</span><br>
+<span class="kw">WHERE</span> city = <span class="str">'London'</span><br><br>
+<span class="cm">-- HAVING filters groups (use after GROUP BY)</span><br>
+<span class="kw">HAVING</span> <span class="fn">COUNT</span>(ride_id) > <span class="num">5</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">JOINs</div>
+    <div class="code-block">
+<span class="cm">-- INNER JOIN: only matching rows</span><br>
+<span class="kw">FROM</span> rides <span class="kw">INNER JOIN</span> stations<br>
+<span class="kw">ON</span> rides.station_id = stations.station_id<br><br>
+<span class="cm">-- LEFT JOIN: all left rows, matched or not</span><br>
+<span class="kw">FROM</span> rides <span class="kw">LEFT JOIN</span> stations<br>
+<span class="kw">ON</span> rides.station_id = stations.station_id
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">The three DS rules for SQL in interviews</div>
+    <p>1. Narrate everything out loud as you type — silence is unreadable.</p>
+    <p>2. Write something that works first, then improve it.</p>
+    <p>3. If you're stuck, ask a clarifying question — they expect it and want to see it.</p>
+  </div>
+</div>
+
+</main>
+</div>
+
+<script>
+// Navigation
+const pages = ['l1','l2','l3','l4','l5','l6','l7','drill','ref'];
+const completed = new Set();
+
+function go(id){
+  pages.forEach(p=>{
+    document.getElementById('page-'+p).classList.remove('active');
+    document.getElementById('nav-'+p)?.classList.remove('active');
+  });
+  document.getElementById('page-'+id).classList.add('active');
+  document.getElementById('nav-'+id)?.classList.add('active');
+  if(id==='drill') loadDrill();
+}
+
+function complete(current, next){
+  completed.add(current);
+  const chk = document.getElementById('chk-'+current);
+  if(chk){ chk.classList.add('done') }
+  const nav = document.getElementById('nav-'+current);
+  if(nav) nav.classList.add('done');
+  updateProgress();
+  go(next);
+}
+
+function updateProgress(){
+  const lessons = ['l1','l2','l3','l4','l5','l6','l7'];
+  const done = lessons.filter(l=>completed.has(l)).length;
+  document.getElementById('prog-label').textContent = done+' / '+lessons.length;
+  document.getElementById('prog-fill').style.width = (done/lessons.length*100)+'%';
+}
+
+// Answer checking
+const answers = {
+  l1: ['select station_id, duration_minutes from rides','select duration_minutes, station_id from rides'],
+  l2: ['select * from rides where duration_minutes > 15'],
+  l3: ['select station_id, avg(duration_minutes) as avg_duration from rides group by station_id'],
+  l4: ['select station_id, avg(duration_minutes) as avg_duration from rides group by station_id having avg(duration_minutes) > 15'],
+  l5: ['select bike_id, count(ride_id) as ride_count from rides group by bike_id order by ride_count desc limit 1'],
+  l6: ['select rides.ride_id, stations.station_name, rides.duration_minutes from rides inner join stations on rides.station_id = stations.station_id'],
+  l7a: ['select ward, sum(case when attended = 0 then 1 else 0 end) as dna_count from appointments group by ward order by dna_count desc limit 1',
+        'select ward, count(*) as dna_count from appointments where attended = 0 group by ward order by dna_count desc limit 1'],
+  l7b: ['select ward, avg(wait_days) as avg_wait from appointments group by ward having avg(wait_days) > 20']
+};
+
+function normalise(s){ return s.toLowerCase().replace(/\s+/g,' ').replace(/;/g,'').trim(); }
+
+function check(id){
+  const input = normalise(document.getElementById('q-'+id).value);
+  const fb = document.getElementById('fb-'+id);
+  const correct = answers[id].some(a=>normalise(a)===input);
+  fb.className = 'feedback show '+(correct?'correct':'wrong');
+  if(correct){
+    fb.textContent = '✓ Correct. Solid. Move on.';
+  } else {
+    const hint = document.getElementById('hint-'+id);
+    hint.classList.add('show');
+    fb.textContent = '✗ Not quite. Check the hint and try again — the logic matters more than exact syntax.';
+  }
+}
+
+function hint(id){
+  document.getElementById('hint-'+id).classList.add('show');
+}
+
+// Drill mode
+const drills = [
+  {
+    domain:'NHS', concept:'COUNT + GROUP BY',
+    q:'An NHS trust wants to know how many appointments each ward had in total. Write a query to show each ward and its appointment count, named total_appointments.',
+    table:`<table class="sql-table"><tr><th>appointment_id</th><th>ward</th><th>attended</th><th>wait_days</th></tr><tr><td>A001</td><td>Cardiology</td><td>1</td><td>12</td></tr><tr><td>A002</td><td>Oncology</td><td>0</td><td>28</td></tr><tr><td>A003</td><td>Cardiology</td><td>1</td><td>8</td></tr><tr><td>A004</td><td>Neurology</td><td>0</td><td>45</td></tr></table>`,
+    hint:'SELECT ward, COUNT(appointment_id) AS total_appointments FROM appointments GROUP BY ward',
+    answers:['select ward, count(appointment_id) as total_appointments from appointments group by ward','select ward, count(*) as total_appointments from appointments group by ward']
+  },
+  {
+    domain:'Logistics', concept:'WHERE + ORDER BY',
+    q:'A logistics company wants to see all deliveries that took more than 2 days, sorted from longest to shortest.',
+    table:`<table class="sql-table"><tr><th>delivery_id</th><th>destination</th><th>days_taken</th><th>on_time</th></tr><tr><td>D001</td><td>Manchester</td><td>1</td><td>1</td></tr><tr><td>D002</td><td>Birmingham</td><td>3</td><td>0</td></tr><tr><td>D003</td><td>Leeds</td><td>4</td><td>0</td></tr><tr><td>D004</td><td>London</td><td>2</td><td>1</td></tr></table>`,
+    hint:'SELECT * FROM deliveries WHERE days_taken > 2 ORDER BY days_taken DESC',
+    answers:['select * from deliveries where days_taken > 2 order by days_taken desc']
+  },
+  {
+    domain:'Finance', concept:'HAVING',
+    q:'A bank wants to see only the account types where the average transaction value exceeds £500. Show account_type and avg_transaction.',
+    table:`<table class="sql-table"><tr><th>transaction_id</th><th>account_type</th><th>amount</th></tr><tr><td>T001</td><td>Current</td><td>200</td></tr><tr><td>T002</td><td>Savings</td><td>800</td></tr><tr><td>T003</td><td>Current</td><td>150</td></tr><tr><td>T004</td><td>ISA</td><td>1200</td></tr><tr><td>T005</td><td>Savings</td><td>600</td></tr></table>`,
+    hint:'SELECT account_type, AVG(amount) AS avg_transaction FROM transactions GROUP BY account_type HAVING AVG(amount) > 500',
+    answers:['select account_type, avg(amount) as avg_transaction from transactions group by account_type having avg(amount) > 500']
+  },
+  {
+    domain:'HSE Ireland', concept:'COUNT + WHERE',
+    q:'HSE wants to know how many data breaches were reported in each region, but only for high severity breaches (severity = "high").',
+    table:`<table class="sql-table"><tr><th>breach_id</th><th>region</th><th>severity</th><th>reported_date</th></tr><tr><td>B001</td><td>Dublin</td><td>high</td><td>2024-01-05</td></tr><tr><td>B002</td><td>Cork</td><td>low</td><td>2024-01-06</td></tr><tr><td>B003</td><td>Dublin</td><td>high</td><td>2024-01-08</td></tr><tr><td>B004</td><td>Galway</td><td>high</td><td>2024-01-09</td></tr><tr><td>B005</td><td>Cork</td><td>high</td><td>2024-01-10</td></tr></table>`,
+    hint:"SELECT region, COUNT(breach_id) AS high_severity_breaches FROM breaches WHERE severity = 'high' GROUP BY region",
+    answers:["select region, count(breach_id) as high_severity_breaches from breaches where severity = 'high' group by region","select region, count(*) as high_severity_breaches from breaches where severity = 'high' group by region"]
+  },
+  {
+    domain:'Forest Bikes', concept:'AVG + ORDER BY + LIMIT',
+    q:'Forest ops wants the top 3 stations by average ride duration. Show station_id and avg_duration, longest first.',
+    table:`<table class="sql-table"><tr><th>ride_id</th><th>station_id</th><th>duration_minutes</th></tr><tr><td>1</td><td>ST01</td><td>14</td></tr><tr><td>2</td><td>ST01</td><td>22</td></tr><tr><td>3</td><td>ST02</td><td>8</td></tr><tr><td>4</td><td>ST03</td><td>31</td></tr><tr><td>5</td><td>ST02</td><td>19</td></tr><tr><td>6</td><td>ST03</td><td>45</td></tr></table>`,
+    hint:'SELECT station_id, AVG(duration_minutes) AS avg_duration FROM rides GROUP BY station_id ORDER BY avg_duration DESC LIMIT 3',
+    answers:['select station_id, avg(duration_minutes) as avg_duration from rides group by station_id order by avg_duration desc limit 3']
+  },
+  {
+    domain:'NHS', concept:'INNER JOIN',
+    q:'Join the appointments table to the wards table to show each appointment_id with its ward_name and wait_days.',
+    table:`<table class="sql-table" style="margin-bottom:.75rem"><tr><th>appointment_id</th><th>ward_id</th><th>wait_days</th></tr><tr><td>A001</td><td>W01</td><td>12</td></tr><tr><td>A002</td><td>W02</td><td>28</td></tr><tr><td>A003</td><td>W01</td><td>8</td></tr></table><table class="sql-table"><tr><th>ward_id</th><th>ward_name</th></tr><tr><td>W01</td><td>Cardiology</td></tr><tr><td>W02</td><td>Oncology</td></tr></table>`,
+    hint:'SELECT appointments.appointment_id, wards.ward_name, appointments.wait_days FROM appointments INNER JOIN wards ON appointments.ward_id = wards.ward_id',
+    answers:['select appointments.appointment_id, wards.ward_name, appointments.wait_days from appointments inner join wards on appointments.ward_id = wards.ward_id']
+  }
+];
+
+let drillIdx = 0;
+let drillScore = 0;
+let drillCount = 0;
+
+function loadDrill(){
+  const d = drills[drillIdx % drills.length];
+  document.getElementById('drill-domain').textContent = d.domain;
+  document.getElementById('drill-concept').textContent = d.concept;
+  document.getElementById('drill-q').textContent = d.q;
+  document.getElementById('drill-table-wrap').innerHTML = d.table;
+  document.getElementById('hint-drill').textContent = d.hint;
+  document.getElementById('hint-drill').classList.remove('show');
+  document.getElementById('fb-drill').className = 'feedback';
+  document.getElementById('q-drill').value = '';
+  document.getElementById('drill-next-wrap').style.display = 'none';
+  drillCount++;
+  document.getElementById('drill-count').textContent = 'Question '+drillCount;
+}
+
+function checkDrill(){
+  const d = drills[drillIdx % drills.length];
+  const input = normalise(document.getElementById('q-drill').value);
+  const correct = d.answers.some(a=>normalise(a)===input);
+  const fb = document.getElementById('fb-drill');
+  fb.className = 'feedback show '+(correct?'correct':'wrong');
+  if(correct){
+    drillScore++;
+    document.getElementById('drill-score').textContent = 'Score: '+drillScore;
+    fb.textContent = '✓ Correct.';
+  } else {
+    document.getElementById('hint-drill').classList.add('show');
+    fb.textContent = '✗ Not quite. Check the hint.';
+  }
+  document.getElementById('drill-next-wrap').style.display = 'block';
+}
+
+function hintDrill(){
+  document.getElementById('hint-drill').classList.add('show');
+}
+
+function nextDrill(){
+  drillIdx++;
+  loadDrill();
+}
+</script>
+</body>
+</html>
