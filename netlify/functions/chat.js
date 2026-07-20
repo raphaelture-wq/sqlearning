@@ -1,6 +1,6 @@
 // Serverless proxy for the in-app "Ask AI" tutor.
 // Keeps the Anthropic API key server-side — the browser never sees it.
-// Deploy target: Vercel (Node serverless function, zero config under /api).
+// Deploy target: Netlify Functions (this repo already auto-deploys there).
 
 const ANTHROPIC_URL = 'https://api.anthropic.com/v1/messages';
 const MODEL = 'claude-sonnet-5';
@@ -34,36 +34,40 @@ There's also a drill mode with random questions across NHS, HSE Ireland, Forest 
 
 The learner may tell you which lesson or page they're currently on — use that to calibrate: don't assume knowledge of concepts from later lessons unless they've already covered them.`;
 
-module.exports = async (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+const CORS_HEADERS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type',
+};
 
-  if (req.method === 'OPTIONS') {
-    res.status(204).end();
-    return;
+exports.handler = async (event) => {
+  if (event.httpMethod === 'OPTIONS') {
+    return { statusCode: 204, headers: CORS_HEADERS, body: '' };
   }
 
-  if (req.method !== 'POST') {
-    res.status(405).json({ error: 'Method not allowed' });
-    return;
+  if (event.httpMethod !== 'POST') {
+    return { statusCode: 405, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Method not allowed' }) };
   }
 
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
-    res.status(500).json({ error: 'Server is missing ANTHROPIC_API_KEY. Set it in your deployment\'s environment variables.' });
-    return;
+    return {
+      statusCode: 500,
+      headers: CORS_HEADERS,
+      body: JSON.stringify({ error: 'Server is missing ANTHROPIC_API_KEY. Set it in your Netlify site\'s environment variables.' }),
+    };
   }
 
-  let body = req.body;
-  if (typeof body === 'string') {
-    try { body = JSON.parse(body); } catch (e) { body = {}; }
+  let body;
+  try {
+    body = JSON.parse(event.body || '{}');
+  } catch (e) {
+    body = {};
   }
   const { message, history, lessonContext } = body || {};
 
   if (!message || typeof message !== 'string' || !message.trim()) {
-    res.status(400).json({ error: 'Missing "message".' });
-    return;
+    return { statusCode: 400, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Missing "message".' }) };
   }
 
   const trimmedHistory = Array.isArray(history) ? history.slice(-12) : [];
@@ -95,8 +99,11 @@ module.exports = async (req, res) => {
 
     if (!anthropicRes.ok) {
       const errText = await anthropicRes.text();
-      res.status(anthropicRes.status).json({ error: `Anthropic API error: ${errText}` });
-      return;
+      return {
+        statusCode: anthropicRes.status,
+        headers: CORS_HEADERS,
+        body: JSON.stringify({ error: `Anthropic API error: ${errText}` }),
+      };
     }
 
     const data = await anthropicRes.json();
@@ -105,8 +112,16 @@ module.exports = async (req, res) => {
       .map(block => block.text)
       .join('\n');
 
-    res.status(200).json({ reply });
+    return {
+      statusCode: 200,
+      headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ reply }),
+    };
   } catch (err) {
-    res.status(502).json({ error: 'Failed to reach Anthropic API: ' + err.message });
+    return {
+      statusCode: 502,
+      headers: CORS_HEADERS,
+      body: JSON.stringify({ error: 'Failed to reach Anthropic API: ' + err.message }),
+    };
   }
 };
