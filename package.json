@@ -1,0 +1,9 @@
+{
+  "name": "sql-prep-palantir-ds",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Interactive SQL prep app with an in-app AI tutor proxy.",
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -147,6 +147,58 @@
   /* Hidden */
   .page { display: none; }
   .page.active { display: block; }
+
+  /* Ask AI chat widget */
+  .chat-toggle {
+    position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 70;
+    display: flex; align-items: center; gap: .5rem;
+    background: var(--accent); color: #000; border: none; border-radius: 999px;
+    padding: .75rem 1.1rem; font-family: var(--sans); font-size: 13px; font-weight: 600;
+    cursor: pointer; box-shadow: 0 4px 20px rgba(0,0,0,.4); transition: opacity .15s;
+  }
+  .chat-toggle:hover { opacity: .88; }
+  .chat-toggle.hidden { display: none; }
+
+  .chat-panel {
+    position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 70;
+    width: 380px; max-width: calc(100vw - 2rem); height: 560px; max-height: calc(100vh - 3rem);
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    display: none; flex-direction: column; overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0,0,0,.5);
+  }
+  .chat-panel.open { display: flex; }
+
+  .chat-header { display: flex; align-items: center; justify-content: space-between; padding: .9rem 1.1rem; border-bottom: 1px solid var(--border); background: var(--surface2); }
+  .chat-header-title { font-size: 13px; font-weight: 600; color: var(--text); display: flex; align-items: center; gap: .5rem; }
+  .chat-header-sub { font-size: 11px; color: var(--muted); margin-top: 1px; }
+  .chat-close { background: none; border: none; color: var(--muted); font-size: 18px; cursor: pointer; line-height: 1; padding: .2rem; }
+  .chat-close:hover { color: var(--text); }
+
+  .chat-messages { flex: 1; overflow-y: auto; padding: 1rem 1.1rem; display: flex; flex-direction: column; gap: .75rem; }
+  .chat-msg { font-size: 13px; line-height: 1.6; max-width: 92%; padding: .6rem .8rem; border-radius: 10px; white-space: pre-wrap; overflow-wrap: break-word; }
+  .chat-msg.user { align-self: flex-end; background: var(--accent-dim); color: var(--text); border: 1px solid rgba(74,158,255,.25); }
+  .chat-msg.assistant { align-self: flex-start; background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+  .chat-msg.assistant.error { border-color: rgba(255,77,77,.3); background: var(--danger-dim); color: var(--danger); }
+  .chat-msg code { font-family: var(--mono); background: #0a0a0a; padding: 1px 5px; border-radius: 4px; font-size: 12px; }
+  .chat-msg pre { background: #0a0a0a; border: 1px solid var(--border); border-radius: 8px; padding: .6rem .75rem; margin: .4rem 0; overflow-x: auto; }
+  .chat-msg pre code { background: none; padding: 0; }
+  .chat-empty { color: var(--muted); font-size: 12px; text-align: center; margin-top: 1.5rem; line-height: 1.6; }
+
+  .chat-typing { align-self: flex-start; display: flex; gap: 4px; padding: .6rem .8rem; }
+  .chat-typing span { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); animation: chat-bounce 1.2s infinite; }
+  .chat-typing span:nth-child(2) { animation-delay: .15s; }
+  .chat-typing span:nth-child(3) { animation-delay: .3s; }
+  @keyframes chat-bounce { 0%,60%,100% { opacity: .3; transform: translateY(0); } 30% { opacity: 1; transform: translateY(-3px); } }
+
+  .chat-input-row { border-top: 1px solid var(--border); padding: .75rem; display: flex; gap: .5rem; align-items: flex-end; }
+  .chat-input-row textarea { min-height: 38px; max-height: 120px; padding: .55rem .7rem; font-size: 13px; }
+  .chat-send { background: var(--accent); border: none; color: #000; border-radius: 8px; padding: 0 .9rem; height: 38px; font-size: 13px; font-weight: 600; cursor: pointer; flex-shrink: 0; }
+  .chat-send:disabled { opacity: .5; cursor: not-allowed; }
+
+  @media (max-width: 860px) {
+    .chat-panel { width: calc(100vw - 1.5rem); right: .75rem; bottom: .75rem; height: calc(100vh - 1.5rem); }
+    .chat-toggle { right: 1rem; bottom: 1rem; }
+  }
 </style>
 </head>
 <body>
@@ -1014,6 +1066,26 @@
 </main>
 </div>
 
+<!-- ASK AI CHAT WIDGET -->
+<button class="chat-toggle" id="chat-toggle" onclick="toggleChat()" aria-label="Ask the AI SQL tutor">💬 Ask AI</button>
+
+<div class="chat-panel" id="chat-panel" role="dialog" aria-label="SQL tutor chat">
+  <div class="chat-header">
+    <div>
+      <div class="chat-header-title">🤖 SQL Tutor</div>
+      <div class="chat-header-sub" id="chat-context-label">Ask about anything you don't understand</div>
+    </div>
+    <button class="chat-close" onclick="toggleChat()" aria-label="Close chat">✕</button>
+  </div>
+  <div class="chat-messages" id="chat-messages">
+    <div class="chat-empty" id="chat-empty">Stuck on something? Ask me about the concept you're on, or paste a query you're unsure about.</div>
+  </div>
+  <div class="chat-input-row">
+    <textarea id="chat-input" placeholder="Ask a SQL question..." rows="1"></textarea>
+    <button class="chat-send" id="chat-send" onclick="sendChatMessage()">Send</button>
+  </div>
+</div>
+
 <script>
 // Navigation
 const pages = ['l1','l2','l3','l4','l5','l6','l7','l8','l9','l10','drill','ref'];
@@ -1037,6 +1109,7 @@ function go(id){
   if(id==='drill') loadDrill();
   closeSidebarOnMobile();
   saveProgress();
+  updateChatContextLabel();
 }
 
 function complete(current, next){
@@ -1315,6 +1388,140 @@ function nextDrill(){
   if(drillPos % drillOrder.length === 0) drillOrder = shuffle(drills.map((_,i)=>i));
   loadDrill();
 }
+
+// Ask AI chat widget
+const CHAT_ENDPOINT = '/api/chat';
+let chatOpen = false;
+let chatHistory = []; // [{role:'user'|'assistant', content:string}]
+let chatBusy = false;
+
+function pageTitle(id){
+  return document.querySelector('#page-'+id+' h1')?.textContent || null;
+}
+
+function updateChatContextLabel(){
+  const label = document.getElementById('chat-context-label');
+  if(!label) return;
+  const title = pageTitle(currentPage);
+  label.textContent = title ? 'On: ' + title : "Ask about anything you don't understand";
+}
+
+function toggleChat(){
+  chatOpen = !chatOpen;
+  document.getElementById('chat-panel').classList.toggle('open', chatOpen);
+  document.getElementById('chat-toggle').classList.toggle('hidden', chatOpen);
+  if(chatOpen){
+    updateChatContextLabel();
+    document.getElementById('chat-input').focus();
+  }
+}
+
+function escapeHtml(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// Minimal renderer: fenced ```sql code blocks, inline `code`, and **bold** — enough for tutoring replies.
+function formatPlainChatText(text){
+  let esc = escapeHtml(text);
+  esc = esc.replace(/`([^`]+)`/g, '<code>$1</code>');
+  esc = esc.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+  return esc;
+}
+
+function renderChatText(raw){
+  const fenceRe = /```(?:\w+)?\n?([\s\S]*?)```/g;
+  let html = '';
+  let lastIndex = 0;
+  let m;
+  while((m = fenceRe.exec(raw)) !== null){
+    html += formatPlainChatText(raw.slice(lastIndex, m.index));
+    html += '<pre><code>' + escapeHtml(m[1].replace(/\n$/, '')) + '</code></pre>';
+    lastIndex = fenceRe.lastIndex;
+  }
+  html += formatPlainChatText(raw.slice(lastIndex));
+  return html;
+}
+
+function appendChatMessage(role, text, isError){
+  document.getElementById('chat-empty')?.remove();
+  const wrap = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = 'chat-msg ' + role + (isError ? ' error' : '');
+  div.innerHTML = renderChatText(text);
+  wrap.appendChild(div);
+  wrap.scrollTop = wrap.scrollHeight;
+  return div;
+}
+
+function setChatTyping(show){
+  let el = document.getElementById('chat-typing');
+  const wrap = document.getElementById('chat-messages');
+  if(show && !el){
+    el = document.createElement('div');
+    el.className = 'chat-typing';
+    el.id = 'chat-typing';
+    el.innerHTML = '<span></span><span></span><span></span>';
+    wrap.appendChild(el);
+    wrap.scrollTop = wrap.scrollHeight;
+  } else if(!show && el){
+    el.remove();
+  }
+}
+
+async function sendChatMessage(){
+  if(chatBusy) return;
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if(!text) return;
+
+  appendChatMessage('user', text);
+  chatHistory.push({role:'user', content:text});
+  input.value = '';
+  input.style.height = 'auto';
+
+  chatBusy = true;
+  document.getElementById('chat-send').disabled = true;
+  setChatTyping(true);
+
+  try{
+    const res = await fetch(CHAT_ENDPOINT, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        message: text,
+        history: chatHistory.slice(0, -1),
+        lessonContext: { id: currentPage, title: pageTitle(currentPage) }
+      })
+    });
+    const data = await res.json().catch(()=>({}));
+    setChatTyping(false);
+
+    if(!res.ok || !data.reply){
+      appendChatMessage('assistant', data.error || 'Something went wrong reaching the AI tutor. Is the backend deployed with ANTHROPIC_API_KEY set?', true);
+    } else {
+      appendChatMessage('assistant', data.reply);
+      chatHistory.push({role:'assistant', content:data.reply});
+    }
+  } catch(err){
+    setChatTyping(false);
+    appendChatMessage('assistant', 'Could not reach the AI tutor backend. Check your connection or the deployment config.', true);
+  } finally {
+    chatBusy = false;
+    document.getElementById('chat-send').disabled = false;
+  }
+}
+
+const chatInput = document.getElementById('chat-input');
+chatInput.addEventListener('input', () => {
+  chatInput.style.height = 'auto';
+  chatInput.style.height = Math.min(chatInput.scrollHeight, 120) + 'px';
+});
+chatInput.addEventListener('keydown', (e) => {
+  if(e.key === 'Enter' && !e.shiftKey){
+    e.preventDefault();
+    sendChatMessage();
+  }
+});
 
 // Restore saved progress, if any
 loadProgress();
