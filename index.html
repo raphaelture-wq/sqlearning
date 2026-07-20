@@ -220,25 +220,6 @@
   </div>
 
   <div class="card">
-    <div class="card-label">Going further — aliases, DISTINCT, and expressions</div>
-    <p>Use <strong style="color:var(--text)">AS</strong> to rename a column in the output — useful when a name is unclear or you're computing something new.</p>
-    <div class="code-block">
-<span class="kw">SELECT</span> duration_minutes <span class="kw">AS</span> length_mins<br>
-<span class="kw">FROM</span> rides;
-    </div>
-    <p><strong style="color:var(--text)">DISTINCT</strong> removes duplicate rows from the result — handy when you just want the unique set of values in a column.</p>
-    <div class="code-block">
-<span class="kw">SELECT</span> <span class="kw">DISTINCT</span> city<br>
-<span class="kw">FROM</span> rides;
-    </div>
-    <p>You can also compute new values directly in SELECT, not just pull raw columns:</p>
-    <div class="code-block">
-<span class="kw">SELECT</span> ride_id, duration_minutes / <span class="num">60.0</span> <span class="kw">AS</span> duration_hours<br>
-<span class="kw">FROM</span> rides;
-    </div>
-  </div>
-
-  <div class="card">
     <div class="card-label">The table you're working with</div>
     <p>For the next few lessons, you have a table called <code style="color:var(--accent)">rides</code> — Forest bike ride data.</p>
     <table class="sql-table">
@@ -261,6 +242,99 @@
     </div>
     <div class="hint" id="hint-l1">You need SELECT with two column names separated by a comma, then FROM rides.</div>
     <div class="feedback" id="fb-l1"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice — write the query</div>
+    <p>Write a query that returns all columns from the rides table.</p>
+    <textarea id="q-l1b" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l1b')">Check answer</button>
+      <button class="btn" onclick="hint('l1b')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l1b">Use * to mean "every column".</div>
+    <div class="feedback" id="fb-l1b"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Going further — aliases, DISTINCT, and expressions</div>
+    <p>Use <strong style="color:var(--text)">AS</strong> to rename a column in the output — useful when a name is unclear or you're computing something new.</p>
+    <div class="code-block">
+<span class="kw">SELECT</span> duration_minutes <span class="kw">AS</span> length_mins<br>
+<span class="kw">FROM</span> rides;
+    </div>
+    <p><strong style="color:var(--text)">DISTINCT</strong> removes duplicate rows from the result — handy when you just want the unique set of values in a column.</p>
+    <div class="code-block">
+<span class="kw">SELECT</span> <span class="kw">DISTINCT</span> city<br>
+<span class="kw">FROM</span> rides;
+    </div>
+    <p>You can also compute new values directly in SELECT, not just pull raw columns:</p>
+    <div class="code-block">
+<span class="kw">SELECT</span> ride_id, duration_minutes / <span class="num">60.0</span> <span class="kw">AS</span> duration_hours<br>
+<span class="kw">FROM</span> rides;
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice — write the query</div>
+    <p>Write a query that returns the unique (distinct) list of cities in the rides table.</p>
+    <textarea id="q-l1c" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l1c')">Check answer</button>
+      <button class="btn" onclick="hint('l1c')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l1c">SELECT DISTINCT city FROM rides</div>
+    <div class="feedback" id="fb-l1c"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice — write the query</div>
+    <p>Write a query that returns <code style="color:var(--accent)">ride_id</code> and <code style="color:var(--accent)">duration_minutes</code> converted to hours, named <code style="color:var(--accent)">duration_hours</code>.</p>
+    <textarea id="q-l1d" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l1d')">Check answer</button>
+      <button class="btn" onclick="hint('l1d')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l1d">SELECT ride_id, duration_minutes / 60.0 AS duration_hours FROM rides</div>
+    <div class="feedback" id="fb-l1d"></div>
+  </div>
+
+  <div class="section-header" style="margin-top:2rem"><p style="text-transform:uppercase;font-size:11px;letter-spacing:.08em;font-weight:600">Putting it together — 3 more before you move on</p></div>
+
+  <div class="card">
+    <div class="card-label">Practice</div>
+    <p>Write a query that returns <code style="color:var(--accent)">bike_id</code> aliased as <code style="color:var(--accent)">bike</code>, and <code style="color:var(--accent)">duration_minutes</code> aliased as <code style="color:var(--accent)">minutes</code>, for all rides.</p>
+    <textarea id="q-l1e" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l1e')">Check answer</button>
+      <button class="btn" onclick="hint('l1e')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l1e">SELECT bike_id AS bike, duration_minutes AS minutes FROM rides</div>
+    <div class="feedback" id="fb-l1e"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice</div>
+    <p>Write a query that returns the distinct list of <code style="color:var(--accent)">station_id</code> values from rides.</p>
+    <textarea id="q-l1f" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l1f')">Check answer</button>
+      <button class="btn" onclick="hint('l1f')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l1f">SELECT DISTINCT station_id FROM rides</div>
+    <div class="feedback" id="fb-l1f"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice</div>
+    <p>Write a query that returns <code style="color:var(--accent)">ride_id</code> and <code style="color:var(--accent)">city</code> for every row in rides.</p>
+    <textarea id="q-l1g" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l1g')">Check answer</button>
+      <button class="btn" onclick="hint('l1g')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l1g">SELECT ride_id, city FROM rides</div>
+    <div class="feedback" id="fb-l1g"></div>
   </div>
 
   <div class="btn-row"><button class="btn btn-primary" onclick="complete('l1','l2')">Next lesson →</button></div>
@@ -292,6 +366,30 @@
   </div>
 
   <div class="card">
+    <div class="card-label">Practice — write the query</div>
+    <p>Write a query that returns all columns for rides in Manchester.</p>
+    <textarea id="q-l2a2" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l2a2')">Check answer</button>
+      <button class="btn" onclick="hint('l2a2')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l2a2">SELECT * FROM rides WHERE city = 'Manchester'</div>
+    <div class="feedback" id="fb-l2a2"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice — write the query</div>
+    <p>Write a query that returns all columns for London rides with a duration greater than 10 minutes.</p>
+    <textarea id="q-l2a3" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l2a3')">Check answer</button>
+      <button class="btn" onclick="hint('l2a3')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l2a3">SELECT * FROM rides WHERE city = 'London' AND duration_minutes > 10</div>
+    <div class="feedback" id="fb-l2a3"></div>
+  </div>
+
+  <div class="card">
     <div class="card-label">More filtering tools</div>
     <p><strong style="color:var(--text)">BETWEEN</strong> checks a range (inclusive on both ends). <strong style="color:var(--text)">IN</strong> checks against a list of values instead of chaining OR. <strong style="color:var(--text)">LIKE</strong> matches text patterns with <code style="color:var(--accent)">%</code> as a wildcard. <strong style="color:var(--text)">IS NULL</strong> / <strong style="color:var(--text)">IS NOT NULL</strong> checks for missing values — never use <code style="color:var(--accent)">= NULL</code>, it silently matches nothing.</p>
     <div class="code-block">
@@ -309,10 +407,36 @@
     </div>
   </div>
 
-  <div class="rule-box">"WHERE filters rows. You decide which rows survive before anything else runs."</div>
+  <div class="card">
+    <div class="card-label">Practice — write the query</div>
+    <p>Write a query that returns all columns for rides with a duration between 10 and 20 minutes (inclusive), using BETWEEN.</p>
+    <textarea id="q-l2b2" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l2b2')">Check answer</button>
+      <button class="btn" onclick="hint('l2b2')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l2b2">SELECT * FROM rides WHERE duration_minutes BETWEEN 10 AND 20</div>
+    <div class="feedback" id="fb-l2b2"></div>
+  </div>
 
   <div class="card">
     <div class="card-label">Practice — write the query</div>
+    <p>Write a query that returns all columns for rides where the city is either London or Manchester, using IN.</p>
+    <textarea id="q-l2b3" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l2b3')">Check answer</button>
+      <button class="btn" onclick="hint('l2b3')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l2b3">SELECT * FROM rides WHERE city IN ('London', 'Manchester')</div>
+    <div class="feedback" id="fb-l2b3"></div>
+  </div>
+
+  <div class="rule-box">"WHERE filters rows. You decide which rows survive before anything else runs."</div>
+
+  <div class="section-header" style="margin-top:1rem"><p style="text-transform:uppercase;font-size:11px;letter-spacing:.08em;font-weight:600">Putting it together — 3 more before you move on</p></div>
+
+  <div class="card">
+    <div class="card-label">Practice</div>
     <p>Write a query that returns all columns for rides where the duration was more than 15 minutes.</p>
     <textarea id="q-l2" placeholder="Write your SQL here..."></textarea>
     <div class="btn-row">
@@ -321,6 +445,30 @@
     </div>
     <div class="hint" id="hint-l2">SELECT * FROM rides WHERE duration_minutes > 15</div>
     <div class="feedback" id="fb-l2"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice</div>
+    <p>Write a query that returns all columns for rides where the city starts with "Lon", using LIKE.</p>
+    <textarea id="q-l2c" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l2c')">Check answer</button>
+      <button class="btn" onclick="hint('l2c')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l2c">SELECT * FROM rides WHERE city LIKE 'Lon%'</div>
+    <div class="feedback" id="fb-l2c"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice</div>
+    <p>Write a query that returns all columns for rides where <code style="color:var(--accent)">bike_id</code> is not null.</p>
+    <textarea id="q-l2d" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l2d')">Check answer</button>
+      <button class="btn" onclick="hint('l2d')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l2d">SELECT * FROM rides WHERE bike_id IS NOT NULL</div>
+    <div class="feedback" id="fb-l2d"></div>
   </div>
 
   <div class="btn-row"><button class="btn btn-primary" onclick="complete('l2','l3')">Next lesson →</button></div>
@@ -368,6 +516,18 @@
   </div>
 
   <div class="card">
+    <div class="card-label">Practice — write the query</div>
+    <p>Write a query that shows each <code style="color:var(--accent)">city</code> and the total number of rides in that city, named <code style="color:var(--accent)">ride_count</code>.</p>
+    <textarea id="q-l3a2" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l3a2')">Check answer</button>
+      <button class="btn" onclick="hint('l3a2')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l3a2">SELECT city, COUNT(ride_id) AS ride_count FROM rides GROUP BY city</div>
+    <div class="feedback" id="fb-l3a2"></div>
+  </div>
+
+  <div class="card">
     <div class="card-label">Going further — conditional aggregation</div>
     <p>You can put a <strong style="color:var(--text)">CASE</strong> expression inside an aggregate to count or sum only rows that meet a condition — without needing a separate query per condition. This pattern shows up constantly in real analytics work (e.g. "how many orders were late" alongside "how many orders total", in one row).</p>
     <div class="code-block">
@@ -390,6 +550,56 @@
     </div>
     <div class="hint" id="hint-l3b">SELECT station_id, SUM(CASE WHEN duration_minutes > 20 THEN 1 ELSE 0 END) AS long_rides FROM rides GROUP BY station_id</div>
     <div class="feedback" id="fb-l3b"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice — write the query</div>
+    <p>Write a query that shows each <code style="color:var(--accent)">station_id</code> and the number of distinct bikes used there, named <code style="color:var(--accent)">unique_bikes</code>.</p>
+    <textarea id="q-l3b2" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l3b2')">Check answer</button>
+      <button class="btn" onclick="hint('l3b2')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l3b2">SELECT station_id, COUNT(DISTINCT bike_id) AS unique_bikes FROM rides GROUP BY station_id</div>
+    <div class="feedback" id="fb-l3b2"></div>
+  </div>
+
+  <div class="section-header" style="margin-top:1rem"><p style="text-transform:uppercase;font-size:11px;letter-spacing:.08em;font-weight:600">Putting it together — 3 more before you move on</p></div>
+
+  <div class="card">
+    <div class="card-label">Practice</div>
+    <p>Write a query showing each <code style="color:var(--accent)">city</code> and its total <code style="color:var(--accent)">duration_minutes</code> summed, named <code style="color:var(--accent)">total_minutes</code>.</p>
+    <textarea id="q-l3c" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l3c')">Check answer</button>
+      <button class="btn" onclick="hint('l3c')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l3c">SELECT city, SUM(duration_minutes) AS total_minutes FROM rides GROUP BY city</div>
+    <div class="feedback" id="fb-l3c"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice</div>
+    <p>Write a query showing each <code style="color:var(--accent)">station_id</code> and its maximum <code style="color:var(--accent)">duration_minutes</code>, named <code style="color:var(--accent)">max_duration</code>.</p>
+    <textarea id="q-l3d" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l3d')">Check answer</button>
+      <button class="btn" onclick="hint('l3d')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l3d">SELECT station_id, MAX(duration_minutes) AS max_duration FROM rides GROUP BY station_id</div>
+    <div class="feedback" id="fb-l3d"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice</div>
+    <p>Write a query showing each <code style="color:var(--accent)">city</code>, its count of rides named <code style="color:var(--accent)">ride_count</code>, and how many of those rides were "long rides" (over 20 minutes) named <code style="color:var(--accent)">long_rides</code>.</p>
+    <textarea id="q-l3e" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l3e')">Check answer</button>
+      <button class="btn" onclick="hint('l3e')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l3e">SELECT city, COUNT(ride_id) AS ride_count, SUM(CASE WHEN duration_minutes > 20 THEN 1 ELSE 0 END) AS long_rides FROM rides GROUP BY city</div>
+    <div class="feedback" id="fb-l3e"></div>
   </div>
 
   <div class="btn-row"><button class="btn btn-primary" onclick="complete('l3','l4')">Next lesson →</button></div>
@@ -425,6 +635,30 @@
   <div class="rule-box">"WHERE = filter rows. HAVING = filter groups. If you're filtering on something you calculated with COUNT, SUM, or AVG — it's HAVING."</div>
 
   <div class="card">
+    <div class="card-label">Practice — write the query</div>
+    <p>Write a query that shows only the stations with more than 1 ride, using COUNT and HAVING. Show <code style="color:var(--accent)">station_id</code> and <code style="color:var(--accent)">total_rides</code>.</p>
+    <textarea id="q-l4a2" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l4a2')">Check answer</button>
+      <button class="btn" onclick="hint('l4a2')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l4a2">SELECT station_id, COUNT(ride_id) AS total_rides FROM rides GROUP BY station_id HAVING COUNT(ride_id) > 1</div>
+    <div class="feedback" id="fb-l4a2"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice — write the query</div>
+    <p>Write a query that shows only the bikes with more than 1 ride, using COUNT and HAVING. Show <code style="color:var(--accent)">bike_id</code> and <code style="color:var(--accent)">total_rides</code>.</p>
+    <textarea id="q-l4a3" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l4a3')">Check answer</button>
+      <button class="btn" onclick="hint('l4a3')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l4a3">SELECT bike_id, COUNT(ride_id) AS total_rides FROM rides GROUP BY bike_id HAVING COUNT(ride_id) > 1</div>
+    <div class="feedback" id="fb-l4a3"></div>
+  </div>
+
+  <div class="card">
     <div class="card-label">Using WHERE and HAVING together</div>
     <p>A single query can use both — WHERE trims rows before grouping happens, HAVING trims the resulting groups. They're not interchangeable, and using both is common: filter out irrelevant rows early (cheaper), then filter the aggregated result.</p>
     <div class="code-block">
@@ -439,6 +673,32 @@
 
   <div class="card">
     <div class="card-label">Practice — write the query</div>
+    <p>Using WHERE and HAVING together, write a query that shows <code style="color:var(--accent)">station_id</code> and <code style="color:var(--accent)">total_rides</code> (COUNT) for London rides only, but only include stations with more than 1 ride.</p>
+    <textarea id="q-l4b2" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l4b2')">Check answer</button>
+      <button class="btn" onclick="hint('l4b2')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l4b2">SELECT station_id, COUNT(ride_id) AS total_rides FROM rides WHERE city = 'London' GROUP BY station_id HAVING COUNT(ride_id) > 1</div>
+    <div class="feedback" id="fb-l4b2"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice — write the query</div>
+    <p>Using WHERE and HAVING together, write a query that shows <code style="color:var(--accent)">city</code> and <code style="color:var(--accent)">avg_duration</code> (AVG duration_minutes) for rides with a duration greater than 5 minutes, but only include cities with an average duration greater than 15.</p>
+    <textarea id="q-l4b3" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l4b3')">Check answer</button>
+      <button class="btn" onclick="hint('l4b3')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l4b3">SELECT city, AVG(duration_minutes) AS avg_duration FROM rides WHERE duration_minutes > 5 GROUP BY city HAVING AVG(duration_minutes) > 15</div>
+    <div class="feedback" id="fb-l4b3"></div>
+  </div>
+
+  <div class="section-header" style="margin-top:1rem"><p style="text-transform:uppercase;font-size:11px;letter-spacing:.08em;font-weight:600">Putting it together — 3 more before you move on</p></div>
+
+  <div class="card">
+    <div class="card-label">Practice</div>
     <p>Write a query that shows only the stations where the average ride duration is greater than 15 minutes.</p>
     <textarea id="q-l4" placeholder="Write your SQL here..."></textarea>
     <div class="btn-row">
@@ -447,6 +707,30 @@
     </div>
     <div class="hint" id="hint-l4">SELECT station_id, AVG(duration_minutes) AS avg_duration FROM rides GROUP BY station_id HAVING AVG(duration_minutes) > 15</div>
     <div class="feedback" id="fb-l4"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice</div>
+    <p>Write a query showing <code style="color:var(--accent)">station_id</code> and <code style="color:var(--accent)">max_duration</code> (MAX duration_minutes), keeping only stations where the max duration exceeds 20 minutes.</p>
+    <textarea id="q-l4c" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l4c')">Check answer</button>
+      <button class="btn" onclick="hint('l4c')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l4c">SELECT station_id, MAX(duration_minutes) AS max_duration FROM rides GROUP BY station_id HAVING MAX(duration_minutes) > 20</div>
+    <div class="feedback" id="fb-l4c"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice</div>
+    <p>Using WHERE and HAVING together, write a query that shows <code style="color:var(--accent)">city</code> and <code style="color:var(--accent)">ride_count</code> (COUNT) for rides outside Manchester, keeping only cities with 2 or more rides.</p>
+    <textarea id="q-l4d" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l4d')">Check answer</button>
+      <button class="btn" onclick="hint('l4d')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l4d">SELECT city, COUNT(ride_id) AS ride_count FROM rides WHERE city != 'Manchester' GROUP BY city HAVING COUNT(ride_id) >= 2</div>
+    <div class="feedback" id="fb-l4d"></div>
   </div>
 
   <div class="btn-row"><button class="btn btn-primary" onclick="complete('l4','l5')">Next lesson →</button></div>
@@ -474,6 +758,30 @@
     <p>This returns the top 3 busiest stations.</p>
   </div>
 
+  <div class="card">
+    <div class="card-label">Practice — write the query</div>
+    <p>Write a query that returns all rides ordered by <code style="color:var(--accent)">duration_minutes</code> from shortest to longest.</p>
+    <textarea id="q-l5a2" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l5a2')">Check answer</button>
+      <button class="btn" onclick="hint('l5a2')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l5a2">SELECT * FROM rides ORDER BY duration_minutes ASC</div>
+    <div class="feedback" id="fb-l5a2"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice — write the query</div>
+    <p>Write a query that returns the top 2 longest rides, showing <code style="color:var(--accent)">ride_id</code> and <code style="color:var(--accent)">duration_minutes</code>.</p>
+    <textarea id="q-l5a3" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l5a3')">Check answer</button>
+      <button class="btn" onclick="hint('l5a3')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l5a3">SELECT ride_id, duration_minutes FROM rides ORDER BY duration_minutes DESC LIMIT 2</div>
+    <div class="feedback" id="fb-l5a3"></div>
+  </div>
+
   <div class="rule-box">"The full clause order: SELECT → FROM → WHERE → GROUP BY → HAVING → ORDER BY → LIMIT. You don't need all of them, but they must appear in this order when you do."</div>
 
   <div class="card">
@@ -493,6 +801,32 @@
 
   <div class="card">
     <div class="card-label">Practice — write the query</div>
+    <p>Write a query that returns <code style="color:var(--accent)">ride_id</code>, <code style="color:var(--accent)">city</code>, and <code style="color:var(--accent)">duration_minutes</code> for all rides, ordered by <code style="color:var(--accent)">city</code> ascending, then <code style="color:var(--accent)">duration_minutes</code> descending.</p>
+    <textarea id="q-l5b2" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l5b2')">Check answer</button>
+      <button class="btn" onclick="hint('l5b2')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l5b2">SELECT ride_id, city, duration_minutes FROM rides ORDER BY city ASC, duration_minutes DESC</div>
+    <div class="feedback" id="fb-l5b2"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice — write the query</div>
+    <p>Write a query that skips the single longest ride and returns the next 2 longest. Show <code style="color:var(--accent)">ride_id</code> and <code style="color:var(--accent)">duration_minutes</code>.</p>
+    <textarea id="q-l5b3" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l5b3')">Check answer</button>
+      <button class="btn" onclick="hint('l5b3')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l5b3">SELECT ride_id, duration_minutes FROM rides ORDER BY duration_minutes DESC LIMIT 2 OFFSET 1</div>
+    <div class="feedback" id="fb-l5b3"></div>
+  </div>
+
+  <div class="section-header" style="margin-top:1rem"><p style="text-transform:uppercase;font-size:11px;letter-spacing:.08em;font-weight:600">Putting it together — 3 more before you move on</p></div>
+
+  <div class="card">
+    <div class="card-label">Practice</div>
     <p>Write a query that returns the <strong>single bike</strong> with the highest total number of rides. Show the <code style="color:var(--accent)">bike_id</code> and the count, named <code style="color:var(--accent)">ride_count</code>.</p>
     <textarea id="q-l5" placeholder="Write your SQL here..."></textarea>
     <div class="btn-row">
@@ -504,7 +838,7 @@
   </div>
 
   <div class="card">
-    <div class="card-label">Practice — harder</div>
+    <div class="card-label">Practice</div>
     <p>Write a query that returns the ride with the <strong>second-longest</strong> duration overall (not the longest). Show <code style="color:var(--accent)">ride_id</code> and <code style="color:var(--accent)">duration_minutes</code>.</p>
     <textarea id="q-l5b" placeholder="Write your SQL here..."></textarea>
     <div class="btn-row">
@@ -513,6 +847,18 @@
     </div>
     <div class="hint" id="hint-l5b">SELECT ride_id, duration_minutes FROM rides ORDER BY duration_minutes DESC LIMIT 1 OFFSET 1</div>
     <div class="feedback" id="fb-l5b"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice</div>
+    <p>Write a query that returns the station with the fewest rides. Show <code style="color:var(--accent)">station_id</code> and <code style="color:var(--accent)">ride_count</code> (COUNT), ordered so the lowest count comes first, limited to 1.</p>
+    <textarea id="q-l5c" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l5c')">Check answer</button>
+      <button class="btn" onclick="hint('l5c')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l5c">SELECT station_id, COUNT(ride_id) AS ride_count FROM rides GROUP BY station_id ORDER BY ride_count ASC LIMIT 1</div>
+    <div class="feedback" id="fb-l5c"></div>
   </div>
 
   <div class="btn-row"><button class="btn btn-primary" onclick="complete('l5','l6')">Next lesson →</button></div>
@@ -550,6 +896,30 @@
   </div>
 
   <div class="card">
+    <div class="card-label">Practice — write the query</div>
+    <p>Write a query that shows each ride's <code style="color:var(--accent)">ride_id</code>, the <code style="color:var(--accent)">station_name</code> it started from, and the <code style="color:var(--accent)">duration_minutes</code>. Use an INNER JOIN.</p>
+    <textarea id="q-l6" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l6')">Check answer</button>
+      <button class="btn" onclick="hint('l6')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l6">SELECT rides.ride_id, stations.station_name, rides.duration_minutes FROM rides INNER JOIN stations ON rides.station_id = stations.station_id</div>
+    <div class="feedback" id="fb-l6"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice — write the query</div>
+    <p>Write a query using INNER JOIN that shows <code style="color:var(--accent)">station_name</code> and <code style="color:var(--accent)">borough</code> for every ride, alongside the ride's <code style="color:var(--accent)">ride_id</code>.</p>
+    <textarea id="q-l6a2" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l6a2')">Check answer</button>
+      <button class="btn" onclick="hint('l6a2')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l6a2">SELECT rides.ride_id, stations.station_name, stations.borough FROM rides INNER JOIN stations ON rides.station_id = stations.station_id</div>
+    <div class="feedback" id="fb-l6a2"></div>
+  </div>
+
+  <div class="card">
     <div class="card-label">LEFT JOIN — all rows from left table</div>
     <div class="code-block">
 <span class="kw">SELECT</span> rides.ride_id, stations.station_name<br>
@@ -560,6 +930,31 @@
   </div>
 
   <div class="rule-box">"INNER JOIN = only where both sides match. LEFT JOIN = everything from the left table, matched or not."</div>
+
+  <div class="card">
+    <div class="card-label">Practice — harder</div>
+    <p>Write a query that shows every station's <code style="color:var(--accent)">station_name</code> and how many rides started there, named <code style="color:var(--accent)">ride_count</code> — including stations with zero rides (like ST04). An INNER JOIN would silently drop ST04; you need a LEFT JOIN.</p>
+    <textarea id="q-l6b" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l6b')">Check answer</button>
+      <button class="btn" onclick="hint('l6b')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l6b">SELECT stations.station_name, COUNT(rides.ride_id) AS ride_count FROM stations LEFT JOIN rides ON stations.station_id = rides.station_id GROUP BY stations.station_name</div>
+    <div class="feedback" id="fb-l6b"></div>
+    <p style="margin-top:.75rem;font-size:13px;color:var(--muted)">Classic gotcha: use <code style="color:var(--accent)">COUNT(rides.ride_id)</code>, not <code style="color:var(--accent)">COUNT(*)</code>. COUNT(*) counts the row itself even when the join found nothing, so a zero-ride station would wrongly show 1.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice — write the query</div>
+    <p>Write a query using LEFT JOIN that shows every ride's <code style="color:var(--accent)">ride_id</code> and the <code style="color:var(--accent)">station_name</code> it started from.</p>
+    <textarea id="q-l6b2" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l6b2')">Check answer</button>
+      <button class="btn" onclick="hint('l6b2')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l6b2">SELECT rides.ride_id, stations.station_name FROM rides LEFT JOIN stations ON rides.station_id = stations.station_id</div>
+    <div class="feedback" id="fb-l6b2"></div>
+  </div>
 
   <div class="card">
     <div class="card-label">Going further — other join types</div>
@@ -574,27 +969,64 @@
 
   <div class="card">
     <div class="card-label">Practice — write the query</div>
-    <p>Write a query that shows each ride's <code style="color:var(--accent)">ride_id</code>, the <code style="color:var(--accent)">station_name</code> it started from, and the <code style="color:var(--accent)">duration_minutes</code>. Use an INNER JOIN.</p>
-    <textarea id="q-l6" placeholder="Write your SQL here..."></textarea>
+    <p>Write a self-join query that finds pairs of different rides (<code style="color:var(--accent)">a</code> and <code style="color:var(--accent)">b</code>) that used the same bike, where <code style="color:var(--accent)">a.ride_id</code> is less than <code style="color:var(--accent)">b.ride_id</code>. Show <code style="color:var(--accent)">a.ride_id</code>, <code style="color:var(--accent)">b.ride_id</code>, and the shared bike as <code style="color:var(--accent)">a.bike_id</code>.</p>
+    <textarea id="q-l6c" placeholder="Write your SQL here..."></textarea>
     <div class="btn-row">
-      <button class="btn btn-primary" onclick="check('l6')">Check answer</button>
-      <button class="btn" onclick="hint('l6')">Hint</button>
+      <button class="btn btn-primary" onclick="check('l6c')">Check answer</button>
+      <button class="btn" onclick="hint('l6c')">Hint</button>
     </div>
-    <div class="hint" id="hint-l6">SELECT rides.ride_id, stations.station_name, rides.duration_minutes FROM rides INNER JOIN stations ON rides.station_id = stations.station_id</div>
-    <div class="feedback" id="fb-l6"></div>
+    <div class="hint" id="hint-l6c">SELECT a.ride_id, b.ride_id, a.bike_id FROM rides a JOIN rides b ON a.bike_id = b.bike_id AND a.ride_id < b.ride_id</div>
+    <div class="feedback" id="fb-l6c"></div>
   </div>
 
   <div class="card">
-    <div class="card-label">Practice — harder</div>
-    <p>Write a query that shows every station's <code style="color:var(--accent)">station_name</code> and how many rides started there, named <code style="color:var(--accent)">ride_count</code> — including stations with zero rides (like ST04). An INNER JOIN would silently drop ST04; you need a LEFT JOIN.</p>
-    <textarea id="q-l6b" placeholder="Write your SQL here..."></textarea>
+    <div class="card-label">Practice — write the query</div>
+    <p>Using a LEFT JOIN with the tables swapped (as a stand-in for a RIGHT JOIN), write a query that shows every station's <code style="color:var(--accent)">station_name</code> and the <code style="color:var(--accent)">ride_id</code> of any ride there — including stations with no rides.</p>
+    <textarea id="q-l6d" placeholder="Write your SQL here..."></textarea>
     <div class="btn-row">
-      <button class="btn btn-primary" onclick="check('l6b')">Check answer</button>
-      <button class="btn" onclick="hint('l6b')">Hint</button>
+      <button class="btn btn-primary" onclick="check('l6d')">Check answer</button>
+      <button class="btn" onclick="hint('l6d')">Hint</button>
     </div>
-    <div class="hint" id="hint-l6b">SELECT stations.station_name, COUNT(rides.ride_id) AS ride_count FROM stations LEFT JOIN rides ON stations.station_id = rides.station_id GROUP BY stations.station_name</div>
-    <div class="feedback" id="fb-l6b"></div>
-    <p style="margin-top:.75rem;font-size:13px;color:var(--muted)">Classic gotcha: use <code style="color:var(--accent)">COUNT(rides.ride_id)</code>, not <code style="color:var(--accent)">COUNT(*)</code>. COUNT(*) counts the row itself even when the join found nothing, so a zero-ride station would wrongly show 1.</p>
+    <div class="hint" id="hint-l6d">SELECT stations.station_name, rides.ride_id FROM stations LEFT JOIN rides ON stations.station_id = rides.station_id</div>
+    <div class="feedback" id="fb-l6d"></div>
+  </div>
+
+  <div class="section-header" style="margin-top:1rem"><p style="text-transform:uppercase;font-size:11px;letter-spacing:.08em;font-weight:600">Putting it together — 3 more before you move on</p></div>
+
+  <div class="card">
+    <div class="card-label">Practice</div>
+    <p>Write a query that shows each <code style="color:var(--accent)">borough</code> and how many rides happened there, named <code style="color:var(--accent)">ride_count</code>, including boroughs with zero rides. Use LEFT JOIN and GROUP BY.</p>
+    <textarea id="q-l6e" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l6e')">Check answer</button>
+      <button class="btn" onclick="hint('l6e')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l6e">SELECT stations.borough, COUNT(rides.ride_id) AS ride_count FROM stations LEFT JOIN rides ON stations.station_id = rides.station_id GROUP BY stations.borough</div>
+    <div class="feedback" id="fb-l6e"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice</div>
+    <p>Write a query using INNER JOIN that shows the <code style="color:var(--accent)">station_name</code> and average <code style="color:var(--accent)">duration_minutes</code> of rides at that station, named <code style="color:var(--accent)">avg_duration</code>.</p>
+    <textarea id="q-l6f" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l6f')">Check answer</button>
+      <button class="btn" onclick="hint('l6f')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l6f">SELECT stations.station_name, AVG(rides.duration_minutes) AS avg_duration FROM rides INNER JOIN stations ON rides.station_id = stations.station_id GROUP BY stations.station_name</div>
+    <div class="feedback" id="fb-l6f"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice</div>
+    <p>Write a query that lists every <code style="color:var(--accent)">station_name</code> and <code style="color:var(--accent)">borough</code>, along with the <code style="color:var(--accent)">ride_id</code> of rides that started there — including stations with no rides at all.</p>
+    <textarea id="q-l6g" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l6g')">Check answer</button>
+      <button class="btn" onclick="hint('l6g')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l6g">SELECT stations.station_name, stations.borough, rides.ride_id FROM stations LEFT JOIN rides ON stations.station_id = rides.station_id</div>
+    <div class="feedback" id="fb-l6g"></div>
   </div>
 
   <div class="btn-row"><button class="btn btn-primary" onclick="complete('l6','l7')">Next lesson →</button></div>
@@ -617,6 +1049,30 @@
 <span class="kw">WHERE</span> duration_minutes > (<span class="kw">SELECT</span> <span class="fn">AVG</span>(duration_minutes) <span class="kw">FROM</span> rides);
     </div>
     <p>The inner query runs first, returns a single number, and the outer query compares each row's duration against it.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice — write the query</div>
+    <p>Write a query that returns the <code style="color:var(--accent)">station_id</code> and <code style="color:var(--accent)">duration_minutes</code> of rides where the duration is less than the average duration across all rides.</p>
+    <textarea id="q-l7a2" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l7a2')">Check answer</button>
+      <button class="btn" onclick="hint('l7a2')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l7a2">SELECT station_id, duration_minutes FROM rides WHERE duration_minutes < (SELECT AVG(duration_minutes) FROM rides)</div>
+    <div class="feedback" id="fb-l7a2"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice — write the query</div>
+    <p>Write a query that returns the <code style="color:var(--accent)">ride_id</code> and <code style="color:var(--accent)">duration_minutes</code> of the single ride with the longest duration, using a subquery in WHERE instead of ORDER BY/LIMIT.</p>
+    <textarea id="q-l7a3" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l7a3')">Check answer</button>
+      <button class="btn" onclick="hint('l7a3')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l7a3">SELECT ride_id, duration_minutes FROM rides WHERE duration_minutes = (SELECT MAX(duration_minutes) FROM rides)</div>
+    <div class="feedback" id="fb-l7a3"></div>
   </div>
 
   <div class="card">
@@ -661,6 +1117,56 @@
     <div class="feedback" id="fb-l7b"></div>
   </div>
 
+  <div class="card">
+    <div class="card-label">Practice — write the query</div>
+    <p>Using a CTE named <code style="color:var(--accent)">station_avg</code> that computes each station's average <code style="color:var(--accent)">duration_minutes</code>, write a query that returns <code style="color:var(--accent)">station_id</code> and <code style="color:var(--accent)">avg_duration</code> for every station, ordered by <code style="color:var(--accent)">avg_duration</code> descending.</p>
+    <textarea id="q-l7b2" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l7b2')">Check answer</button>
+      <button class="btn" onclick="hint('l7b2')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l7b2">WITH station_avg AS (SELECT station_id, AVG(duration_minutes) AS avg_duration FROM rides GROUP BY station_id) SELECT station_id, avg_duration FROM station_avg ORDER BY avg_duration DESC</div>
+    <div class="feedback" id="fb-l7b2"></div>
+  </div>
+
+  <div class="section-header" style="margin-top:1rem"><p style="text-transform:uppercase;font-size:11px;letter-spacing:.08em;font-weight:600">Putting it together — 3 more before you move on</p></div>
+
+  <div class="card">
+    <div class="card-label">Practice</div>
+    <p>Using a CTE named <code style="color:var(--accent)">bike_counts</code> that counts rides per <code style="color:var(--accent)">bike_id</code>, write a query that returns only the <code style="color:var(--accent)">bike_id</code> values with more than 1 ride.</p>
+    <textarea id="q-l7c" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l7c')">Check answer</button>
+      <button class="btn" onclick="hint('l7c')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l7c">WITH bike_counts AS (SELECT bike_id, COUNT(ride_id) AS ride_count FROM rides GROUP BY bike_id) SELECT bike_id FROM bike_counts WHERE ride_count > 1</div>
+    <div class="feedback" id="fb-l7c"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice</div>
+    <p>Write a query that returns all columns for rides at stations whose average duration (computed in a subquery) is greater than 15 minutes.</p>
+    <textarea id="q-l7d" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l7d')">Check answer</button>
+      <button class="btn" onclick="hint('l7d')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l7d">SELECT * FROM rides WHERE station_id IN (SELECT station_id FROM rides GROUP BY station_id HAVING AVG(duration_minutes) > 15)</div>
+    <div class="feedback" id="fb-l7d"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice</div>
+    <p>Write a query that returns rides where the duration is greater than the average duration across all rides, but this time select only <code style="color:var(--accent)">ride_id</code> and <code style="color:var(--accent)">duration_minutes</code> (not all columns).</p>
+    <textarea id="q-l7e" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l7e')">Check answer</button>
+      <button class="btn" onclick="hint('l7e')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l7e">SELECT ride_id, duration_minutes FROM rides WHERE duration_minutes > (SELECT AVG(duration_minutes) FROM rides)</div>
+    <div class="feedback" id="fb-l7e"></div>
+  </div>
+
   <div class="btn-row"><button class="btn btn-primary" onclick="complete('l7','l8')">Next lesson →</button></div>
 </div>
 
@@ -684,13 +1190,6 @@
   </div>
 
   <div class="card">
-    <div class="card-label">RANK vs DENSE_RANK vs ROW_NUMBER</div>
-    <p><strong style="color:var(--text)">ROW_NUMBER()</strong> always gives 1, 2, 3... with no ties. <strong style="color:var(--text)">RANK()</strong> gives ties the same number, then skips (1, 2, 2, 4). <strong style="color:var(--text)">DENSE_RANK()</strong> gives ties the same number without skipping (1, 2, 2, 3). <strong style="color:var(--text)">LAG()</strong> / <strong style="color:var(--text)">LEAD()</strong> pull a value from the previous / next row in the ordering — useful for comparing a row to what came before it.</p>
-  </div>
-
-  <div class="rule-box">"A window function can't be used directly in WHERE — it's calculated after WHERE and GROUP BY have already run. To filter on one (e.g. 'just the top row per group'), wrap it in a CTE or subquery first, then filter the outer query."</div>
-
-  <div class="card">
     <div class="card-label">Practice — write the query</div>
     <p>Write a query that shows each ride's <code style="color:var(--accent)">ride_id</code>, <code style="color:var(--accent)">station_id</code>, and <code style="color:var(--accent)">duration_minutes</code>, plus its rank within its own station by duration (longest = 1). Name the column <code style="color:var(--accent)">duration_rank</code> and use RANK().</p>
     <textarea id="q-l8a" placeholder="Write your SQL here..."></textarea>
@@ -703,6 +1202,25 @@
   </div>
 
   <div class="card">
+    <div class="card-label">Practice — write the query</div>
+    <p>Write a query that shows each ride's <code style="color:var(--accent)">ride_id</code>, <code style="color:var(--accent)">city</code>, and <code style="color:var(--accent)">duration_minutes</code>, plus its rank within its own city by duration (longest = 1), named <code style="color:var(--accent)">duration_rank</code>, using RANK().</p>
+    <textarea id="q-l8a2" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l8a2')">Check answer</button>
+      <button class="btn" onclick="hint('l8a2')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l8a2">SELECT ride_id, city, duration_minutes, RANK() OVER (PARTITION BY city ORDER BY duration_minutes DESC) AS duration_rank FROM rides</div>
+    <div class="feedback" id="fb-l8a2"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">RANK vs DENSE_RANK vs ROW_NUMBER</div>
+    <p><strong style="color:var(--text)">ROW_NUMBER()</strong> always gives 1, 2, 3... with no ties. <strong style="color:var(--text)">RANK()</strong> gives ties the same number, then skips (1, 2, 2, 4). <strong style="color:var(--text)">DENSE_RANK()</strong> gives ties the same number without skipping (1, 2, 2, 3). <strong style="color:var(--text)">LAG()</strong> / <strong style="color:var(--text)">LEAD()</strong> pull a value from the previous / next row in the ordering — useful for comparing a row to what came before it.</p>
+  </div>
+
+  <div class="rule-box">"A window function can't be used directly in WHERE — it's calculated after WHERE and GROUP BY have already run. To filter on one (e.g. 'just the top row per group'), wrap it in a CTE or subquery first, then filter the outer query."</div>
+
+  <div class="card">
     <div class="card-label">Practice — harder</div>
     <p>Window functions can't go in WHERE directly. Using a CTE named <code style="color:var(--accent)">ranked</code> with <code style="color:var(--accent)">ROW_NUMBER()</code>, write a query that returns only the single longest ride at each station. Show <code style="color:var(--accent)">ride_id</code>, <code style="color:var(--accent)">station_id</code>, and <code style="color:var(--accent)">duration_minutes</code>.</p>
     <textarea id="q-l8b" placeholder="Write your SQL here..."></textarea>
@@ -712,6 +1230,56 @@
     </div>
     <div class="hint" id="hint-l8b">WITH ranked AS (SELECT ride_id, station_id, duration_minutes, ROW_NUMBER() OVER (PARTITION BY station_id ORDER BY duration_minutes DESC) AS rn FROM rides) SELECT ride_id, station_id, duration_minutes FROM ranked WHERE rn = 1</div>
     <div class="feedback" id="fb-l8b"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice — write the query</div>
+    <p>Write a query that shows each ride's <code style="color:var(--accent)">ride_id</code>, <code style="color:var(--accent)">station_id</code>, and <code style="color:var(--accent)">duration_minutes</code>, plus a dense-rank column named <code style="color:var(--accent)">duration_dense_rank</code> ranking rides within their station by duration (longest = 1), using DENSE_RANK().</p>
+    <textarea id="q-l8b2" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l8b2')">Check answer</button>
+      <button class="btn" onclick="hint('l8b2')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l8b2">SELECT ride_id, station_id, duration_minutes, DENSE_RANK() OVER (PARTITION BY station_id ORDER BY duration_minutes DESC) AS duration_dense_rank FROM rides</div>
+    <div class="feedback" id="fb-l8b2"></div>
+  </div>
+
+  <div class="section-header" style="margin-top:1rem"><p style="text-transform:uppercase;font-size:11px;letter-spacing:.08em;font-weight:600">Putting it together — 3 more before you move on</p></div>
+
+  <div class="card">
+    <div class="card-label">Practice</div>
+    <p>Write a query that shows each ride's <code style="color:var(--accent)">ride_id</code>, <code style="color:var(--accent)">station_id</code>, and <code style="color:var(--accent)">duration_minutes</code>, plus a row number named <code style="color:var(--accent)">rn</code> numbering rides within their station ordered by duration ascending, using ROW_NUMBER().</p>
+    <textarea id="q-l8c" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l8c')">Check answer</button>
+      <button class="btn" onclick="hint('l8c')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l8c">SELECT ride_id, station_id, duration_minutes, ROW_NUMBER() OVER (PARTITION BY station_id ORDER BY duration_minutes ASC) AS rn FROM rides</div>
+    <div class="feedback" id="fb-l8c"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice</div>
+    <p>Using a CTE named <code style="color:var(--accent)">ranked</code> with <code style="color:var(--accent)">DENSE_RANK()</code>, write a query that returns only the second-longest ride at each station. Show <code style="color:var(--accent)">ride_id</code>, <code style="color:var(--accent)">station_id</code>, and <code style="color:var(--accent)">duration_minutes</code>.</p>
+    <textarea id="q-l8d" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l8d')">Check answer</button>
+      <button class="btn" onclick="hint('l8d')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l8d">WITH ranked AS (SELECT ride_id, station_id, duration_minutes, DENSE_RANK() OVER (PARTITION BY station_id ORDER BY duration_minutes DESC) AS dr FROM rides) SELECT ride_id, station_id, duration_minutes FROM ranked WHERE dr = 2</div>
+    <div class="feedback" id="fb-l8d"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice</div>
+    <p>Write a query that shows each ride's <code style="color:var(--accent)">ride_id</code>, <code style="color:var(--accent)">city</code>, <code style="color:var(--accent)">duration_minutes</code>, and the duration of the previous ride in that city (ordered by <code style="color:var(--accent)">ride_id</code>), named <code style="color:var(--accent)">prev_duration</code>, using LAG().</p>
+    <textarea id="q-l8e" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l8e')">Check answer</button>
+      <button class="btn" onclick="hint('l8e')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l8e">SELECT ride_id, city, duration_minutes, LAG(duration_minutes) OVER (PARTITION BY city ORDER BY ride_id) AS prev_duration FROM rides</div>
+    <div class="feedback" id="fb-l8e"></div>
   </div>
 
   <div class="btn-row"><button class="btn btn-primary" onclick="complete('l8','l9')">Next lesson →</button></div>
@@ -772,6 +1340,20 @@
   </div>
 
   <div class="card">
+    <div class="card-label">Practice — write the query</div>
+    <p>Write a query that combines both order tables into a single list of just <code style="color:var(--accent)">order_id</code> and <code style="color:var(--accent)">customer</code> for every order in both systems, using UNION ALL.</p>
+    <textarea id="q-l9a2" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l9a2')">Check answer</button>
+      <button class="btn" onclick="hint('l9a2')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l9a2">SELECT order_id, customer FROM orders_og UNION ALL SELECT order_id, customer FROM orders_bureau</div>
+    <div class="feedback" id="fb-l9a2"></div>
+  </div>
+
+  <div class="section-header" style="margin-top:1rem"><p style="text-transform:uppercase;font-size:11px;letter-spacing:.08em;font-weight:600">Putting it together — 3 more before you move on</p></div>
+
+  <div class="card">
     <div class="card-label">Practice — harder</div>
     <p>Managers keep asking which system each order came from. Write the same combined query, but add a column named <code style="color:var(--accent)">source_system</code> showing <code style="color:var(--accent)">'Office Goods'</code> for rows from orders_og and <code style="color:var(--accent)">'Bureau SAS'</code> for rows from orders_bureau.</p>
     <textarea id="q-l9b" placeholder="Write your SQL here..."></textarea>
@@ -781,6 +1363,30 @@
     </div>
     <div class="hint" id="hint-l9b">SELECT order_id, customer, status, order_date, 'Office Goods' AS source_system FROM orders_og UNION ALL SELECT order_id, customer, status, order_date, 'Bureau SAS' AS source_system FROM orders_bureau</div>
     <div class="feedback" id="fb-l9b"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice</div>
+    <p>Write a query that returns the distinct list of <code style="color:var(--accent)">status</code> values used across both order systems combined, using UNION (not UNION ALL) so duplicates are removed.</p>
+    <textarea id="q-l9c" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l9c')">Check answer</button>
+      <button class="btn" onclick="hint('l9c')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l9c">SELECT status FROM orders_og UNION SELECT status FROM orders_bureau</div>
+    <div class="feedback" id="fb-l9c"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice</div>
+    <p>Write a query that combines <code style="color:var(--accent)">order_id</code> and <code style="color:var(--accent)">order_date</code> from both systems into one list, ordered by <code style="color:var(--accent)">order_date</code> ascending.</p>
+    <textarea id="q-l9d" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l9d')">Check answer</button>
+      <button class="btn" onclick="hint('l9d')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l9d">SELECT order_id, order_date FROM orders_og UNION ALL SELECT order_id, order_date FROM orders_bureau ORDER BY order_date ASC</div>
+    <div class="feedback" id="fb-l9d"></div>
   </div>
 
   <div class="btn-row"><button class="btn btn-primary" onclick="complete('l9','l10')">Go to the capstone →</button></div>
@@ -1123,20 +1729,69 @@ document.addEventListener('keydown', e=>{
 // Answer checking
 const answers = {
   l1: ['select station_id, duration_minutes from rides','select duration_minutes, station_id from rides'],
+  l1b: ['select * from rides'],
+  l1c: ['select distinct city from rides'],
+  l1d: ['select ride_id, duration_minutes / 60.0 as duration_hours from rides'],
+  l1e: ['select bike_id as bike, duration_minutes as minutes from rides'],
+  l1f: ['select distinct station_id from rides'],
+  l1g: ['select ride_id, city from rides'],
   l2: ['select * from rides where duration_minutes > 15'],
+  l2a2: ["select * from rides where city = 'manchester'"],
+  l2a3: ["select * from rides where city = 'london' and duration_minutes > 10"],
+  l2b2: ['select * from rides where duration_minutes between 10 and 20'],
+  l2b3: ["select * from rides where city in ('london', 'manchester')"],
+  l2c: ["select * from rides where city like 'lon%'"],
+  l2d: ['select * from rides where bike_id is not null'],
   l3: ['select station_id, avg(duration_minutes) as avg_duration from rides group by station_id'],
+  l3a2: ['select city, count(ride_id) as ride_count from rides group by city','select city, count(*) as ride_count from rides group by city'],
   l3b: ['select station_id, sum(case when duration_minutes > 20 then 1 else 0 end) as long_rides from rides group by station_id'],
+  l3b2: ['select station_id, count(distinct bike_id) as unique_bikes from rides group by station_id'],
+  l3c: ['select city, sum(duration_minutes) as total_minutes from rides group by city'],
+  l3d: ['select station_id, max(duration_minutes) as max_duration from rides group by station_id'],
+  l3e: ['select city, count(ride_id) as ride_count, sum(case when duration_minutes > 20 then 1 else 0 end) as long_rides from rides group by city','select city, count(*) as ride_count, sum(case when duration_minutes > 20 then 1 else 0 end) as long_rides from rides group by city'],
   l4: ['select station_id, avg(duration_minutes) as avg_duration from rides group by station_id having avg(duration_minutes) > 15'],
+  l4a2: ['select station_id, count(ride_id) as total_rides from rides group by station_id having count(ride_id) > 1','select station_id, count(*) as total_rides from rides group by station_id having count(*) > 1'],
+  l4a3: ['select bike_id, count(ride_id) as total_rides from rides group by bike_id having count(ride_id) > 1','select bike_id, count(*) as total_rides from rides group by bike_id having count(*) > 1'],
+  l4b2: ["select station_id, count(ride_id) as total_rides from rides where city = 'london' group by station_id having count(ride_id) > 1"],
+  l4b3: ['select city, avg(duration_minutes) as avg_duration from rides where duration_minutes > 5 group by city having avg(duration_minutes) > 15'],
+  l4c: ['select station_id, max(duration_minutes) as max_duration from rides group by station_id having max(duration_minutes) > 20'],
+  l4d: ["select city, count(ride_id) as ride_count from rides where city != 'manchester' group by city having count(ride_id) >= 2"],
   l5: ['select bike_id, count(ride_id) as ride_count from rides group by bike_id order by ride_count desc limit 1'],
+  l5a2: ['select * from rides order by duration_minutes asc'],
+  l5a3: ['select ride_id, duration_minutes from rides order by duration_minutes desc limit 2'],
   l5b: ['select ride_id, duration_minutes from rides order by duration_minutes desc limit 1 offset 1'],
+  l5b2: ['select ride_id, city, duration_minutes from rides order by city asc, duration_minutes desc'],
+  l5b3: ['select ride_id, duration_minutes from rides order by duration_minutes desc limit 2 offset 1'],
+  l5c: ['select station_id, count(ride_id) as ride_count from rides group by station_id order by ride_count asc limit 1','select station_id, count(*) as ride_count from rides group by station_id order by ride_count asc limit 1'],
   l6: ['select rides.ride_id, stations.station_name, rides.duration_minutes from rides inner join stations on rides.station_id = stations.station_id'],
+  l6a2: ['select rides.ride_id, stations.station_name, stations.borough from rides inner join stations on rides.station_id = stations.station_id'],
   l6b: ['select stations.station_name, count(rides.ride_id) as ride_count from stations left join rides on stations.station_id = rides.station_id group by stations.station_name'],
+  l6b2: ['select rides.ride_id, stations.station_name from rides left join stations on rides.station_id = stations.station_id'],
+  l6c: ['select a.ride_id, b.ride_id, a.bike_id from rides a join rides b on a.bike_id = b.bike_id and a.ride_id < b.ride_id'],
+  l6d: ['select stations.station_name, rides.ride_id from stations left join rides on stations.station_id = rides.station_id'],
+  l6e: ['select stations.borough, count(rides.ride_id) as ride_count from stations left join rides on stations.station_id = rides.station_id group by stations.borough'],
+  l6f: ['select stations.station_name, avg(rides.duration_minutes) as avg_duration from rides inner join stations on rides.station_id = stations.station_id group by stations.station_name'],
+  l6g: ['select stations.station_name, stations.borough, rides.ride_id from stations left join rides on stations.station_id = rides.station_id'],
   l7a: ['select * from rides where duration_minutes > (select avg(duration_minutes) from rides)'],
+  l7a2: ['select station_id, duration_minutes from rides where duration_minutes < (select avg(duration_minutes) from rides)'],
+  l7a3: ['select ride_id, duration_minutes from rides where duration_minutes = (select max(duration_minutes) from rides)'],
   l7b: ['with station_avg as (select station_id, avg(duration_minutes) as avg_duration from rides group by station_id) select rides.ride_id, rides.station_id, rides.duration_minutes from rides join station_avg on rides.station_id = station_avg.station_id where rides.duration_minutes > station_avg.avg_duration'],
+  l7b2: ['with station_avg as (select station_id, avg(duration_minutes) as avg_duration from rides group by station_id) select station_id, avg_duration from station_avg order by avg_duration desc'],
+  l7c: ['with bike_counts as (select bike_id, count(ride_id) as ride_count from rides group by bike_id) select bike_id from bike_counts where ride_count > 1'],
+  l7d: ['select * from rides where station_id in (select station_id from rides group by station_id having avg(duration_minutes) > 15)'],
+  l7e: ['select ride_id, duration_minutes from rides where duration_minutes > (select avg(duration_minutes) from rides)'],
   l8a: ['select ride_id, station_id, duration_minutes, rank() over (partition by station_id order by duration_minutes desc) as duration_rank from rides'],
+  l8a2: ['select ride_id, city, duration_minutes, rank() over (partition by city order by duration_minutes desc) as duration_rank from rides'],
   l8b: ['with ranked as (select ride_id, station_id, duration_minutes, row_number() over (partition by station_id order by duration_minutes desc) as rn from rides) select ride_id, station_id, duration_minutes from ranked where rn = 1'],
+  l8b2: ['select ride_id, station_id, duration_minutes, dense_rank() over (partition by station_id order by duration_minutes desc) as duration_dense_rank from rides'],
+  l8c: ['select ride_id, station_id, duration_minutes, row_number() over (partition by station_id order by duration_minutes asc) as rn from rides'],
+  l8d: ['with ranked as (select ride_id, station_id, duration_minutes, dense_rank() over (partition by station_id order by duration_minutes desc) as dr from rides) select ride_id, station_id, duration_minutes from ranked where dr = 2'],
+  l8e: ['select ride_id, city, duration_minutes, lag(duration_minutes) over (partition by city order by ride_id) as prev_duration from rides'],
   l9a: ['select order_id, customer, status, order_date from orders_og union all select order_id, customer, status, order_date from orders_bureau'],
+  l9a2: ['select order_id, customer from orders_og union all select order_id, customer from orders_bureau'],
   l9b: ["select order_id, customer, status, order_date, 'office goods' as source_system from orders_og union all select order_id, customer, status, order_date, 'bureau sas' as source_system from orders_bureau"],
+  l9c: ['select status from orders_og union select status from orders_bureau'],
+  l9d: ['select order_id, order_date from orders_og union all select order_id, order_date from orders_bureau order by order_date asc'],
   l10a: ["select order_id, customer, status, order_date, 'office goods' as source_system from orders_og union all select order_id, customer, status, order_date, 'bureau sas' as source_system from orders_bureau"],
   l10b: ["select order_id, customer, status as status_clean, order_date from orders_og union all select order_id, customer, case status when 'awaiting' then 'pending' when 'dispatched' then 'shipped' when 'delivered' then 'delivered' end as status_clean, order_date from orders_bureau"],
   l10c: ['with unified as (select order_id, customer, order_date from orders_og union all select order_id, customer, order_date from orders_bureau) select unified.order_id, unified.customer from unified left join assignments on unified.order_id = assignments.order_id where assignments.assigned_to is null'],
