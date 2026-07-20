@@ -64,13 +64,32 @@ open index.html
 
 Or just download the ZIP and open `index.html` directly in Chrome.
 
+Opening `index.html` directly (no server) works fine for every lesson, drill, and the reference page — the only feature that needs deployment is the **Ask AI** tutor below.
+
+---
+
+## Ask AI — an in-app SQL tutor
+
+There's a chat panel (bottom-right "💬 Ask AI" button) for whenever a concept doesn't click. It's grounded in this app's exact curriculum — the same tables, lessons, and terminology you're seeing on screen — so answers stay consistent with what you've already learned instead of introducing new jargon.
+
+It needs a small backend to keep the Claude API key off the client, so it only works once deployed (not when opening `index.html` locally from disk). To deploy:
+
+1. Push this repo to GitHub.
+2. Import it into [Vercel](https://vercel.com/new) (or run `vercel` from the CLI). No build config needed — Vercel serves `index.html` as a static file and `api/chat.js` as a serverless function automatically.
+3. In the Vercel project settings, add an environment variable `ANTHROPIC_API_KEY` with your [Anthropic API key](https://console.anthropic.com/settings/keys).
+4. Redeploy. The chat button will now work on the deployed URL.
+
+The proxy (`api/chat.js`) never returns the API key to the browser — it just forwards your question plus your current lesson as context to Claude and relays the reply back.
+
 ---
 
 ## File structure
 
 ```
-├── index.html    # Full app — all lessons, drills, and reference
-└── README.md     # This file
+├── index.html      # Full app — all lessons, drills, reference, and the Ask AI widget
+├── api/chat.js     # Serverless proxy that calls the Claude API (keeps the key server-side)
+├── .env.example    # Template for the ANTHROPIC_API_KEY env var
+└── README.md       # This file
 ```
 
 ---
