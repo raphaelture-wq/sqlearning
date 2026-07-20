@@ -1893,13 +1893,13 @@ function check(id){
   }
   const input = normalise(raw);
   const correct = answers[id].some(a=>normalise(a)===input);
+  const hintEl = document.getElementById('hint-'+id);
   fb.className = 'feedback show '+(correct?'correct':'wrong');
   if(correct){
     fb.textContent = '✓ Correct. Solid. Move on.';
+    hintEl.classList.remove('show');
   } else {
-    const hint = document.getElementById('hint-'+id);
-    hint.classList.add('show');
-    fb.textContent = '✗ Not quite. Check the hint and try again — the logic matters more than exact syntax.';
+    fb.textContent = '✗ Not quite. The logic matters more than exact syntax — try again, or click Hint if you want a nudge.';
   }
 }
 
@@ -2027,9 +2027,9 @@ function checkDrill(){
   }
   if(correct){
     fb.textContent = '✓ Correct.';
+    document.getElementById('hint-drill').classList.remove('show');
   } else {
-    document.getElementById('hint-drill').classList.add('show');
-    fb.textContent = '✗ Not quite. Check the hint.';
+    fb.textContent = '✗ Not quite. Try again, or click Hint if you want a nudge.';
   }
   document.getElementById('drill-next-wrap').style.display = 'block';
 }
