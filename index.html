@@ -1817,11 +1817,15 @@ const answers = {
   l2d: ['select * from rides where bike_id is not null'],
   l3: ['select station_id, avg(duration_minutes) as avg_duration from rides group by station_id'],
   l3a2: ['select city, count(ride_id) as ride_count from rides group by city','select city, count(*) as ride_count from rides group by city'],
-  l3b: ['select station_id, sum(case when duration_minutes > 20 then 1 else 0 end) as long_rides from rides group by station_id'],
+  l3b: ['select station_id, sum(case when duration_minutes > 20 then 1 else 0 end) as long_rides from rides group by station_id',
+        'select station_id, count(case when duration_minutes > 20 then 1 end) as long_rides from rides group by station_id'],
   l3b2: ['select station_id, count(distinct bike_id) as unique_bikes from rides group by station_id'],
   l3c: ['select city, sum(duration_minutes) as total_minutes from rides group by city'],
   l3d: ['select station_id, max(duration_minutes) as max_duration from rides group by station_id'],
-  l3e: ['select city, count(ride_id) as ride_count, sum(case when duration_minutes > 20 then 1 else 0 end) as long_rides from rides group by city','select city, count(*) as ride_count, sum(case when duration_minutes > 20 then 1 else 0 end) as long_rides from rides group by city'],
+  l3e: ['select city, count(ride_id) as ride_count, sum(case when duration_minutes > 20 then 1 else 0 end) as long_rides from rides group by city',
+        'select city, count(*) as ride_count, sum(case when duration_minutes > 20 then 1 else 0 end) as long_rides from rides group by city',
+        'select city, count(ride_id) as ride_count, count(case when duration_minutes > 20 then 1 end) as long_rides from rides group by city',
+        'select city, count(*) as ride_count, count(case when duration_minutes > 20 then 1 end) as long_rides from rides group by city'],
   l4: ['select station_id, avg(duration_minutes) as avg_duration from rides group by station_id having avg(duration_minutes) > 15'],
   l4a2: ['select station_id, count(ride_id) as total_rides from rides group by station_id having count(ride_id) > 1','select station_id, count(*) as total_rides from rides group by station_id having count(*) > 1'],
   l4a3: ['select bike_id, count(ride_id) as total_rides from rides group by bike_id having count(ride_id) > 1','select bike_id, count(*) as total_rides from rides group by bike_id having count(*) > 1'],
@@ -1879,6 +1883,7 @@ function normalise(s){
     .replace(/\(\s+/g, '(')
     .replace(/\s+\)/g, ')')
     .replace(/\s*,\s*/g, ', ')
+    .replace(/\bas\b/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
 }
@@ -1893,13 +1898,13 @@ function check(id){
   }
   const input = normalise(raw);
   const correct = answers[id].some(a=>normalise(a)===input);
+  const hintEl = document.getElementById('hint-'+id);
   fb.className = 'feedback show '+(correct?'correct':'wrong');
   if(correct){
     fb.textContent = '✓ Correct. Solid. Move on.';
+    hintEl.classList.remove('show');
   } else {
-    const hint = document.getElementById('hint-'+id);
-    hint.classList.add('show');
-    fb.textContent = '✗ Not quite. Check the hint and try again — the logic matters more than exact syntax.';
+    fb.textContent = '✗ Not quite. The logic matters more than exact syntax — try again, or click Hint if you want a nudge.';
   }
 }
 
@@ -2027,9 +2032,9 @@ function checkDrill(){
   }
   if(correct){
     fb.textContent = '✓ Correct.';
+    document.getElementById('hint-drill').classList.remove('show');
   } else {
-    document.getElementById('hint-drill').classList.add('show');
-    fb.textContent = '✗ Not quite. Check the hint.';
+    fb.textContent = '✗ Not quite. Try again, or click Hint if you want a nudge.';
   }
   document.getElementById('drill-next-wrap').style.display = 'block';
 }
