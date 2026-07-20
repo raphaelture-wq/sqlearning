@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Interactive SQL prep for data science interviews — lessons, drills, and a quick reference.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🗄️</text></svg>">
 <title>SQL Prep — Palantir DS</title>
 <style>
   :root {
@@ -26,8 +28,36 @@
 
   /* Layout */
   .app { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
-  .sidebar { background: var(--surface); border-right: 1px solid var(--border); padding: 1.5rem 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+  .sidebar { background: var(--surface); border-right: 1px solid var(--border); padding: 1.5rem 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; display: flex; flex-direction: column; }
   .main { padding: 2rem; max-width: 760px; }
+
+  /* Focus visibility (keyboard nav) */
+  a:focus-visible, button:focus-visible, .nav-item:focus-visible, textarea:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 2px;
+  }
+
+  /* Mobile menu toggle */
+  .menu-toggle {
+    display: none; position: fixed; top: 1rem; left: 1rem; z-index: 60;
+    width: 40px; height: 40px; align-items: center; justify-content: center;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    color: var(--text); font-size: 18px; cursor: pointer;
+  }
+  .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 40; }
+
+  @media (max-width: 860px) {
+    .app { grid-template-columns: 1fr; }
+    .menu-toggle { display: flex; }
+    .sidebar {
+      position: fixed; top: 0; left: 0; width: 260px; z-index: 50;
+      transform: translateX(-100%); transition: transform .2s ease;
+      box-shadow: 2px 0 24px rgba(0,0,0,.4);
+    }
+    .sidebar.open { transform: translateX(0); }
+    .sidebar-overlay.show { display: block; }
+    .main { padding: 4.5rem 1.25rem 2rem; max-width: 100%; }
+    .sql-table { display: block; overflow-x: auto; white-space: nowrap; }
+  }
 
   /* Sidebar */
   .sidebar-title { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; padding: 0 1.25rem; margin-bottom: 1rem; }
@@ -106,6 +136,14 @@
   .drill-meta { display: flex; gap: .75rem; margin-bottom: 1rem; flex-wrap: wrap; }
   .domain-tag { font-size: 11px; padding: 3px 10px; border-radius: 20px; border: 1px solid var(--border); color: var(--muted); }
 
+  /* System diagram (capstone) */
+  .diagram { display: flex; align-items: center; justify-content: center; gap: .75rem; flex-wrap: wrap; margin: 1rem 0; }
+  .diagram-col { display: flex; flex-direction: column; align-items: center; gap: .5rem; }
+  .diagram-box { border: 1px solid var(--border); background: var(--surface2); border-radius: 8px; padding: .75rem 1rem; text-align: center; font-size: 13px; color: #ccc; min-width: 150px; }
+  .diagram-box span { display: block; font-size: 11px; color: var(--muted); margin-top: .25rem; font-family: var(--mono); }
+  .diagram-box.highlight { border-color: var(--accent); color: var(--text); background: var(--accent-dim); }
+  .diagram-arrow { font-size: 22px; color: var(--muted); }
+
   /* Hidden */
   .page { display: none; }
   .page.active { display: block; }
@@ -113,10 +151,13 @@
 </head>
 <body>
 
+<button class="menu-toggle" id="menu-toggle" onclick="toggleSidebar()" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
 <div class="app">
 
 <!-- SIDEBAR -->
-<nav class="sidebar">
+<nav class="sidebar" id="sidebar" aria-label="Lesson navigation">
   <div class="sidebar-title">SQL Prep · DS</div>
 
   <div class="progress-wrap">
@@ -125,6 +166,7 @@
       <span id="prog-label">0 / 7</span>
     </div>
     <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+    <div id="completion-msg" style="display:none;color:var(--success);font-size:11px;margin-top:.5rem">🎉 All lessons complete — nice work.</div>
   </div>
 
   <div class="nav-section">
@@ -135,13 +177,20 @@
     <div class="nav-item" id="nav-l4" onclick="go('l4')"><div class="check" id="chk-l4"></div>HAVING</div>
     <div class="nav-item" id="nav-l5" onclick="go('l5')"><div class="check" id="chk-l5"></div>ORDER BY & LIMIT</div>
     <div class="nav-item" id="nav-l6" onclick="go('l6')"><div class="check" id="chk-l6"></div>JOINs</div>
-    <div class="nav-item" id="nav-l7" onclick="go('l7')"><div class="check" id="chk-l7"></div>Read a Table → Answer</div>
+    <div class="nav-item" id="nav-l7" onclick="go('l7')"><div class="check" id="chk-l7"></div>Subqueries & CTEs</div>
+    <div class="nav-item" id="nav-l8" onclick="go('l8')"><div class="check" id="chk-l8"></div>Window Functions</div>
+    <div class="nav-item" id="nav-l9" onclick="go('l9')"><div class="check" id="chk-l9"></div>UNION & Multiple Sources</div>
+    <div class="nav-item" id="nav-l10" onclick="go('l10')"><div class="check" id="chk-l10"></div>Capstone: Two Systems, One Tool</div>
   </div>
 
   <div class="nav-section">
     <div class="nav-label">Practice</div>
     <div class="nav-item" id="nav-drill" onclick="go('drill')"><div class="check" id="chk-drill"></div>Drill mode</div>
     <div class="nav-item" id="nav-ref" onclick="go('ref')"><div class="check" id="chk-ref"></div>Quick reference</div>
+  </div>
+
+  <div class="nav-section" style="margin-top:auto;padding-top:.5rem;border-top:1px solid var(--border)">
+    <div class="nav-item" id="nav-reset" onclick="resetProgress()" style="color:var(--danger)">↺ Reset progress</div>
   </div>
 </nav>
 
@@ -151,7 +200,7 @@
 <!-- L1: SELECT & FROM -->
 <div class="page active" id="page-l1">
   <div class="section-header">
-    <div style="margin-bottom:.5rem"><span class="badge badge-blue">Lesson 1 of 7</span></div>
+    <div style="margin-bottom:.5rem"><span class="badge badge-blue">Lesson 1 of 10</span></div>
     <h1>SELECT & FROM</h1>
     <p>The two clauses you use in every single SQL query.</p>
   </div>
@@ -166,6 +215,25 @@
     <p>To get everything from a table, use <code style="color:var(--accent)">*</code> (star):</p>
     <div class="code-block">
 <span class="kw">SELECT</span> *<br>
+<span class="kw">FROM</span> rides;
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Going further — aliases, DISTINCT, and expressions</div>
+    <p>Use <strong style="color:var(--text)">AS</strong> to rename a column in the output — useful when a name is unclear or you're computing something new.</p>
+    <div class="code-block">
+<span class="kw">SELECT</span> duration_minutes <span class="kw">AS</span> length_mins<br>
+<span class="kw">FROM</span> rides;
+    </div>
+    <p><strong style="color:var(--text)">DISTINCT</strong> removes duplicate rows from the result — handy when you just want the unique set of values in a column.</p>
+    <div class="code-block">
+<span class="kw">SELECT</span> <span class="kw">DISTINCT</span> city<br>
+<span class="kw">FROM</span> rides;
+    </div>
+    <p>You can also compute new values directly in SELECT, not just pull raw columns:</p>
+    <div class="code-block">
+<span class="kw">SELECT</span> ride_id, duration_minutes / <span class="num">60.0</span> <span class="kw">AS</span> duration_hours<br>
 <span class="kw">FROM</span> rides;
     </div>
   </div>
@@ -201,7 +269,7 @@
 <!-- L2: WHERE -->
 <div class="page" id="page-l2">
   <div class="section-header">
-    <div style="margin-bottom:.5rem"><span class="badge badge-blue">Lesson 2 of 7</span></div>
+    <div style="margin-bottom:.5rem"><span class="badge badge-blue">Lesson 2 of 10</span></div>
     <h1>WHERE</h1>
     <p>Filter which rows you get back.</p>
   </div>
@@ -220,6 +288,24 @@
 <span class="kw">SELECT</span> *<br>
 <span class="kw">FROM</span> rides<br>
 <span class="kw">WHERE</span> city = <span class="str">'London'</span> <span class="kw">AND</span> duration_minutes > <span class="num">20</span>;
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">More filtering tools</div>
+    <p><strong style="color:var(--text)">BETWEEN</strong> checks a range (inclusive on both ends). <strong style="color:var(--text)">IN</strong> checks against a list of values instead of chaining OR. <strong style="color:var(--text)">LIKE</strong> matches text patterns with <code style="color:var(--accent)">%</code> as a wildcard. <strong style="color:var(--text)">IS NULL</strong> / <strong style="color:var(--text)">IS NOT NULL</strong> checks for missing values — never use <code style="color:var(--accent)">= NULL</code>, it silently matches nothing.</p>
+    <div class="code-block">
+<span class="kw">WHERE</span> duration_minutes <span class="kw">BETWEEN</span> <span class="num">10</span> <span class="kw">AND</span> <span class="num">20</span><br>
+<span class="kw">WHERE</span> city <span class="kw">IN</span> (<span class="str">'London'</span>, <span class="str">'Manchester'</span>)<br>
+<span class="kw">WHERE</span> city <span class="kw">LIKE</span> <span class="str">'Lon%'</span><br>
+<span class="kw">WHERE</span> bike_id <span class="kw">IS NOT NULL</span>
+    </div>
+    <p>When mixing AND and OR, use parentheses — AND binds tighter than OR, so without them the logic can silently mean something different from what you intended.</p>
+    <div class="code-block">
+<span class="cm">-- means: London rides, OR any ride over 30 minutes (probably not what you wanted)</span><br>
+<span class="kw">WHERE</span> city = <span class="str">'London'</span> <span class="kw">AND</span> duration_minutes > <span class="num">10</span> <span class="kw">OR</span> duration_minutes > <span class="num">30</span><br><br>
+<span class="cm">-- means: London rides over 10 minutes, OR anything over 30 minutes — use parens to be explicit</span><br>
+<span class="kw">WHERE</span> (city = <span class="str">'London'</span> <span class="kw">AND</span> duration_minutes > <span class="num">10</span>) <span class="kw">OR</span> duration_minutes > <span class="num">30</span>
     </div>
   </div>
 
@@ -243,7 +329,7 @@
 <!-- L3: GROUP BY & Aggregates -->
 <div class="page" id="page-l3">
   <div class="section-header">
-    <div style="margin-bottom:.5rem"><span class="badge badge-blue">Lesson 3 of 7</span></div>
+    <div style="margin-bottom:.5rem"><span class="badge badge-blue">Lesson 3 of 10</span></div>
     <h1>GROUP BY & Aggregates</h1>
     <p>Collapse rows into groups and calculate something about each group.</p>
   </div>
@@ -281,13 +367,38 @@
     <div class="feedback" id="fb-l3"></div>
   </div>
 
+  <div class="card">
+    <div class="card-label">Going further — conditional aggregation</div>
+    <p>You can put a <strong style="color:var(--text)">CASE</strong> expression inside an aggregate to count or sum only rows that meet a condition — without needing a separate query per condition. This pattern shows up constantly in real analytics work (e.g. "how many orders were late" alongside "how many orders total", in one row).</p>
+    <div class="code-block">
+<span class="kw">SELECT</span> station_id,<br>
+&nbsp;&nbsp;<span class="fn">COUNT</span>(<span class="kw">DISTINCT</span> bike_id) <span class="kw">AS</span> unique_bikes,<br>
+&nbsp;&nbsp;<span class="fn">SUM</span>(<span class="kw">CASE WHEN</span> duration_minutes > <span class="num">20</span> <span class="kw">THEN</span> <span class="num">1</span> <span class="kw">ELSE</span> <span class="num">0</span> <span class="kw">END</span>) <span class="kw">AS</span> long_rides<br>
+<span class="kw">FROM</span> rides<br>
+<span class="kw">GROUP BY</span> station_id;
+    </div>
+    <p><code style="color:var(--accent)">COUNT(DISTINCT column)</code> counts unique values only, instead of every row.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice — harder</div>
+    <p>For each <code style="color:var(--accent)">station_id</code>, count how many "long rides" (duration over 20 minutes) happened there. Name the column <code style="color:var(--accent)">long_rides</code>.</p>
+    <textarea id="q-l3b" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l3b')">Check answer</button>
+      <button class="btn" onclick="hint('l3b')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l3b">SELECT station_id, SUM(CASE WHEN duration_minutes > 20 THEN 1 ELSE 0 END) AS long_rides FROM rides GROUP BY station_id</div>
+    <div class="feedback" id="fb-l3b"></div>
+  </div>
+
   <div class="btn-row"><button class="btn btn-primary" onclick="complete('l3','l4')">Next lesson →</button></div>
 </div>
 
 <!-- L4: HAVING -->
 <div class="page" id="page-l4">
   <div class="section-header">
-    <div style="margin-bottom:.5rem"><span class="badge badge-blue">Lesson 4 of 7</span></div>
+    <div style="margin-bottom:.5rem"><span class="badge badge-blue">Lesson 4 of 10</span></div>
     <h1>HAVING</h1>
     <p>Filter groups after GROUP BY. The most commonly confused clause.</p>
   </div>
@@ -314,6 +425,19 @@
   <div class="rule-box">"WHERE = filter rows. HAVING = filter groups. If you're filtering on something you calculated with COUNT, SUM, or AVG — it's HAVING."</div>
 
   <div class="card">
+    <div class="card-label">Using WHERE and HAVING together</div>
+    <p>A single query can use both — WHERE trims rows before grouping happens, HAVING trims the resulting groups. They're not interchangeable, and using both is common: filter out irrelevant rows early (cheaper), then filter the aggregated result.</p>
+    <div class="code-block">
+<span class="kw">SELECT</span> station_id, <span class="fn">COUNT</span>(ride_id) <span class="kw">AS</span> total_rides<br>
+<span class="kw">FROM</span> rides<br>
+<span class="kw">WHERE</span> city = <span class="str">'London'</span><br>
+<span class="kw">GROUP BY</span> station_id<br>
+<span class="kw">HAVING</span> <span class="fn">COUNT</span>(ride_id) > <span class="num">1</span>;
+    </div>
+    <p>HAVING can also combine multiple aggregate conditions with AND/OR, just like WHERE does with row conditions.</p>
+  </div>
+
+  <div class="card">
     <div class="card-label">Practice — write the query</div>
     <p>Write a query that shows only the stations where the average ride duration is greater than 15 minutes.</p>
     <textarea id="q-l4" placeholder="Write your SQL here..."></textarea>
@@ -331,7 +455,7 @@
 <!-- L5: ORDER BY & LIMIT -->
 <div class="page" id="page-l5">
   <div class="section-header">
-    <div style="margin-bottom:.5rem"><span class="badge badge-blue">Lesson 5 of 7</span></div>
+    <div style="margin-bottom:.5rem"><span class="badge badge-blue">Lesson 5 of 10</span></div>
     <h1>ORDER BY & LIMIT</h1>
     <p>Sort your results and cap how many rows come back.</p>
   </div>
@@ -353,6 +477,21 @@
   <div class="rule-box">"The full clause order: SELECT → FROM → WHERE → GROUP BY → HAVING → ORDER BY → LIMIT. You don't need all of them, but they must appear in this order when you do."</div>
 
   <div class="card">
+    <div class="card-label">Going further — multi-column sorts and OFFSET</div>
+    <p>ORDER BY can take multiple columns — the first breaks ties using the second, and so on.</p>
+    <div class="code-block">
+<span class="kw">ORDER BY</span> city <span class="kw">ASC</span>, duration_minutes <span class="kw">DESC</span>
+    </div>
+    <p><strong style="color:var(--text)">OFFSET</strong> skips a number of rows before LIMIT starts counting — useful for pagination, or for questions like "the 2nd highest" instead of "the highest".</p>
+    <div class="code-block">
+<span class="kw">SELECT</span> ride_id, duration_minutes<br>
+<span class="kw">FROM</span> rides<br>
+<span class="kw">ORDER BY</span> duration_minutes <span class="kw">DESC</span><br>
+<span class="kw">LIMIT</span> <span class="num">1</span> <span class="kw">OFFSET</span> <span class="num">1</span>; <span class="cm">-- skips the top row, returns the 2nd-longest</span>
+    </div>
+  </div>
+
+  <div class="card">
     <div class="card-label">Practice — write the query</div>
     <p>Write a query that returns the <strong>single bike</strong> with the highest total number of rides. Show the <code style="color:var(--accent)">bike_id</code> and the count, named <code style="color:var(--accent)">ride_count</code>.</p>
     <textarea id="q-l5" placeholder="Write your SQL here..."></textarea>
@@ -364,13 +503,25 @@
     <div class="feedback" id="fb-l5"></div>
   </div>
 
+  <div class="card">
+    <div class="card-label">Practice — harder</div>
+    <p>Write a query that returns the ride with the <strong>second-longest</strong> duration overall (not the longest). Show <code style="color:var(--accent)">ride_id</code> and <code style="color:var(--accent)">duration_minutes</code>.</p>
+    <textarea id="q-l5b" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l5b')">Check answer</button>
+      <button class="btn" onclick="hint('l5b')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l5b">SELECT ride_id, duration_minutes FROM rides ORDER BY duration_minutes DESC LIMIT 1 OFFSET 1</div>
+    <div class="feedback" id="fb-l5b"></div>
+  </div>
+
   <div class="btn-row"><button class="btn btn-primary" onclick="complete('l5','l6')">Next lesson →</button></div>
 </div>
 
 <!-- L6: JOINs -->
 <div class="page" id="page-l6">
   <div class="section-header">
-    <div style="margin-bottom:.5rem"><span class="badge badge-blue">Lesson 6 of 7</span></div>
+    <div style="margin-bottom:.5rem"><span class="badge badge-blue">Lesson 6 of 10</span></div>
     <h1>JOINs</h1>
     <p>Connect two tables together using a shared column.</p>
   </div>
@@ -383,8 +534,9 @@
       <tr><td>ST01</td><td>London Bridge</td><td>Southwark</td></tr>
       <tr><td>ST02</td><td>Shoreditch High St</td><td>Hackney</td></tr>
       <tr><td>ST03</td><td>Piccadilly</td><td>Westminster</td></tr>
+      <tr><td>ST04</td><td>Warehouse North</td><td>Camden</td></tr>
     </table>
-    <p style="margin-top:.75rem">Both tables share <code style="color:var(--accent)">station_id</code>. That's the key you JOIN on.</p>
+    <p style="margin-top:.75rem">Both tables share <code style="color:var(--accent)">station_id</code>. That's the key you JOIN on. Notice ST04 has no rides in the <code style="color:var(--accent)">rides</code> table yet — keep that in mind for the harder exercise below.</p>
   </div>
 
   <div class="card">
@@ -410,6 +562,17 @@
   <div class="rule-box">"INNER JOIN = only where both sides match. LEFT JOIN = everything from the left table, matched or not."</div>
 
   <div class="card">
+    <div class="card-label">Going further — other join types</div>
+    <p><strong style="color:var(--text)">RIGHT JOIN</strong> is the mirror of LEFT JOIN: everything from the right table, matched or not. <strong style="color:var(--text)">FULL OUTER JOIN</strong> keeps everything from both sides, matched or not, filling in NULLs where there's no counterpart. Not every database supports RIGHT/FULL (SQLite added them recently; MySQL still doesn't do FULL) — when in doubt, a LEFT JOIN with the tables swapped does the same job as a RIGHT JOIN.</p>
+    <p>A <strong style="color:var(--text)">self-join</strong> joins a table to itself — useful for comparing rows within the same table, like finding two rides from the same bike back-to-back. You just need to alias the table twice:</p>
+    <div class="code-block">
+<span class="kw">SELECT</span> a.ride_id, b.ride_id<br>
+<span class="kw">FROM</span> rides a<br>
+<span class="kw">JOIN</span> rides b <span class="kw">ON</span> a.bike_id = b.bike_id <span class="kw">AND</span> a.ride_id &lt; b.ride_id;
+    </div>
+  </div>
+
+  <div class="card">
     <div class="card-label">Practice — write the query</div>
     <p>Write a query that shows each ride's <code style="color:var(--accent)">ride_id</code>, the <code style="color:var(--accent)">station_name</code> it started from, and the <code style="color:var(--accent)">duration_minutes</code>. Use an INNER JOIN.</p>
     <textarea id="q-l6" placeholder="Write your SQL here..."></textarea>
@@ -421,63 +584,301 @@
     <div class="feedback" id="fb-l6"></div>
   </div>
 
+  <div class="card">
+    <div class="card-label">Practice — harder</div>
+    <p>Write a query that shows every station's <code style="color:var(--accent)">station_name</code> and how many rides started there, named <code style="color:var(--accent)">ride_count</code> — including stations with zero rides (like ST04). An INNER JOIN would silently drop ST04; you need a LEFT JOIN.</p>
+    <textarea id="q-l6b" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l6b')">Check answer</button>
+      <button class="btn" onclick="hint('l6b')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l6b">SELECT stations.station_name, COUNT(rides.ride_id) AS ride_count FROM stations LEFT JOIN rides ON stations.station_id = rides.station_id GROUP BY stations.station_name</div>
+    <div class="feedback" id="fb-l6b"></div>
+    <p style="margin-top:.75rem;font-size:13px;color:var(--muted)">Classic gotcha: use <code style="color:var(--accent)">COUNT(rides.ride_id)</code>, not <code style="color:var(--accent)">COUNT(*)</code>. COUNT(*) counts the row itself even when the join found nothing, so a zero-ride station would wrongly show 1.</p>
+  </div>
+
   <div class="btn-row"><button class="btn btn-primary" onclick="complete('l6','l7')">Next lesson →</button></div>
 </div>
 
-<!-- L7: Read a table → answer -->
+<!-- L7: Subqueries & CTEs -->
 <div class="page" id="page-l7">
   <div class="section-header">
-    <div style="margin-bottom:.5rem"><span class="badge badge-orange">Lesson 7 of 7 — most important</span></div>
-    <h1>Read a Table → Answer a Business Question</h1>
-    <p>This is the exact format of the Palantir CodePair round.</p>
+    <div style="margin-bottom:.5rem"><span class="badge badge-blue">Lesson 7 of 10</span></div>
+    <h1>Subqueries & CTEs</h1>
+    <p>Use the result of one query inside another — and keep it readable.</p>
   </div>
 
   <div class="card">
-    <div class="card-label">The skill</div>
-    <p>In the interview you'll be given a data table and a business question. Your job: read the table, identify what it contains, write a query that answers the question, and explain your reasoning out loud.</p>
-    <p>The interviewer is watching three things: do you understand what the data represents, do you write the right query, and do you narrate your thinking.</p>
+    <div class="card-label">The concept</div>
+    <p>A <strong style="color:var(--text)">subquery</strong> is a query nested inside another query. It can appear in WHERE (to compare against a calculated value), in FROM (to treat a query's result like a table), or in SELECT.</p>
+    <div class="code-block">
+<span class="kw">SELECT</span> *<br>
+<span class="kw">FROM</span> rides<br>
+<span class="kw">WHERE</span> duration_minutes > (<span class="kw">SELECT</span> <span class="fn">AVG</span>(duration_minutes) <span class="kw">FROM</span> rides);
+    </div>
+    <p>The inner query runs first, returns a single number, and the outer query compares each row's duration against it.</p>
   </div>
 
   <div class="card">
-    <div class="card-label">NHS scenario — the table</div>
-    <p>You are working with an NHS trust. Here is a table of patient appointments:</p>
-    <table class="sql-table">
-      <tr><th>appointment_id</th><th>patient_id</th><th>ward</th><th>appointment_date</th><th>attended</th><th>wait_days</th></tr>
-      <tr><td>A001</td><td>P01</td><td>Cardiology</td><td>2024-01-10</td><td>1</td><td>12</td></tr>
-      <tr><td>A002</td><td>P02</td><td>Oncology</td><td>2024-01-11</td><td>0</td><td>28</td></tr>
-      <tr><td>A003</td><td>P03</td><td>Cardiology</td><td>2024-01-12</td><td>1</td><td>8</td></tr>
-      <tr><td>A004</td><td>P04</td><td>Neurology</td><td>2024-01-13</td><td>0</td><td>45</td></tr>
-      <tr><td>A005</td><td>P05</td><td>Oncology</td><td>2024-01-14</td><td>1</td><td>31</td></tr>
-      <tr><td>A006</td><td>P06</td><td>Cardiology</td><td>2024-01-15</td><td>0</td><td>19</td></tr>
-    </table>
-    <p style="margin-top:.75rem;font-size:13px;color:var(--muted)"><code style="color:var(--accent)">attended</code>: 1 = attended, 0 = did not attend (DNA)</p>
+    <div class="card-label">CTEs — naming a subquery with WITH</div>
+    <p>A <strong style="color:var(--text)">CTE</strong> (Common Table Expression) uses <code style="color:var(--accent)">WITH ... AS (...)</code> to give a subquery a name, then reference it like a table later in the same query. It doesn't change what's possible — it changes how readable a multi-step query is, which matters a lot once queries get complex.</p>
+    <div class="code-block">
+<span class="kw">WITH</span> station_avg <span class="kw">AS</span> (<br>
+&nbsp;&nbsp;<span class="kw">SELECT</span> station_id, <span class="fn">AVG</span>(duration_minutes) <span class="kw">AS</span> avg_duration<br>
+&nbsp;&nbsp;<span class="kw">FROM</span> rides<br>
+&nbsp;&nbsp;<span class="kw">GROUP BY</span> station_id<br>
+)<br>
+<span class="kw">SELECT</span> rides.ride_id, rides.duration_minutes, station_avg.avg_duration<br>
+<span class="kw">FROM</span> rides<br>
+<span class="kw">JOIN</span> station_avg <span class="kw">ON</span> rides.station_id = station_avg.station_id;
+    </div>
+    <p>A <strong style="color:var(--text)">correlated subquery</strong> is one that references a column from the outer query inside the inner query, so it re-runs once per outer row. They're powerful but slower — a CTE with a JOIN, like above, often does the same job more clearly.</p>
   </div>
 
+  <div class="rule-box">"Reach for a subquery when you need one calculated value to filter against. Reach for a CTE when the query has more than one logical step — it reads top to bottom like a recipe instead of a nested puzzle."</div>
+
   <div class="card">
-    <div class="card-label">Business question 1</div>
-    <p>The trust director wants to know which ward has the highest DNA (did not attend) rate. Write the query.</p>
+    <div class="card-label">Practice — write the query</div>
+    <p>Write a query that returns all rides where the duration is greater than the average duration across all rides.</p>
     <textarea id="q-l7a" placeholder="Write your SQL here..."></textarea>
     <div class="btn-row">
       <button class="btn btn-primary" onclick="check('l7a')">Check answer</button>
       <button class="btn" onclick="hint('l7a')">Hint</button>
     </div>
-    <div class="hint" id="hint-l7a">You need to COUNT appointments per ward, then COUNT where attended = 0, then calculate a ratio. Or simpler: SELECT ward, SUM(CASE WHEN attended = 0 THEN 1 ELSE 0 END) AS dna_count FROM appointments GROUP BY ward ORDER BY dna_count DESC LIMIT 1</div>
+    <div class="hint" id="hint-l7a">SELECT * FROM rides WHERE duration_minutes > (SELECT AVG(duration_minutes) FROM rides)</div>
     <div class="feedback" id="fb-l7a"></div>
   </div>
 
   <div class="card">
-    <div class="card-label">Business question 2</div>
-    <p>Which wards have an average wait time of more than 20 days? Show the ward and average wait, named <code style="color:var(--accent)">avg_wait</code>.</p>
+    <div class="card-label">Practice — harder</div>
+    <p>Using a CTE named <code style="color:var(--accent)">station_avg</code>, write a query that returns rides that are longer than <strong>their own station's</strong> average duration (not the overall average). Show <code style="color:var(--accent)">ride_id</code>, <code style="color:var(--accent)">station_id</code>, and <code style="color:var(--accent)">duration_minutes</code>.</p>
     <textarea id="q-l7b" placeholder="Write your SQL here..."></textarea>
     <div class="btn-row">
       <button class="btn btn-primary" onclick="check('l7b')">Check answer</button>
       <button class="btn" onclick="hint('l7b')">Hint</button>
     </div>
-    <div class="hint" id="hint-l7b">SELECT ward, AVG(wait_days) AS avg_wait FROM appointments GROUP BY ward HAVING AVG(wait_days) > 20</div>
+    <div class="hint" id="hint-l7b">WITH station_avg AS (SELECT station_id, AVG(duration_minutes) AS avg_duration FROM rides GROUP BY station_id) SELECT rides.ride_id, rides.station_id, rides.duration_minutes FROM rides JOIN station_avg ON rides.station_id = station_avg.station_id WHERE rides.duration_minutes > station_avg.avg_duration</div>
     <div class="feedback" id="fb-l7b"></div>
   </div>
 
-  <div class="btn-row"><button class="btn btn-primary" onclick="complete('l7','drill')">Go to drill mode →</button></div>
+  <div class="btn-row"><button class="btn btn-primary" onclick="complete('l7','l8')">Next lesson →</button></div>
+</div>
+
+<!-- L8: Window Functions -->
+<div class="page" id="page-l8">
+  <div class="section-header">
+    <div style="margin-bottom:.5rem"><span class="badge badge-blue">Lesson 8 of 10</span></div>
+    <h1>Window Functions</h1>
+    <p>Calculate across a group of rows without collapsing them into one.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-label">The concept</div>
+    <p>GROUP BY collapses many rows into one row per group. A <strong style="color:var(--text)">window function</strong> calculates something across a group of rows too — but keeps every row in the output. That's the core difference, and it's why window functions are everywhere in analytics: ranking, running totals, "top N per group", comparing a row to the one before it.</p>
+    <div class="code-block">
+<span class="kw">SELECT</span> ride_id, station_id, duration_minutes,<br>
+&nbsp;&nbsp;<span class="fn">RANK</span>() <span class="kw">OVER</span> (<span class="kw">PARTITION BY</span> station_id <span class="kw">ORDER BY</span> duration_minutes <span class="kw">DESC</span>) <span class="kw">AS</span> duration_rank<br>
+<span class="kw">FROM</span> rides;
+    </div>
+    <p><strong style="color:var(--text)">PARTITION BY</strong> is like GROUP BY, but for the window — it resets the calculation for each group. <strong style="color:var(--text)">ORDER BY</strong> inside OVER() controls the order the ranking (or running total) is calculated in.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-label">RANK vs DENSE_RANK vs ROW_NUMBER</div>
+    <p><strong style="color:var(--text)">ROW_NUMBER()</strong> always gives 1, 2, 3... with no ties. <strong style="color:var(--text)">RANK()</strong> gives ties the same number, then skips (1, 2, 2, 4). <strong style="color:var(--text)">DENSE_RANK()</strong> gives ties the same number without skipping (1, 2, 2, 3). <strong style="color:var(--text)">LAG()</strong> / <strong style="color:var(--text)">LEAD()</strong> pull a value from the previous / next row in the ordering — useful for comparing a row to what came before it.</p>
+  </div>
+
+  <div class="rule-box">"A window function can't be used directly in WHERE — it's calculated after WHERE and GROUP BY have already run. To filter on one (e.g. 'just the top row per group'), wrap it in a CTE or subquery first, then filter the outer query."</div>
+
+  <div class="card">
+    <div class="card-label">Practice — write the query</div>
+    <p>Write a query that shows each ride's <code style="color:var(--accent)">ride_id</code>, <code style="color:var(--accent)">station_id</code>, and <code style="color:var(--accent)">duration_minutes</code>, plus its rank within its own station by duration (longest = 1). Name the column <code style="color:var(--accent)">duration_rank</code> and use RANK().</p>
+    <textarea id="q-l8a" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l8a')">Check answer</button>
+      <button class="btn" onclick="hint('l8a')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l8a">SELECT ride_id, station_id, duration_minutes, RANK() OVER (PARTITION BY station_id ORDER BY duration_minutes DESC) AS duration_rank FROM rides</div>
+    <div class="feedback" id="fb-l8a"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice — harder</div>
+    <p>Window functions can't go in WHERE directly. Using a CTE named <code style="color:var(--accent)">ranked</code> with <code style="color:var(--accent)">ROW_NUMBER()</code>, write a query that returns only the single longest ride at each station. Show <code style="color:var(--accent)">ride_id</code>, <code style="color:var(--accent)">station_id</code>, and <code style="color:var(--accent)">duration_minutes</code>.</p>
+    <textarea id="q-l8b" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l8b')">Check answer</button>
+      <button class="btn" onclick="hint('l8b')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l8b">WITH ranked AS (SELECT ride_id, station_id, duration_minutes, ROW_NUMBER() OVER (PARTITION BY station_id ORDER BY duration_minutes DESC) AS rn FROM rides) SELECT ride_id, station_id, duration_minutes FROM ranked WHERE rn = 1</div>
+    <div class="feedback" id="fb-l8b"></div>
+  </div>
+
+  <div class="btn-row"><button class="btn btn-primary" onclick="complete('l8','l9')">Next lesson →</button></div>
+</div>
+
+<!-- L9: UNION & Multiple Sources -->
+<div class="page" id="page-l9">
+  <div class="section-header">
+    <div style="margin-bottom:.5rem"><span class="badge badge-blue">Lesson 9 of 10</span></div>
+    <h1>UNION & Combining Multiple Sources</h1>
+    <p>Stack results from separate queries — or separate systems — into one list.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-label">The concept</div>
+    <p><strong style="color:var(--text)">UNION</strong> stacks the results of two queries on top of each other, as long as they return the same number of columns in compatible types. <strong style="color:var(--text)">UNION</strong> removes exact duplicate rows; <strong style="color:var(--text)">UNION ALL</strong> keeps everything, including duplicates, and is faster since there's no dedup step — use it whenever you know duplicates can't happen, or don't care about them.</p>
+    <div class="code-block">
+<span class="kw">SELECT</span> city <span class="kw">FROM</span> rides <span class="kw">WHERE</span> city = <span class="str">'London'</span><br>
+<span class="kw">UNION ALL</span><br>
+<span class="kw">SELECT</span> city <span class="kw">FROM</span> rides <span class="kw">WHERE</span> city = <span class="str">'Manchester'</span>;
+    </div>
+    <p>The real-world use case: your company runs on two systems that were never designed to talk to each other — an acquisition, a legacy system nobody's retired yet, a regional office with its own database. UNION lets you build one combined view without touching either source system.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Two order systems</div>
+    <p>Office Goods Corp tracks orders in its own system. Its recently-acquired sister company, Bureau SAS, tracks orders in a separate one. Same idea, two tables, slightly different data:</p>
+    <table class="sql-table">
+      <tr><th>order_id</th><th>customer</th><th>status</th><th>order_date</th><th>promised_date</th></tr>
+      <tr><td>OG-101</td><td>Acme Ltd</td><td>Pending</td><td>2026-06-20</td><td>2026-07-05</td></tr>
+      <tr><td>OG-102</td><td>Bright Co</td><td>Shipped</td><td>2026-06-18</td><td>2026-06-28</td></tr>
+      <tr><td>OG-103</td><td>Card & Co</td><td>Delivered</td><td>2026-06-10</td><td>2026-06-20</td></tr>
+      <tr><td>OG-104</td><td>Delta Supplies</td><td>Pending</td><td>2026-06-25</td><td>2026-06-30</td></tr>
+    </table>
+    <p style="margin-top:.5rem;font-size:12px;color:var(--muted)">↑ orders_og</p>
+    <table class="sql-table" style="margin-top:1rem">
+      <tr><th>order_id</th><th>customer</th><th>status</th><th>order_date</th><th>promised_date</th></tr>
+      <tr><td>BSAS-201</td><td>Ecole Fournitures</td><td>awaiting</td><td>2026-06-19</td><td>2026-06-29</td></tr>
+      <tr><td>BSAS-202</td><td>Fontaine SARL</td><td>dispatched</td><td>2026-06-15</td><td>2026-06-25</td></tr>
+      <tr><td>BSAS-203</td><td>Girard Bureau</td><td>delivered</td><td>2026-06-05</td><td>2026-06-15</td></tr>
+      <tr><td>BSAS-204</td><td>Hugo Papeterie</td><td>awaiting</td><td>2026-06-27</td><td>2026-07-10</td></tr>
+    </table>
+    <p style="margin-top:.5rem;font-size:12px;color:var(--muted)">↑ orders_bureau — notice the status values are worded differently. That's exactly the kind of mess you'll clean up in the next lesson.</p>
+  </div>
+
+  <div class="rule-box">"UNION only cares about column position and type, not column names — the output takes its column names from the first SELECT. Always double check both sides actually mean the same thing before stacking them."</div>
+
+  <div class="card">
+    <div class="card-label">Practice — write the query</div>
+    <p>Write a query that combines both order tables into a single list, showing <code style="color:var(--accent)">order_id</code>, <code style="color:var(--accent)">customer</code>, <code style="color:var(--accent)">status</code>, and <code style="color:var(--accent)">order_date</code> for every order in both systems.</p>
+    <textarea id="q-l9a" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l9a')">Check answer</button>
+      <button class="btn" onclick="hint('l9a')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l9a">SELECT order_id, customer, status, order_date FROM orders_og UNION ALL SELECT order_id, customer, status, order_date FROM orders_bureau</div>
+    <div class="feedback" id="fb-l9a"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice — harder</div>
+    <p>Managers keep asking which system each order came from. Write the same combined query, but add a column named <code style="color:var(--accent)">source_system</code> showing <code style="color:var(--accent)">'Office Goods'</code> for rows from orders_og and <code style="color:var(--accent)">'Bureau SAS'</code> for rows from orders_bureau.</p>
+    <textarea id="q-l9b" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l9b')">Check answer</button>
+      <button class="btn" onclick="hint('l9b')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l9b">SELECT order_id, customer, status, order_date, 'Office Goods' AS source_system FROM orders_og UNION ALL SELECT order_id, customer, status, order_date, 'Bureau SAS' AS source_system FROM orders_bureau</div>
+    <div class="feedback" id="fb-l9b"></div>
+  </div>
+
+  <div class="btn-row"><button class="btn btn-primary" onclick="complete('l9','l10')">Go to the capstone →</button></div>
+</div>
+
+<!-- L10: Capstone -->
+<div class="page" id="page-l10">
+  <div class="section-header">
+    <div style="margin-bottom:.5rem"><span class="badge badge-orange">Lesson 10 of 10 — capstone</span></div>
+    <h1>Capstone: Two Systems, One Fulfillment Tool</h1>
+    <p>This is the exact shape of the Palantir CodePair round — a messy real business problem, not a clean textbook question.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-label">The scenario</div>
+    <p>You work for <strong style="color:var(--text)">Office Goods Corp</strong>, a paper and office goods company. Recently, your company acquired one of its competitors, <strong style="color:var(--text)">Bureau SAS</strong>. The IT unification project won't start for another year, which means your colleagues are stuck tracking and managing orders on two different systems.</p>
+    <p>They've survived a couple of months by manually stitching spreadsheets together, but with demand growing, things have started to fall through the cracks: incorrect metrics, unfulfilled orders, unhappy customers. The fulfillment department has asked for help — something quick, ahead of the unification project.</p>
+    <p>After understanding the problem, you've decided to build a simple operational view that connects to both systems: one place for managers to see every order, spot what hasn't been assigned yet, and flag what's at risk of missing its delivery date. Along the way, it should end the debates about which spreadsheet is the most up to date.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-label">What you sketched out</div>
+    <div class="diagram">
+      <div class="diagram-box">Office Goods system<br><span>orders_og</span></div>
+      <div class="diagram-arrow">→</div>
+      <div class="diagram-box highlight">Unified fulfillment view<br><span>the SQL you're about to write</span></div>
+      <div class="diagram-arrow">←</div>
+      <div class="diagram-box">Bureau SAS system<br><span>orders_bureau</span></div>
+    </div>
+    <p style="text-align:center;color:var(--muted);font-size:13px">↓ joined against</p>
+    <div class="diagram">
+      <div class="diagram-box">Assignments<br><span>who owns each order</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">The three tables</div>
+    <p><code style="color:var(--accent)">orders_og</code> and <code style="color:var(--accent)">orders_bureau</code> are the same as the last lesson. Here's the new one — <code style="color:var(--accent)">assignments</code>, which only has a row for orders someone has already picked up:</p>
+    <table class="sql-table">
+      <tr><th>order_id</th><th>assigned_to</th></tr>
+      <tr><td>OG-101</td><td>Priya</td></tr>
+      <tr><td>OG-103</td><td>Priya</td></tr>
+      <tr><td>BSAS-202</td><td>Tom</td></tr>
+    </table>
+    <p style="margin-top:.75rem;font-size:13px;color:var(--muted)">Reminder — orders_bureau uses <code style="color:var(--accent)">awaiting</code> / <code style="color:var(--accent)">dispatched</code> / <code style="color:var(--accent)">delivered</code> where orders_og uses <code style="color:var(--accent)">Pending</code> / <code style="color:var(--accent)">Shipped</code> / <code style="color:var(--accent)">Delivered</code>. Same meaning, different words — that inconsistency is the whole point of this exercise.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Step 1 — unify the two systems</div>
+    <p>Build the base view: every order from both systems in one list, with <code style="color:var(--accent)">order_id</code>, <code style="color:var(--accent)">customer</code>, <code style="color:var(--accent)">status</code>, <code style="color:var(--accent)">order_date</code>, and a <code style="color:var(--accent)">source_system</code> column.</p>
+    <textarea id="q-l10a" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l10a')">Check answer</button>
+      <button class="btn" onclick="hint('l10a')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l10a">SELECT order_id, customer, status, order_date, 'Office Goods' AS source_system FROM orders_og UNION ALL SELECT order_id, customer, status, order_date, 'Bureau SAS' AS source_system FROM orders_bureau</div>
+    <div class="feedback" id="fb-l10a"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Step 2 — normalize the statuses</div>
+    <p>orders_og's status is already clean. Write a query that combines both systems and produces a single <code style="color:var(--accent)">status_clean</code> column with only three values — <code style="color:var(--accent)">Pending</code>, <code style="color:var(--accent)">Shipped</code>, <code style="color:var(--accent)">Delivered</code> — for every order. Show <code style="color:var(--accent)">order_id</code>, <code style="color:var(--accent)">customer</code>, <code style="color:var(--accent)">status_clean</code>, and <code style="color:var(--accent)">order_date</code>.</p>
+    <textarea id="q-l10b" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l10b')">Check answer</button>
+      <button class="btn" onclick="hint('l10b')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l10b">SELECT order_id, customer, status AS status_clean, order_date FROM orders_og UNION ALL SELECT order_id, customer, CASE status WHEN 'awaiting' THEN 'Pending' WHEN 'dispatched' THEN 'Shipped' WHEN 'delivered' THEN 'Delivered' END AS status_clean, order_date FROM orders_bureau</div>
+    <div class="feedback" id="fb-l10b"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Step 3 — find unassigned orders</div>
+    <p>Using a CTE named <code style="color:var(--accent)">unified</code> that combines <code style="color:var(--accent)">order_id</code>, <code style="color:var(--accent)">customer</code>, and <code style="color:var(--accent)">order_date</code> from both systems, write a query that returns every order with no matching row in <code style="color:var(--accent)">assignments</code> — the ones sitting unassigned right now.</p>
+    <textarea id="q-l10c" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l10c')">Check answer</button>
+      <button class="btn" onclick="hint('l10c')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l10c">WITH unified AS (SELECT order_id, customer, order_date FROM orders_og UNION ALL SELECT order_id, customer, order_date FROM orders_bureau) SELECT unified.order_id, unified.customer FROM unified LEFT JOIN assignments ON unified.order_id = assignments.order_id WHERE assignments.assigned_to IS NULL</div>
+    <div class="feedback" id="fb-l10c"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Step 4 — flag at-risk deliveries</div>
+    <p>Assume today's date is <code style="color:var(--accent)">2026-07-01</code>. Using a CTE named <code style="color:var(--accent)">unified</code> with the normalized <code style="color:var(--accent)">status_clean</code> and <code style="color:var(--accent)">promised_date</code> from both systems, write a query that returns every order that is <strong>not yet Delivered</strong> and whose <code style="color:var(--accent)">promised_date</code> has already passed. Show <code style="color:var(--accent)">order_id</code>, <code style="color:var(--accent)">status_clean</code>, and <code style="color:var(--accent)">promised_date</code>.</p>
+    <textarea id="q-l10d" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l10d')">Check answer</button>
+      <button class="btn" onclick="hint('l10d')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l10d">WITH unified AS (SELECT order_id, status AS status_clean, promised_date FROM orders_og UNION ALL SELECT order_id, CASE status WHEN 'awaiting' THEN 'Pending' WHEN 'dispatched' THEN 'Shipped' WHEN 'delivered' THEN 'Delivered' END AS status_clean, promised_date FROM orders_bureau) SELECT order_id, status_clean, promised_date FROM unified WHERE status_clean != 'Delivered' AND promised_date < '2026-07-01'</div>
+    <div class="feedback" id="fb-l10d"></div>
+  </div>
+
+  <div class="rule-box">"This is the whole job in miniature: understand two messy systems, unify them, normalize the inconsistencies, and answer the operational questions that actually matter to the business — assigned or not, on time or not."</div>
+
+  <div class="btn-row"><button class="btn btn-primary" onclick="complete('l10','drill')">Go to drill mode →</button></div>
 </div>
 
 <!-- DRILL MODE -->
@@ -489,7 +890,7 @@
 
   <div style="display:flex;gap:.75rem;margin-bottom:1.25rem;flex-wrap:wrap">
     <span class="badge badge-blue" id="drill-count">Question 1</span>
-    <span class="badge badge-green" id="drill-score">Score: 0</span>
+    <span class="badge badge-green" id="drill-score">Score: 0 / 0</span>
   </div>
 
   <div class="drill-card">
@@ -568,6 +969,41 @@
   </div>
 
   <div class="card">
+    <div class="card-label">Subqueries & CTEs</div>
+    <div class="code-block">
+<span class="cm">-- Subquery: a calculated value used inline</span><br>
+<span class="kw">WHERE</span> duration_minutes > (<span class="kw">SELECT</span> <span class="fn">AVG</span>(duration_minutes) <span class="kw">FROM</span> rides)<br><br>
+<span class="cm">-- CTE: name a subquery, then use it like a table</span><br>
+<span class="kw">WITH</span> station_avg <span class="kw">AS</span> (<br>
+&nbsp;&nbsp;<span class="kw">SELECT</span> station_id, <span class="fn">AVG</span>(duration_minutes) <span class="kw">AS</span> avg_duration <span class="kw">FROM</span> rides <span class="kw">GROUP BY</span> station_id<br>
+)<br>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> station_avg
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Window functions</div>
+    <div class="code-block">
+<span class="fn">RANK</span>() <span class="kw">OVER</span> (<span class="kw">PARTITION BY</span> station_id <span class="kw">ORDER BY</span> duration_minutes <span class="kw">DESC</span>)<br>
+<span class="cm">-- ROW_NUMBER(): 1,2,3... no ties</span><br>
+<span class="cm">-- RANK(): ties share a number, then skips (1,2,2,4)</span><br>
+<span class="cm">-- DENSE_RANK(): ties share a number, no skip (1,2,2,3)</span><br>
+<span class="cm">-- can't filter on these in WHERE directly — wrap in a CTE first</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">UNION — combining sources</div>
+    <div class="code-block">
+<span class="cm">-- UNION ALL: keep all rows, including duplicates (fast)</span><br>
+<span class="kw">SELECT</span> order_id <span class="kw">FROM</span> orders_og<br>
+<span class="kw">UNION ALL</span><br>
+<span class="kw">SELECT</span> order_id <span class="kw">FROM</span> orders_bureau<br><br>
+<span class="cm">-- UNION: same, but removes exact duplicate rows</span>
+    </div>
+  </div>
+
+  <div class="card">
     <div class="card-label">The three DS rules for SQL in interviews</div>
     <p>1. Narrate everything out loud as you type — silence is unreadable.</p>
     <p>2. Write something that works first, then improve it.</p>
@@ -580,17 +1016,27 @@
 
 <script>
 // Navigation
-const pages = ['l1','l2','l3','l4','l5','l6','l7','drill','ref'];
+const pages = ['l1','l2','l3','l4','l5','l6','l7','l8','l9','l10','drill','ref'];
 const completed = new Set();
+const STORAGE_KEY = 'sqlprep_progress';
+let currentPage = 'l1';
 
 function go(id){
   pages.forEach(p=>{
     document.getElementById('page-'+p).classList.remove('active');
-    document.getElementById('nav-'+p)?.classList.remove('active');
+    const nav = document.getElementById('nav-'+p);
+    nav?.classList.remove('active');
+    nav?.removeAttribute('aria-current');
   });
   document.getElementById('page-'+id).classList.add('active');
-  document.getElementById('nav-'+id)?.classList.add('active');
+  const activeNav = document.getElementById('nav-'+id);
+  activeNav?.classList.add('active');
+  activeNav?.setAttribute('aria-current','page');
+  currentPage = id;
+  window.scrollTo({top:0, behavior:'instant'});
   if(id==='drill') loadDrill();
+  closeSidebarOnMobile();
+  saveProgress();
 }
 
 function complete(current, next){
@@ -604,30 +1050,120 @@ function complete(current, next){
 }
 
 function updateProgress(){
-  const lessons = ['l1','l2','l3','l4','l5','l6','l7'];
+  const lessons = ['l1','l2','l3','l4','l5','l6','l7','l8','l9','l10'];
   const done = lessons.filter(l=>completed.has(l)).length;
   document.getElementById('prog-label').textContent = done+' / '+lessons.length;
   document.getElementById('prog-fill').style.width = (done/lessons.length*100)+'%';
+  document.getElementById('completion-msg').style.display = (done===lessons.length) ? 'block' : 'none';
+  saveProgress();
 }
+
+// Persistence — progress survives a refresh
+function saveProgress(){
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({completed:[...completed], last: currentPage}));
+  }catch(e){}
+}
+
+function loadProgress(){
+  let data;
+  try{ data = JSON.parse(localStorage.getItem(STORAGE_KEY)); }catch(e){ data = null; }
+  if(!data) return;
+  (data.completed||[]).forEach(id=>{
+    completed.add(id);
+    document.getElementById('chk-'+id)?.classList.add('done');
+    document.getElementById('nav-'+id)?.classList.add('done');
+  });
+  updateProgress();
+  if(data.last && pages.includes(data.last)) go(data.last);
+}
+
+function resetProgress(){
+  if(!confirm('Reset all progress? This clears completed lessons and drill score.')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  location.reload();
+}
+
+// Mobile sidebar
+function toggleSidebar(){
+  const open = document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebar-overlay').classList.toggle('show', open);
+  document.getElementById('menu-toggle').setAttribute('aria-expanded', open);
+}
+
+function closeSidebarOnMobile(){
+  if(window.innerWidth <= 860){
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sidebar-overlay').classList.remove('show');
+    document.getElementById('menu-toggle').setAttribute('aria-expanded','false');
+  }
+}
+
+// Keyboard accessibility for nav items (they're clickable divs)
+document.querySelectorAll('.nav-item').forEach(el=>{
+  el.setAttribute('tabindex','0');
+  el.setAttribute('role','button');
+  el.addEventListener('keydown', e=>{
+    if(e.key==='Enter' || e.key===' '){ e.preventDefault(); el.click(); }
+  });
+});
+
+// Ctrl/Cmd+Enter submits the focused answer box
+document.addEventListener('keydown', e=>{
+  if((e.metaKey||e.ctrlKey) && e.key==='Enter'){
+    const el = document.activeElement;
+    if(el && el.tagName==='TEXTAREA' && el.id.startsWith('q-')){
+      e.preventDefault();
+      const id = el.id.slice(2);
+      if(id==='drill') checkDrill(); else check(id);
+    }
+  }
+});
 
 // Answer checking
 const answers = {
   l1: ['select station_id, duration_minutes from rides','select duration_minutes, station_id from rides'],
   l2: ['select * from rides where duration_minutes > 15'],
   l3: ['select station_id, avg(duration_minutes) as avg_duration from rides group by station_id'],
+  l3b: ['select station_id, sum(case when duration_minutes > 20 then 1 else 0 end) as long_rides from rides group by station_id'],
   l4: ['select station_id, avg(duration_minutes) as avg_duration from rides group by station_id having avg(duration_minutes) > 15'],
   l5: ['select bike_id, count(ride_id) as ride_count from rides group by bike_id order by ride_count desc limit 1'],
+  l5b: ['select ride_id, duration_minutes from rides order by duration_minutes desc limit 1 offset 1'],
   l6: ['select rides.ride_id, stations.station_name, rides.duration_minutes from rides inner join stations on rides.station_id = stations.station_id'],
-  l7a: ['select ward, sum(case when attended = 0 then 1 else 0 end) as dna_count from appointments group by ward order by dna_count desc limit 1',
-        'select ward, count(*) as dna_count from appointments where attended = 0 group by ward order by dna_count desc limit 1'],
-  l7b: ['select ward, avg(wait_days) as avg_wait from appointments group by ward having avg(wait_days) > 20']
+  l6b: ['select stations.station_name, count(rides.ride_id) as ride_count from stations left join rides on stations.station_id = rides.station_id group by stations.station_name'],
+  l7a: ['select * from rides where duration_minutes > (select avg(duration_minutes) from rides)'],
+  l7b: ['with station_avg as (select station_id, avg(duration_minutes) as avg_duration from rides group by station_id) select rides.ride_id, rides.station_id, rides.duration_minutes from rides join station_avg on rides.station_id = station_avg.station_id where rides.duration_minutes > station_avg.avg_duration'],
+  l8a: ['select ride_id, station_id, duration_minutes, rank() over (partition by station_id order by duration_minutes desc) as duration_rank from rides'],
+  l8b: ['with ranked as (select ride_id, station_id, duration_minutes, row_number() over (partition by station_id order by duration_minutes desc) as rn from rides) select ride_id, station_id, duration_minutes from ranked where rn = 1'],
+  l9a: ['select order_id, customer, status, order_date from orders_og union all select order_id, customer, status, order_date from orders_bureau'],
+  l9b: ["select order_id, customer, status, order_date, 'office goods' as source_system from orders_og union all select order_id, customer, status, order_date, 'bureau sas' as source_system from orders_bureau"],
+  l10a: ["select order_id, customer, status, order_date, 'office goods' as source_system from orders_og union all select order_id, customer, status, order_date, 'bureau sas' as source_system from orders_bureau"],
+  l10b: ["select order_id, customer, status as status_clean, order_date from orders_og union all select order_id, customer, case status when 'awaiting' then 'pending' when 'dispatched' then 'shipped' when 'delivered' then 'delivered' end as status_clean, order_date from orders_bureau"],
+  l10c: ['with unified as (select order_id, customer, order_date from orders_og union all select order_id, customer, order_date from orders_bureau) select unified.order_id, unified.customer from unified left join assignments on unified.order_id = assignments.order_id where assignments.assigned_to is null'],
+  l10d: ["with unified as (select order_id, status as status_clean, promised_date from orders_og union all select order_id, case status when 'awaiting' then 'pending' when 'dispatched' then 'shipped' when 'delivered' then 'delivered' end as status_clean, promised_date from orders_bureau) select order_id, status_clean, promised_date from unified where status_clean != 'delivered' and promised_date < '2026-07-01'"]
 };
 
-function normalise(s){ return s.toLowerCase().replace(/\s+/g,' ').replace(/;/g,'').trim(); }
+function normalise(s){
+  return s.toLowerCase()
+    .replace(/`/g, "'")
+    .replace(/"/g, "'")
+    .replace(/;/g, '')
+    .replace(/\(\s+/g, '(')
+    .replace(/\s+\)/g, ')')
+    .replace(/\s*,\s*/g, ', ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
 
 function check(id){
-  const input = normalise(document.getElementById('q-'+id).value);
+  const raw = document.getElementById('q-'+id).value;
   const fb = document.getElementById('fb-'+id);
+  if(!raw.trim()){
+    fb.className = 'feedback show wrong';
+    fb.textContent = 'Write a query first, then check it.';
+    return;
+  }
+  const input = normalise(raw);
   const correct = answers[id].some(a=>normalise(a)===input);
   fb.className = 'feedback show '+(correct?'correct':'wrong');
   if(correct){
@@ -686,15 +1222,50 @@ const drills = [
     table:`<table class="sql-table" style="margin-bottom:.75rem"><tr><th>appointment_id</th><th>ward_id</th><th>wait_days</th></tr><tr><td>A001</td><td>W01</td><td>12</td></tr><tr><td>A002</td><td>W02</td><td>28</td></tr><tr><td>A003</td><td>W01</td><td>8</td></tr></table><table class="sql-table"><tr><th>ward_id</th><th>ward_name</th></tr><tr><td>W01</td><td>Cardiology</td></tr><tr><td>W02</td><td>Oncology</td></tr></table>`,
     hint:'SELECT appointments.appointment_id, wards.ward_name, appointments.wait_days FROM appointments INNER JOIN wards ON appointments.ward_id = wards.ward_id',
     answers:['select appointments.appointment_id, wards.ward_name, appointments.wait_days from appointments inner join wards on appointments.ward_id = wards.ward_id']
+  },
+  {
+    domain:'E-commerce', concept:'Subquery in WHERE',
+    q:'An e-commerce team wants to find every product priced above the average price of all products. Show product_name and price.',
+    table:`<table class="sql-table"><tr><th>product_id</th><th>product_name</th><th>price</th></tr><tr><td>P01</td><td>Notebook</td><td>4</td></tr><tr><td>P02</td><td>Desk Lamp</td><td>22</td></tr><tr><td>P03</td><td>Stapler</td><td>9</td></tr><tr><td>P04</td><td>Office Chair</td><td>85</td></tr></table>`,
+    hint:'SELECT product_name, price FROM products WHERE price > (SELECT AVG(price) FROM products)',
+    answers:['select product_name, price from products where price > (select avg(price) from products)']
+  },
+  {
+    domain:'Retail', concept:'RANK() + PARTITION BY',
+    q:"A retail chain wants to rank each employee's total sales within their own region (highest sales = rank 1). Show employee, region, total_sales, and sales_rank.",
+    table:`<table class="sql-table"><tr><th>employee</th><th>region</th><th>total_sales</th></tr><tr><td>Wei</td><td>North</td><td>12000</td></tr><tr><td>Sam</td><td>North</td><td>18500</td></tr><tr><td>Ana</td><td>South</td><td>9400</td></tr><tr><td>Leo</td><td>South</td><td>15200</td></tr></table>`,
+    hint:'SELECT employee, region, total_sales, RANK() OVER (PARTITION BY region ORDER BY total_sales DESC) AS sales_rank FROM sales',
+    answers:['select employee, region, total_sales, rank() over (partition by region order by total_sales desc) as sales_rank from sales']
+  },
+  {
+    domain:'Marketing', concept:'UNION ALL + CASE',
+    q:"Marketing has leads in two exported tables that use different wording for the same two stages. Combine them into one list with a normalized status_clean column ('New' or 'Contacted') and a source column showing which table each lead came from.",
+    table:`<table class="sql-table" style="margin-bottom:.75rem"><tr><th>lead_id</th><th>name</th><th>status</th></tr><tr><td>L01</td><td>Priya K.</td><td>new</td></tr><tr><td>L02</td><td>Tom R.</td><td>contacted</td></tr></table><table class="sql-table"><tr><th>lead_id</th><th>name</th><th>stage</th></tr><tr><td>L03</td><td>Wei C.</td><td>open</td></tr><tr><td>L04</td><td>Ana M.</td><td>working</td></tr></table>`,
+    hint:"SELECT lead_id, name, CASE status WHEN 'new' THEN 'New' WHEN 'contacted' THEN 'Contacted' END AS status_clean, 'HubSpot' AS source FROM leads_hubspot UNION ALL SELECT lead_id, name, CASE stage WHEN 'open' THEN 'New' WHEN 'working' THEN 'Contacted' END AS status_clean, 'Salesforce' AS source FROM leads_salesforce",
+    answers:["select lead_id, name, case status when 'new' then 'new' when 'contacted' then 'contacted' end as status_clean, 'hubspot' as source from leads_hubspot union all select lead_id, name, case stage when 'open' then 'new' when 'working' then 'contacted' end as status_clean, 'salesforce' as source from leads_salesforce"]
   }
 ];
 
-let drillIdx = 0;
+// Shuffle so repeat visits to drill mode don't always start with the same question
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1; i>0; i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+let drillOrder = shuffle(drills.map((_,i)=>i));
+let drillPos = 0;
 let drillScore = 0;
-let drillCount = 0;
+let drillAttempts = 0;
+let drillAnswered = false;
+
+function currentDrill(){ return drills[drillOrder[drillPos % drillOrder.length]]; }
 
 function loadDrill(){
-  const d = drills[drillIdx % drills.length];
+  const d = currentDrill();
   document.getElementById('drill-domain').textContent = d.domain;
   document.getElementById('drill-concept').textContent = d.concept;
   document.getElementById('drill-q').textContent = d.q;
@@ -704,19 +1275,29 @@ function loadDrill(){
   document.getElementById('fb-drill').className = 'feedback';
   document.getElementById('q-drill').value = '';
   document.getElementById('drill-next-wrap').style.display = 'none';
-  drillCount++;
-  document.getElementById('drill-count').textContent = 'Question '+drillCount;
+  drillAnswered = false;
+  document.getElementById('drill-count').textContent = 'Question '+(drillPos+1);
 }
 
 function checkDrill(){
-  const d = drills[drillIdx % drills.length];
-  const input = normalise(document.getElementById('q-drill').value);
-  const correct = d.answers.some(a=>normalise(a)===input);
+  const raw = document.getElementById('q-drill').value;
   const fb = document.getElementById('fb-drill');
+  if(!raw.trim()){
+    fb.className = 'feedback show wrong';
+    fb.textContent = 'Write a query first, then check it.';
+    return;
+  }
+  const d = currentDrill();
+  const input = normalise(raw);
+  const correct = d.answers.some(a=>normalise(a)===input);
   fb.className = 'feedback show '+(correct?'correct':'wrong');
+  if(!drillAnswered){
+    drillAnswered = true;
+    drillAttempts++;
+    if(correct) drillScore++;
+    document.getElementById('drill-score').textContent = 'Score: '+drillScore+' / '+drillAttempts;
+  }
   if(correct){
-    drillScore++;
-    document.getElementById('drill-score').textContent = 'Score: '+drillScore;
     fb.textContent = '✓ Correct.';
   } else {
     document.getElementById('hint-drill').classList.add('show');
@@ -730,9 +1311,13 @@ function hintDrill(){
 }
 
 function nextDrill(){
-  drillIdx++;
+  drillPos++;
+  if(drillPos % drillOrder.length === 0) drillOrder = shuffle(drills.map((_,i)=>i));
   loadDrill();
 }
+
+// Restore saved progress, if any
+loadProgress();
 </script>
 </body>
 </html>
