@@ -161,7 +161,7 @@
 
   .chat-panel {
     position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 70;
-    width: 380px; max-width: calc(100vw - 2rem); height: 560px; max-height: calc(100vh - 3rem);
+    width: min(380px, calc(100vw - 2rem)); height: min(560px, calc(100vh - 3rem));
     background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
     display: none; flex-direction: column; overflow: hidden;
     box-shadow: 0 8px 40px rgba(0,0,0,.5);
@@ -196,7 +196,7 @@
   .chat-send:disabled { opacity: .5; cursor: not-allowed; }
 
   @media (max-width: 860px) {
-    .chat-panel { width: calc(100vw - 1.5rem); right: .75rem; bottom: .75rem; height: calc(100vh - 1.5rem); }
+    .chat-panel { right: .75rem; bottom: .75rem; width: min(340px, calc(100vw - 1.5rem)); height: min(480px, calc(100vh - 6rem)); }
     .chat-toggle { right: 1rem; bottom: 1rem; }
   }
 </style>
