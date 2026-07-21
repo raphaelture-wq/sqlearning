@@ -237,6 +237,7 @@
 
   <div class="nav-section">
     <div class="nav-label">Practice</div>
+    <div class="nav-item" id="nav-framework" onclick="go('framework')"><div class="check" id="chk-framework"></div>Decomposition Framework</div>
     <div class="nav-item" id="nav-drill" onclick="go('drill')"><div class="check" id="chk-drill"></div>Drill mode</div>
     <div class="nav-item" id="nav-ref" onclick="go('ref')"><div class="check" id="chk-ref"></div>Quick reference</div>
   </div>
@@ -1536,7 +1537,86 @@
 
   <div class="rule-box">"This is the whole job in miniature: understand two messy systems, unify them, normalize the inconsistencies, and answer the operational questions that actually matter to the business — assigned or not, on time or not."</div>
 
-  <div class="btn-row"><button class="btn btn-primary" onclick="complete('l10','drill')">Go to drill mode →</button></div>
+  <div class="btn-row"><button class="btn btn-primary" onclick="complete('l10','framework')">Next: decomposition framework →</button></div>
+</div>
+
+<!-- DECOMPOSITION FRAMEWORK -->
+<div class="page" id="page-framework">
+  <div class="section-header">
+    <div style="margin-bottom:.5rem"><span class="badge badge-orange">Decomposition round</span></div>
+    <h1>Decomposition Framework</h1>
+    <p>Turn a vague business ask into 2–4 concrete, data-answerable questions — before you touch SQL.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Why this matters</div>
+    <p>In the decomposition round, you won't get a clean SQL prompt. You'll get something like <em>"a company reached out asking for help with X — how would you think about this?"</em> The interviewer wants to see your framework <strong style="color:var(--text)">before</strong> they hand you any tables. Show up with a repeatable process, not just SQL syntax, and you'll have somewhere to go the moment the ask feels vague.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-label">The 5-step framework</div>
+    <p><strong style="color:var(--text)">1. Restate the goal, out loud.</strong> Say back what you think they're actually asking, in your own words, before doing anything else. If it's vague ("help us with X"), ask what decision this is meant to drive, or what "better" would look like.</p>
+    <p><strong style="color:var(--text)">2. Split the ask into 2–4 concrete sub-questions.</strong> A business ask is rarely one query's worth of work. Break it into pieces you could answer independently — e.g. "reduce late deliveries" becomes "which orders are late right now?", "where is it worst?", "is it getting worse over time?"</p>
+    <p><strong style="color:var(--text)">3. For each sub-question, name the data you'd need.</strong> Roughly which table, which columns, and what you'd filter/group/join on. You're not writing the query yet — just sketching what it would touch.</p>
+    <p><strong style="color:var(--text)">4. Start with the simplest version, then add complexity.</strong> Write the smallest query that gives a directional answer first. Refine after — joins, edge cases, date logic — once the simple version works.</p>
+    <p><strong style="color:var(--text)">5. Say what you assumed, and what you'd check next.</strong> Real data is messy (see Lesson 9). Call out anything you assumed — e.g. "assuming 'late' means past the promised date" — and what you'd validate if you had more time.</p>
+  </div>
+
+  <div class="rule-box">"A vague ask is not a query — it's 2 to 4 questions wearing a trenchcoat. Find them before you touch SQL."</div>
+
+  <div class="card">
+    <div class="card-label">Worked example</div>
+    <p>Ops leadership says: <em>"Deliveries have been slipping lately — can you help us understand what's going on?"</em></p>
+    <p><strong style="color:var(--text)">1. Restate:</strong> They want to know why deliveries are late, and — more usefully — where to focus first. That means they'll want to know how bad it is, where it's concentrated, and whether it's trending worse.</p>
+    <p><strong style="color:var(--text)">2. Sub-questions:</strong> How many shipments are late right now? Which carriers or regions have the worst late-rate? Is the late-rate getting worse over recent weeks?</p>
+    <p><strong style="color:var(--text)">3. Data:</strong> A <code style="color:var(--accent)">shipments</code> table with a promised date and a delivered date. "Late" = delivered after the promised date, or not yet delivered and the promised date has already passed.</p>
+    <table class="sql-table">
+      <tr><th>shipment_id</th><th>carrier</th><th>region</th><th>promised_date</th><th>delivered_date</th><th>status</th></tr>
+      <tr><td>S001</td><td>FastFreight</td><td>North</td><td>2026-06-20</td><td>2026-06-19</td><td>Delivered</td></tr>
+      <tr><td>S002</td><td>FastFreight</td><td>North</td><td>2026-06-21</td><td>2026-06-25</td><td>Delivered</td></tr>
+      <tr><td>S003</td><td>QuickHaul</td><td>South</td><td>2026-06-18</td><td></td><td>In Transit</td></tr>
+      <tr><td>S004</td><td>QuickHaul</td><td>South</td><td>2026-06-15</td><td>2026-06-22</td><td>Delivered</td></tr>
+      <tr><td>S005</td><td>FastFreight</td><td>South</td><td>2026-06-25</td><td></td><td>In Transit</td></tr>
+    </table>
+    <p style="margin-top:.75rem"><strong style="color:var(--text)">4. Simplest first:</strong> start with an overall count of late shipments, then break it out — this is exactly the shape of the practice query below.</p>
+    <div class="code-block">
+<span class="cm">-- simplest version: how many are late, full stop</span><br>
+<span class="kw">SELECT</span> <span class="fn">COUNT</span>(*) <span class="kw">AS</span> late_count<br>
+<span class="kw">FROM</span> shipments<br>
+<span class="kw">WHERE</span> (delivered_date <span class="kw">IS NOT NULL AND</span> delivered_date > promised_date)<br>
+&nbsp;&nbsp;<span class="kw">OR</span> (delivered_date <span class="kw">IS NULL AND</span> promised_date &lt; <span class="str">'2026-06-28'</span>);
+    </div>
+    <p><strong style="color:var(--text)">5. Assumptions to flag out loud:</strong> "in transit" past its promised date counts as late even though it hasn't technically failed to deliver yet — worth confirming that's what the business means by "late."</p>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice — decompose it yourself</div>
+    <p>Finance says: <em>"Customers keep disputing charges — can you dig into what's happening?"</em> Before looking at any answer, write out your own breakdown: what's the real goal, what 2–4 sub-questions would you ask, and roughly what data would answer each one?</p>
+    <textarea id="q-fw-reflect" placeholder="Restate the goal, list your sub-questions, and sketch the data each one would need..."></textarea>
+    <div class="btn-row">
+      <button class="btn" onclick="hint('fw-reflect')">Reveal a model breakdown</button>
+    </div>
+    <div class="hint" id="hint-fw-reflect">A possible breakdown — yours doesn't need to match, it just needs the same shape: <br><br>
+      <strong>Restate:</strong> they want to understand disputes well enough to reduce them — likely looking for a pattern worth acting on.<br>
+      <strong>Sub-questions:</strong> How many disputes are there, and what fraction of all transactions? Do disputes cluster by merchant, card type, or amount range? Is the dispute rate rising over time?<br>
+      <strong>Data:</strong> probably a transactions table with a disputed flag, merchant, card_type, amount, and date — group by merchant/card_type, filter disputed = true, and look at a date trend.<br>
+      <strong>Assumption to flag:</strong> whether "disputed" means opened or resolved-in-the-customer's-favor — those tell very different stories.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice — now write the query</div>
+    <p>Using the <code style="color:var(--accent)">shipments</code> table above, and assuming today's date is <code style="color:var(--accent)">2026-06-28</code>, write a query showing each <code style="color:var(--accent)">carrier</code> and how many of their shipments are currently late — delivered after the promised date, or not yet delivered with a promised date already in the past. Name the column <code style="color:var(--accent)">late_count</code>.</p>
+    <textarea id="q-fw1" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('fw1')">Check answer</button>
+      <button class="btn" onclick="hint('fw1')">Hint</button>
+    </div>
+    <div class="hint" id="hint-fw1">SELECT carrier, SUM(CASE WHEN (delivered_date IS NOT NULL AND delivered_date > promised_date) OR (delivered_date IS NULL AND promised_date < '2026-06-28') THEN 1 ELSE 0 END) AS late_count FROM shipments GROUP BY carrier</div>
+    <div class="feedback" id="fb-fw1"></div>
+  </div>
+
+  <div class="btn-row"><button class="btn btn-primary" onclick="go('drill')">Go to drill mode →</button></div>
 </div>
 
 <!-- DRILL MODE -->
@@ -1667,6 +1747,15 @@
     <p>2. Write something that works first, then improve it.</p>
     <p>3. If you're stuck, ask a clarifying question — they expect it and want to see it.</p>
   </div>
+
+  <div class="card">
+    <div class="card-label">Decomposition framework (for vague business asks)</div>
+    <p>1. Restate the goal out loud, before doing anything else.</p>
+    <p>2. Split the ask into 2–4 concrete sub-questions.</p>
+    <p>3. For each sub-question, name the data you'd need — table, columns, filter/group/join.</p>
+    <p>4. Start with the simplest query that gives a directional answer, then add complexity.</p>
+    <p>5. Say what you assumed, and what you'd check next.</p>
+  </div>
 </div>
 
 </main>
@@ -1694,7 +1783,7 @@
 
 <script>
 // Navigation
-const pages = ['l1','l2','l3','l4','l5','l6','l7','l8','l9','l10','drill','ref'];
+const pages = ['l1','l2','l3','l4','l5','l6','l7','l8','l9','l10','framework','drill','ref'];
 const completed = new Set();
 const STORAGE_KEY = 'sqlprep_progress';
 let currentPage = 'l1';
@@ -1872,7 +1961,8 @@ const answers = {
   l10a: ["select order_id, customer, status, order_date, 'office goods' as source_system from orders_og union all select order_id, customer, status, order_date, 'bureau sas' as source_system from orders_bureau"],
   l10b: ["select order_id, customer, status as status_clean, order_date from orders_og union all select order_id, customer, case status when 'awaiting' then 'pending' when 'dispatched' then 'shipped' when 'delivered' then 'delivered' end as status_clean, order_date from orders_bureau"],
   l10c: ['with unified as (select order_id, customer, order_date from orders_og union all select order_id, customer, order_date from orders_bureau) select unified.order_id, unified.customer from unified left join assignments on unified.order_id = assignments.order_id where assignments.assigned_to is null'],
-  l10d: ["with unified as (select order_id, status as status_clean, promised_date from orders_og union all select order_id, case status when 'awaiting' then 'pending' when 'dispatched' then 'shipped' when 'delivered' then 'delivered' end as status_clean, promised_date from orders_bureau) select order_id, status_clean, promised_date from unified where status_clean != 'delivered' and promised_date < '2026-07-01'"]
+  l10d: ["with unified as (select order_id, status as status_clean, promised_date from orders_og union all select order_id, case status when 'awaiting' then 'pending' when 'dispatched' then 'shipped' when 'delivered' then 'delivered' end as status_clean, promised_date from orders_bureau) select order_id, status_clean, promised_date from unified where status_clean != 'delivered' and promised_date < '2026-07-01'"],
+  fw1: ["select carrier, sum(case when (delivered_date is not null and delivered_date > promised_date) or (delivered_date is null and promised_date < '2026-06-28') then 1 else 0 end) as late_count from shipments group by carrier"]
 };
 
 function normalise(s){
