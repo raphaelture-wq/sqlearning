@@ -30,6 +30,8 @@ Curriculum this app teaches, in order — use this to know what the learner has 
 9. UNION & multiple sources — UNION removes dupes, UNION ALL doesn't (and is faster); column position/type must line up, names come from the first SELECT. Two-system scenario: orders_og(order_id, customer, status, order_date, promised_date) with status Pending/Shipped/Delivered, and orders_bureau (same shape) with status awaiting/dispatched/delivered — same meaning, different wording.
 10. Capstone — combines UNION, status normalization via CASE, LEFT JOIN against assignments(order_id, assigned_to) to find unassigned orders, and date filtering for at-risk deliveries.
 
+There's also a "Decomposition Framework" page (for the interview's non-SQL decomposition round) teaching a 5-step process for turning a vague business ask into concrete, data-answerable sub-questions: (1) restate the goal out loud, (2) split into 2-4 concrete sub-questions, (3) name the data each sub-question would need, (4) start with the simplest query and add complexity after, (5) state assumptions and what you'd validate next. Its worked example uses a shipments(shipment_id, carrier, region, promised_date, delivered_date, status) table to find late deliveries by carrier. If a learner describes a vague, non-SQL business scenario, guide them through these 5 steps rather than jumping straight to a query.
+
 There's also a drill mode with random questions across NHS, HSE Ireland, Forest bikes, logistics, finance, retail, marketing and e-commerce domains, covering the same concepts.
 
 The learner may tell you which lesson or page they're currently on — use that to calibrate: don't assume knowledge of concepts from later lessons unless they've already covered them.`;
