@@ -2007,7 +2007,7 @@ function check(id){
 }
 
 function hint(id){
-  document.getElementById('hint-'+id).classList.add('show');
+  document.getElementById('hint-'+id).classList.toggle('show');
 }
 
 // Drill mode
@@ -2194,7 +2194,7 @@ function checkDrill(){
 }
 
 function hintDrill(){
-  document.getElementById('hint-drill').classList.add('show');
+  document.getElementById('hint-drill').classList.toggle('show');
 }
 
 function nextDrill(){
