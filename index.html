@@ -326,6 +326,7 @@
 <span class="kw">SELECT</span> ride_id, duration_minutes / <span class="num">60.0</span> <span class="kw">AS</span> duration_hours<br>
 <span class="kw">FROM</span> rides;
     </div>
+    <p><code style="color:var(--accent)">duration_minutes / 60.0</code> divides each row's minutes by 60 to get hours, and <code style="color:var(--accent)">AS duration_hours</code> names that calculated result in the output — the underlying table is untouched, this only affects what you see back.</p>
   </div>
 
   <div class="card">
@@ -416,6 +417,7 @@
 <span class="kw">FROM</span> rides<br>
 <span class="kw">WHERE</span> city = <span class="str">'London'</span> <span class="kw">AND</span> duration_minutes > <span class="num">20</span>;
     </div>
+    <p>With AND, both conditions have to be true for a row to survive — a Manchester ride is excluded even if it's over 20 minutes, and a 5-minute London ride is excluded too. Only rides that are both in London and over 20 minutes come back.</p>
   </div>
 
   <div class="card">
@@ -590,7 +592,7 @@
 <span class="kw">FROM</span> rides<br>
 <span class="kw">GROUP BY</span> station_id;
     </div>
-    <p><code style="color:var(--accent)">COUNT(DISTINCT column)</code> counts unique values only, instead of every row.</p>
+    <p>The CASE expression turns each row into a 1 or a 0 — 1 if its duration is over 20 minutes, 0 otherwise — and SUM adds those up per station, giving a count of just the "long" rides. It's really COUNT with a condition attached, done without a second query. <code style="color:var(--accent)">COUNT(DISTINCT column)</code> in the same SELECT counts unique values only, instead of every row.</p>
   </div>
 
   <div class="card">
@@ -721,6 +723,7 @@
 <span class="kw">GROUP BY</span> station_id<br>
 <span class="kw">HAVING</span> <span class="fn">COUNT</span>(ride_id) > <span class="num">1</span>;
     </div>
+    <p>Walking through it in the order it actually runs: <strong style="color:var(--text)">WHERE</strong> keeps only rows where <code style="color:var(--accent)">city = 'London'</code> — every other city is discarded before anything else happens. <strong style="color:var(--text)">GROUP BY station_id</strong> then collapses the surviving London rows into one row per station. <strong style="color:var(--text)">COUNT(ride_id) AS total_rides</strong> counts how many rows landed in each of those groups. Finally, <strong style="color:var(--text)">HAVING COUNT(ride_id) > 1</strong> throws out any station group whose count isn't above 1 — so a station with exactly one London ride never makes it into the result.</p>
     <p>HAVING can also combine multiple aggregate conditions with AND/OR, just like WHERE does with row conditions.</p>
   </div>
 
@@ -843,6 +846,7 @@
     <div class="code-block">
 <span class="kw">ORDER BY</span> city <span class="kw">ASC</span>, duration_minutes <span class="kw">DESC</span>
     </div>
+    <p>Rows are sorted by <code style="color:var(--accent)">city</code> first, A→Z. Only when two rows share the same city does <code style="color:var(--accent)">duration_minutes</code> come into play, breaking that tie longest-first.</p>
     <p><strong style="color:var(--text)">OFFSET</strong> skips a number of rows before LIMIT starts counting — useful for pagination, or for questions like "the 2nd highest" instead of "the highest".</p>
     <div class="code-block">
 <span class="kw">SELECT</span> ride_id, duration_minutes<br>
@@ -1018,6 +1022,7 @@
 <span class="kw">FROM</span> rides a<br>
 <span class="kw">JOIN</span> rides b <span class="kw">ON</span> a.bike_id = b.bike_id <span class="kw">AND</span> a.ride_id &lt; b.ride_id;
     </div>
+    <p><code style="color:var(--accent)">a</code> and <code style="color:var(--accent)">b</code> are two aliases pointing at the same <code style="color:var(--accent)">rides</code> table, so the join is comparing rides against other rides. <code style="color:var(--accent)">a.bike_id = b.bike_id</code> pairs up rows that used the same bike. <code style="color:var(--accent)">a.ride_id &lt; b.ride_id</code> is what makes it useful instead of noise — without it, every ride would also match itself (bike_id always equals its own bike_id), and every real pair would show up twice, once each direction.</p>
   </div>
 
   <div class="card">
@@ -1141,6 +1146,7 @@
 <span class="kw">FROM</span> rides<br>
 <span class="kw">JOIN</span> station_avg <span class="kw">ON</span> rides.station_id = station_avg.station_id;
     </div>
+    <p>The <code style="color:var(--accent)">WITH</code> block runs first and is named <code style="color:var(--accent)">station_avg</code> — a table of one average duration per station. The outer query then joins <code style="color:var(--accent)">rides</code> to it on <code style="color:var(--accent)">station_id</code>, so each ride ends up sitting next to its own station's average, ready to compare against.</p>
     <p>A <strong style="color:var(--text)">correlated subquery</strong> is one that references a column from the outer query inside the inner query, so it re-runs once per outer row. They're powerful but slower — a CTE with a JOIN, like above, often does the same job more clearly.</p>
   </div>
 
@@ -1354,6 +1360,7 @@
 <span class="kw">UNION ALL</span><br>
 <span class="kw">SELECT</span> city <span class="kw">FROM</span> rides <span class="kw">WHERE</span> city = <span class="str">'Manchester'</span>;
     </div>
+    <p>Each half is a complete query on its own — one returns the London rows' city values, the other returns the Manchester rows'. UNION ALL doesn't compare or join them; it just stacks the second query's rows underneath the first's, producing one combined column of city values instead of two separate result sets.</p>
     <p>The real-world use case: your company runs on two systems that were never designed to talk to each other — an acquisition, a legacy system nobody's retired yet, a regional office with its own database. UNION lets you build one combined view without touching either source system.</p>
   </div>
 
@@ -1586,6 +1593,7 @@
 <span class="kw">WHERE</span> (delivered_date <span class="kw">IS NOT NULL AND</span> delivered_date > promised_date)<br>
 &nbsp;&nbsp;<span class="kw">OR</span> (delivered_date <span class="kw">IS NULL AND</span> promised_date &lt; <span class="str">'2026-06-28'</span>);
     </div>
+    <p>The WHERE clause covers two different ways a shipment counts as late, joined by OR: the first parenthesized condition catches shipments that <em>were</em> delivered, but arrived after their promised_date; the second catches shipments still in transit (no delivered_date yet) whose promised_date has already slipped into the past. The parentheses matter here — without them, AND's tighter binding would change which rows qualify.</p>
     <p><strong style="color:var(--text)">5. Assumptions to flag out loud:</strong> "in transit" past its promised date counts as late even though it hasn't technically failed to deliver yet — worth confirming that's what the business means by "late."</p>
   </div>
 
