@@ -122,6 +122,8 @@
   .badge-blue { background: var(--accent-dim); color: var(--accent); }
   .badge-green { background: var(--success-dim); color: var(--success); }
   .badge-orange { background: rgba(255,165,0,.12); color: orange; }
+  .badge-gray { background: var(--surface2); color: var(--muted); }
+  .nav-tag { font-size: 10px; color: var(--muted); margin-left: auto; padding-left: .5rem; flex-shrink: 0; }
 
   /* Section header */
   .section-header { margin-bottom: 1.5rem; }
@@ -215,31 +217,35 @@
   <div class="progress-wrap">
     <div class="progress-label">
       <span>Progress</span>
-      <span id="prog-label">0 / 7</span>
+      <span id="prog-label">0 / 10</span>
     </div>
     <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
     <div id="completion-msg" style="display:none;color:var(--success);font-size:11px;margin-top:.5rem">🎉 All lessons complete — nice work.</div>
   </div>
 
   <div class="nav-section">
-    <div class="nav-label">Lessons</div>
+    <div class="nav-label">Core — know cold</div>
     <div class="nav-item active" id="nav-l1" onclick="go('l1')"><div class="check" id="chk-l1"></div>SELECT & FROM</div>
-    <div class="nav-item" id="nav-l2" onclick="go('l2')"><div class="check" id="chk-l2"></div>WHERE</div>
+    <div class="nav-item" id="nav-l2" onclick="go('l2')"><div class="check" id="chk-l2"></div>WHERE & dates</div>
     <div class="nav-item" id="nav-l3" onclick="go('l3')"><div class="check" id="chk-l3"></div>GROUP BY & Aggregates</div>
     <div class="nav-item" id="nav-l4" onclick="go('l4')"><div class="check" id="chk-l4"></div>HAVING</div>
     <div class="nav-item" id="nav-l5" onclick="go('l5')"><div class="check" id="chk-l5"></div>ORDER BY & LIMIT</div>
     <div class="nav-item" id="nav-l6" onclick="go('l6')"><div class="check" id="chk-l6"></div>JOINs</div>
-    <div class="nav-item" id="nav-l7" onclick="go('l7')"><div class="check" id="chk-l7"></div>Subqueries & CTEs</div>
-    <div class="nav-item" id="nav-l8" onclick="go('l8')"><div class="check" id="chk-l8"></div>Window Functions</div>
-    <div class="nav-item" id="nav-l9" onclick="go('l9')"><div class="check" id="chk-l9"></div>UNION & Multiple Sources</div>
-    <div class="nav-item" id="nav-l10" onclick="go('l10')"><div class="check" id="chk-l10"></div>Capstone: Two Systems, One Tool</div>
   </div>
 
   <div class="nav-section">
-    <div class="nav-label">Practice</div>
+    <div class="nav-label">Practice — do this next</div>
     <div class="nav-item" id="nav-framework" onclick="go('framework')"><div class="check" id="chk-framework"></div>Decomposition Framework</div>
     <div class="nav-item" id="nav-drill" onclick="go('drill')"><div class="check" id="chk-drill"></div>Drill mode</div>
     <div class="nav-item" id="nav-ref" onclick="go('ref')"><div class="check" id="chk-ref"></div>Quick reference</div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Optional — only if time allows</div>
+    <div class="nav-item" id="nav-l7" onclick="go('l7')"><div class="check" id="chk-l7"></div>Subqueries & CTEs<span class="nav-tag">nice-to-have</span></div>
+    <div class="nav-item" id="nav-l8" onclick="go('l8')"><div class="check" id="chk-l8"></div>Window Functions<span class="nav-tag">skip</span></div>
+    <div class="nav-item" id="nav-l9" onclick="go('l9')"><div class="check" id="chk-l9"></div>UNION & Multiple Sources<span class="nav-tag">skip</span></div>
+    <div class="nav-item" id="nav-l10" onclick="go('l10')"><div class="check" id="chk-l10"></div>Capstone: Two Systems, One Tool<span class="nav-tag">skip</span></div>
   </div>
 
   <div class="nav-section" style="margin-top:auto;padding-top:.5rem;border-top:1px solid var(--border)">
@@ -487,6 +493,56 @@
   </div>
 
   <div class="rule-box">"WHERE filters rows. You decide which rows survive before anything else runs."</div>
+
+  <div class="card">
+    <div class="card-label">Date logic — comparing dates and DATEDIFF</div>
+    <p>Dates work like any other value in WHERE — write them as <code style="color:var(--accent)">'YYYY-MM-DD'</code> and compare with the same operators: <code style="color:var(--accent)">&gt;</code>, <code style="color:var(--accent)">&lt;</code>, <code style="color:var(--accent)">BETWEEN</code>. "Basic date logic" mostly just means: is this date before/after that one, or within a range.</p>
+    <div class="code-block">
+<span class="kw">WHERE</span> opened_date &gt;= <span class="str">'2026-06-01'</span><br>
+<span class="kw">WHERE</span> opened_date <span class="kw">BETWEEN</span> <span class="str">'2026-06-01'</span> <span class="kw">AND</span> <span class="str">'2026-06-30'</span>
+    </div>
+    <p>The other piece you need cold is <strong style="color:var(--text)">turning two dates into a number of days</strong> — e.g. "how long did this take?" That's <code style="color:var(--accent)">DATEDIFF</code>. The exact syntax differs by SQL dialect, so know the idea more than one memorized spelling:</p>
+    <div class="code-block">
+<span class="cm">-- MySQL: DATEDIFF(later_date, earlier_date) — most common in these prep tools</span><br>
+<span class="fn">DATEDIFF</span>(closed_date, opened_date) <span class="kw">AS</span> days_to_close<br><br>
+<span class="cm">-- Postgres/SQLite: just subtract the dates directly</span><br>
+closed_date - opened_date <span class="kw">AS</span> days_to_close
+    </div>
+    <p>Whichever spelling comes up on the day, say the logic out loud first — "later minus earlier gives me days elapsed" — the interviewer cares more that you reasoned it than that you recalled the exact function name.</p>
+    <p>Table for this section — a <code style="color:var(--accent)">tickets</code> table, one row per support ticket:</p>
+    <table class="sql-table">
+      <tr><th>ticket_id</th><th>opened_date</th><th>closed_date</th></tr>
+      <tr><td>T001</td><td>2026-06-01</td><td>2026-06-04</td></tr>
+      <tr><td>T002</td><td>2026-06-02</td><td>2026-06-02</td></tr>
+      <tr><td>T003</td><td>2026-06-03</td><td>2026-06-10</td></tr>
+      <tr><td>T004</td><td>2026-06-05</td><td></td></tr>
+    </table>
+    <p style="margin-top:.5rem">Notice T004 has no <code style="color:var(--accent)">closed_date</code> — it's still open. DATEDIFF against a NULL returns NULL rather than erroring, which is worth flagging out loud if you spot it: "this ticket's still open, so its days-to-close will come back blank."</p>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice — write the query</div>
+    <p>Using the <code style="color:var(--accent)">tickets</code> table above, write a query that shows each <code style="color:var(--accent)">ticket_id</code> and the number of days between <code style="color:var(--accent)">opened_date</code> and <code style="color:var(--accent)">closed_date</code>, named <code style="color:var(--accent)">days_to_close</code>.</p>
+    <textarea id="q-l2date1" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l2date1')">Check answer</button>
+      <button class="btn" onclick="hint('l2date1')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l2date1">SELECT ticket_id, DATEDIFF(closed_date, opened_date) AS days_to_close FROM tickets</div>
+    <div class="feedback" id="fb-l2date1"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice — write the query</div>
+    <p>Write a query that returns the <code style="color:var(--accent)">ticket_id</code> of every ticket that took more than 5 days to close.</p>
+    <textarea id="q-l2date2" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l2date2')">Check answer</button>
+      <button class="btn" onclick="hint('l2date2')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l2date2">SELECT ticket_id FROM tickets WHERE DATEDIFF(closed_date, opened_date) > 5</div>
+    <div class="feedback" id="fb-l2date2"></div>
+  </div>
 
   <div class="section-header" style="margin-top:1rem"><p style="text-transform:uppercase;font-size:11px;letter-spacing:.08em;font-weight:600">Putting it together — 3 more before you move on</p></div>
 
@@ -1087,15 +1143,16 @@
     <div class="feedback" id="fb-l6g"></div>
   </div>
 
-  <div class="btn-row"><button class="btn btn-primary" onclick="complete('l6','l7')">Next lesson →</button></div>
+  <div class="btn-row"><button class="btn btn-primary" onclick="complete('l6','framework')">Next: Decomposition Framework →</button></div>
 </div>
 
 <!-- L7: Subqueries & CTEs -->
 <div class="page" id="page-l7">
   <div class="section-header">
-    <div style="margin-bottom:.5rem"><span class="badge badge-blue">Lesson 7 of 10</span></div>
+    <div style="margin-bottom:.5rem"><span class="badge badge-gray">Optional — nice-to-have, not essential</span></div>
     <h1>Subqueries & CTEs</h1>
     <p>Use the result of one query inside another — and keep it readable.</p>
+    <p style="font-size:12px;color:var(--muted)">Might come up, but almost anything you'd do here can also be solved with a JOIN or HAVING from the core lessons. Worth a skim, not worth drilling hard.</p>
   </div>
 
   <div class="card">
@@ -1232,9 +1289,10 @@
 <!-- L8: Window Functions -->
 <div class="page" id="page-l8">
   <div class="section-header">
-    <div style="margin-bottom:.5rem"><span class="badge badge-blue">Lesson 8 of 10</span></div>
+    <div style="margin-bottom:.5rem"><span class="badge badge-gray">Bonus — likely not needed for this round</span></div>
     <h1>Window Functions</h1>
     <p>Calculate across a group of rows without collapsing them into one.</p>
+    <p style="font-size:12px;color:var(--muted)">This is a step up from what a technical-comprehension round tends to test. Only come here if the core six lessons and the decomposition framework already feel solid and you want extra depth.</p>
   </div>
 
   <div class="card">
@@ -1347,9 +1405,10 @@
 <!-- L9: UNION & Multiple Sources -->
 <div class="page" id="page-l9">
   <div class="section-header">
-    <div style="margin-bottom:.5rem"><span class="badge badge-blue">Lesson 9 of 10</span></div>
+    <div style="margin-bottom:.5rem"><span class="badge badge-gray">Bonus — unlikely to come up</span></div>
     <h1>UNION & Combining Multiple Sources</h1>
     <p>Stack results from separate queries — or separate systems — into one list.</p>
+    <p style="font-size:12px;color:var(--muted)">A niche tool for a fit-round refresher. Read it if you're curious, but don't spend drilling time here — it's not part of the core set.</p>
   </div>
 
   <div class="card">
@@ -1455,9 +1514,10 @@
 <!-- L10: Capstone -->
 <div class="page" id="page-l10">
   <div class="section-header">
-    <div style="margin-bottom:.5rem"><span class="badge badge-orange">Lesson 10 of 10 — capstone</span></div>
+    <div style="margin-bottom:.5rem"><span class="badge badge-gray">Bonus capstone — leans on UNION & CTEs</span></div>
     <h1>Capstone: Two Systems, One Fulfillment Tool</h1>
     <p>This is the exact shape of the Palantir CodePair round — a messy real business problem, not a clean textbook question.</p>
+    <p style="font-size:12px;color:var(--muted)">The decomposition thinking here matters far more than the UNION/CTE syntax it happens to use. If you're short on time, the standalone Decomposition Framework page covers the same reasoning without requiring the optional lessons.</p>
   </div>
 
   <div class="card">
@@ -1544,7 +1604,7 @@
 
   <div class="rule-box">"This is the whole job in miniature: understand two messy systems, unify them, normalize the inconsistencies, and answer the operational questions that actually matter to the business — assigned or not, on time or not."</div>
 
-  <div class="btn-row"><button class="btn btn-primary" onclick="complete('l10','framework')">Next: decomposition framework →</button></div>
+  <div class="btn-row"><button class="btn btn-primary" onclick="complete('l10','drill')">Back to drill mode →</button></div>
 </div>
 
 <!-- DECOMPOSITION FRAMEWORK -->
@@ -1566,7 +1626,7 @@
     <p><strong style="color:var(--text)">2. Split the ask into 2–4 concrete sub-questions.</strong> A business ask is rarely one query's worth of work. Break it into pieces you could answer independently — e.g. "reduce late deliveries" becomes "which orders are late right now?", "where is it worst?", "is it getting worse over time?"</p>
     <p><strong style="color:var(--text)">3. For each sub-question, name the data you'd need.</strong> Roughly which table, which columns, and what you'd filter/group/join on. You're not writing the query yet — just sketching what it would touch.</p>
     <p><strong style="color:var(--text)">4. Start with the simplest version, then add complexity.</strong> Write the smallest query that gives a directional answer first. Refine after — joins, edge cases, date logic — once the simple version works.</p>
-    <p><strong style="color:var(--text)">5. Say what you assumed, and what you'd check next.</strong> Real data is messy (see Lesson 9). Call out anything you assumed — e.g. "assuming 'late' means past the promised date" — and what you'd validate if you had more time.</p>
+    <p><strong style="color:var(--text)">5. Say what you assumed, and what you'd check next.</strong> Real data is messy — statuses spelled differently across systems, nulls that mean different things, definitions ("late," "active," "attrition") that vary by team. Call out anything you assumed — e.g. "assuming 'late' means past the promised date" — and what you'd validate if you had more time.</p>
   </div>
 
   <div class="rule-box">"A vague ask is not a query — it's 2 to 4 questions wearing a trenchcoat. Find them before you touch SQL."</div>
@@ -1613,6 +1673,21 @@
   </div>
 
   <div class="card">
+    <div class="card-label">Practice — decompose it yourself, again</div>
+    <p>People ops says: <em>"Attrition feels higher this quarter — can someone look into it?"</em> Same drill: restate the goal, list 2–4 sub-questions, sketch the data each one needs. This one is deliberately vaguer than the last — the goal is to get fast at finding structure in an ask that has none yet.</p>
+    <textarea id="q-fw-reflect2" placeholder="Restate the goal, list your sub-questions, and sketch the data each one would need..."></textarea>
+    <div class="btn-row">
+      <button class="btn" onclick="hint('fw-reflect2')">Reveal a model breakdown</button>
+    </div>
+    <div class="hint" id="hint-fw-reflect2">A possible breakdown: <br><br>
+      <strong>Restate:</strong> they want to know whether attrition is actually up, and if so, where it's concentrated, so they know where to focus retention efforts.<br>
+      <strong>Sub-questions:</strong> What's this quarter's attrition rate compared to the last few quarters? Which teams, tenure bands, or managers show the highest attrition? Is it concentrated among a particular group (e.g. high performers, a specific tenure range)?<br>
+      <strong>Data:</strong> an employees table with hire_date, termination_date, team, manager, and maybe performance_rating — compute a rate per period (departures / average headcount), group by team or tenure band, filter to terminations within the quarter.<br>
+      <strong>Assumption to flag:</strong> does "attrition" mean voluntary departures only, or voluntary + involuntary combined? Those tell very different stories and change which rows you'd filter to.
+    </div>
+  </div>
+
+  <div class="card">
     <div class="card-label">Practice — now write the query</div>
     <p>Using the <code style="color:var(--accent)">shipments</code> table above, and assuming today's date is <code style="color:var(--accent)">2026-06-28</code>, write a query showing each <code style="color:var(--accent)">carrier</code> and how many of their shipments are currently late — delivered after the promised date, or not yet delivered with a promised date already in the past. Name the column <code style="color:var(--accent)">late_count</code>.</p>
     <textarea id="q-fw1" placeholder="Write your SQL here..."></textarea>
@@ -1624,7 +1699,11 @@
     <div class="feedback" id="fb-fw1"></div>
   </div>
 
-  <div class="btn-row"><button class="btn btn-primary" onclick="go('drill')">Go to drill mode →</button></div>
+  <div class="btn-row">
+    <button class="btn btn-primary" onclick="go('drill')">Go to drill mode →</button>
+    <button class="btn" onclick="go('l7')">Optional: Subqueries & CTEs →</button>
+  </div>
+  <p style="font-size:12px;color:var(--muted);margin-top:.5rem">The core six lessons plus this framework are what actually get tested. Subqueries, window functions, UNION, and the capstone (left sidebar, "Optional") are there if you have spare time — they're unlikely to be essential for this round.</p>
 </div>
 
 <!-- DRILL MODE -->
@@ -1634,10 +1713,14 @@
     <p>Random questions across Palantir-relevant domains. Write the query, check your answer, keep going.</p>
   </div>
 
-  <div style="display:flex;gap:.75rem;margin-bottom:1.25rem;flex-wrap:wrap">
+  <div style="display:flex;gap:.75rem;margin-bottom:1.25rem;flex-wrap:wrap;align-items:center">
     <span class="badge badge-blue" id="drill-count">Question 1</span>
     <span class="badge badge-green" id="drill-score">Score: 0 / 0</span>
   </div>
+  <label style="display:flex;align-items:center;gap:.4rem;font-size:12px;color:var(--muted);margin-bottom:1rem;cursor:pointer">
+    <input type="checkbox" id="drill-include-bonus" onchange="toggleBonusDrills()">
+    Include optional topics (window functions, UNION) — off by default since they're unlikely to be tested
+  </label>
 
   <div class="drill-card">
     <div class="drill-meta">
@@ -1703,6 +1786,17 @@
   </div>
 
   <div class="card">
+    <div class="card-label">Dates & DATEDIFF</div>
+    <div class="code-block">
+<span class="cm">-- comparisons work the same as any other value</span><br>
+<span class="kw">WHERE</span> opened_date &gt;= <span class="str">'2026-06-01'</span><br><br>
+<span class="cm">-- days between two dates — MySQL-style (most common here)</span><br>
+<span class="fn">DATEDIFF</span>(later_date, earlier_date)<br>
+<span class="cm">-- Postgres/SQLite: just subtract — later_date - earlier_date</span>
+    </div>
+  </div>
+
+  <div class="card">
     <div class="card-label">JOINs</div>
     <div class="code-block">
 <span class="cm">-- INNER JOIN: only matching rows</span><br>
@@ -1711,41 +1805,6 @@
 <span class="cm">-- LEFT JOIN: all left rows, matched or not</span><br>
 <span class="kw">FROM</span> rides <span class="kw">LEFT JOIN</span> stations<br>
 <span class="kw">ON</span> rides.station_id = stations.station_id
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-label">Subqueries & CTEs</div>
-    <div class="code-block">
-<span class="cm">-- Subquery: a calculated value used inline</span><br>
-<span class="kw">WHERE</span> duration_minutes > (<span class="kw">SELECT</span> <span class="fn">AVG</span>(duration_minutes) <span class="kw">FROM</span> rides)<br><br>
-<span class="cm">-- CTE: name a subquery, then use it like a table</span><br>
-<span class="kw">WITH</span> station_avg <span class="kw">AS</span> (<br>
-&nbsp;&nbsp;<span class="kw">SELECT</span> station_id, <span class="fn">AVG</span>(duration_minutes) <span class="kw">AS</span> avg_duration <span class="kw">FROM</span> rides <span class="kw">GROUP BY</span> station_id<br>
-)<br>
-<span class="kw">SELECT</span> * <span class="kw">FROM</span> station_avg
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-label">Window functions</div>
-    <div class="code-block">
-<span class="fn">RANK</span>() <span class="kw">OVER</span> (<span class="kw">PARTITION BY</span> station_id <span class="kw">ORDER BY</span> duration_minutes <span class="kw">DESC</span>)<br>
-<span class="cm">-- ROW_NUMBER(): 1,2,3... no ties</span><br>
-<span class="cm">-- RANK(): ties share a number, then skips (1,2,2,4)</span><br>
-<span class="cm">-- DENSE_RANK(): ties share a number, no skip (1,2,2,3)</span><br>
-<span class="cm">-- can't filter on these in WHERE directly — wrap in a CTE first</span>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-label">UNION — combining sources</div>
-    <div class="code-block">
-<span class="cm">-- UNION ALL: keep all rows, including duplicates (fast)</span><br>
-<span class="kw">SELECT</span> order_id <span class="kw">FROM</span> orders_og<br>
-<span class="kw">UNION ALL</span><br>
-<span class="kw">SELECT</span> order_id <span class="kw">FROM</span> orders_bureau<br><br>
-<span class="cm">-- UNION: same, but removes exact duplicate rows</span>
     </div>
   </div>
 
@@ -1763,6 +1822,43 @@
     <p>3. For each sub-question, name the data you'd need — table, columns, filter/group/join.</p>
     <p>4. Start with the simplest query that gives a directional answer, then add complexity.</p>
     <p>5. Say what you assumed, and what you'd check next.</p>
+  </div>
+
+  <div class="section-header" style="margin-top:1rem"><p style="text-transform:uppercase;font-size:11px;letter-spacing:.08em;font-weight:600">Optional — only if time allows</p></div>
+
+  <div class="card">
+    <div class="card-label">Subqueries & CTEs <span class="badge badge-gray" style="margin-left:.4rem">nice-to-have</span></div>
+    <div class="code-block">
+<span class="cm">-- Subquery: a calculated value used inline</span><br>
+<span class="kw">WHERE</span> duration_minutes > (<span class="kw">SELECT</span> <span class="fn">AVG</span>(duration_minutes) <span class="kw">FROM</span> rides)<br><br>
+<span class="cm">-- CTE: name a subquery, then use it like a table</span><br>
+<span class="kw">WITH</span> station_avg <span class="kw">AS</span> (<br>
+&nbsp;&nbsp;<span class="kw">SELECT</span> station_id, <span class="fn">AVG</span>(duration_minutes) <span class="kw">AS</span> avg_duration <span class="kw">FROM</span> rides <span class="kw">GROUP BY</span> station_id<br>
+)<br>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> station_avg
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Window functions <span class="badge badge-gray" style="margin-left:.4rem">skip</span></div>
+    <div class="code-block">
+<span class="fn">RANK</span>() <span class="kw">OVER</span> (<span class="kw">PARTITION BY</span> station_id <span class="kw">ORDER BY</span> duration_minutes <span class="kw">DESC</span>)<br>
+<span class="cm">-- ROW_NUMBER(): 1,2,3... no ties</span><br>
+<span class="cm">-- RANK(): ties share a number, then skips (1,2,2,4)</span><br>
+<span class="cm">-- DENSE_RANK(): ties share a number, no skip (1,2,2,3)</span><br>
+<span class="cm">-- can't filter on these in WHERE directly — wrap in a CTE first</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">UNION — combining sources <span class="badge badge-gray" style="margin-left:.4rem">skip</span></div>
+    <div class="code-block">
+<span class="cm">-- UNION ALL: keep all rows, including duplicates (fast)</span><br>
+<span class="kw">SELECT</span> order_id <span class="kw">FROM</span> orders_og<br>
+<span class="kw">UNION ALL</span><br>
+<span class="kw">SELECT</span> order_id <span class="kw">FROM</span> orders_bureau<br><br>
+<span class="cm">-- UNION: same, but removes exact duplicate rows</span>
+    </div>
   </div>
 </div>
 
@@ -1912,6 +2008,10 @@ const answers = {
   l2b3: ["select * from rides where city in ('london', 'manchester')"],
   l2c: ["select * from rides where city like 'lon%'"],
   l2d: ['select * from rides where bike_id is not null'],
+  l2date1: ['select ticket_id, datediff(closed_date, opened_date) as days_to_close from tickets',
+            'select ticket_id, closed_date - opened_date as days_to_close from tickets'],
+  l2date2: ['select ticket_id from tickets where datediff(closed_date, opened_date) > 5',
+            'select ticket_id from tickets where closed_date - opened_date > 5'],
   l3: ['select station_id, avg(duration_minutes) as avg_duration from rides group by station_id'],
   l3a2: ['select city, count(ride_id) as ride_count from rides group by city','select city, count(*) as ride_count from rides group by city'],
   l3b: ['select station_id, sum(case when duration_minutes > 20 then 1 else 0 end) as long_rides from rides group by station_id',
@@ -2062,14 +2162,14 @@ const drills = [
     answers:['select product_name, price from products where price > (select avg(price) from products)']
   },
   {
-    domain:'Retail', concept:'RANK() + PARTITION BY',
+    domain:'Retail', concept:'RANK() + PARTITION BY', bonus:true,
     q:"A retail chain wants to rank each employee's total sales within their own region (highest sales = rank 1). Show employee, region, total_sales, and sales_rank.",
     table:`<table class="sql-table"><tr><th>employee</th><th>region</th><th>total_sales</th></tr><tr><td>Wei</td><td>North</td><td>12000</td></tr><tr><td>Sam</td><td>North</td><td>18500</td></tr><tr><td>Ana</td><td>South</td><td>9400</td></tr><tr><td>Leo</td><td>South</td><td>15200</td></tr></table>`,
     hint:'SELECT employee, region, total_sales, RANK() OVER (PARTITION BY region ORDER BY total_sales DESC) AS sales_rank FROM sales',
     answers:['select employee, region, total_sales, rank() over (partition by region order by total_sales desc) as sales_rank from sales']
   },
   {
-    domain:'Marketing', concept:'UNION ALL + CASE',
+    domain:'Marketing', concept:'UNION ALL + CASE', bonus:true,
     q:"Marketing has leads in two exported tables that use different wording for the same two stages. Combine them into one list with a normalized status_clean column ('New' or 'Contacted') and a source column showing which table each lead came from.",
     table:`<table class="sql-table" style="margin-bottom:.75rem"><tr><th>lead_id</th><th>name</th><th>status</th></tr><tr><td>L01</td><td>Priya K.</td><td>new</td></tr><tr><td>L02</td><td>Tom R.</td><td>contacted</td></tr></table><table class="sql-table"><tr><th>lead_id</th><th>name</th><th>stage</th></tr><tr><td>L03</td><td>Wei C.</td><td>open</td></tr><tr><td>L04</td><td>Ana M.</td><td>working</td></tr></table>`,
     hint:"SELECT lead_id, name, CASE status WHEN 'new' THEN 'New' WHEN 'contacted' THEN 'Contacted' END AS status_clean, 'HubSpot' AS source FROM leads_hubspot UNION ALL SELECT lead_id, name, CASE stage WHEN 'open' THEN 'New' WHEN 'working' THEN 'Contacted' END AS status_clean, 'Salesforce' AS source FROM leads_salesforce",
@@ -2111,7 +2211,7 @@ const drills = [
     answers:['select claim_id, customer_id from claims where customer_id in (select customer_id from claims group by customer_id having count(claim_id) > 2)','select claim_id, customer_id from claims where customer_id in (select customer_id from claims group by customer_id having count(*) > 2)']
   },
   {
-    domain:'Banking', concept:'Running total — SUM() OVER',
+    domain:'Banking', concept:'Running total — SUM() OVER', bonus:true,
     q:'For every transaction, show txn_id, account_id, amount, and a running_balance column that sums amount for that account, ordered by txn_id.',
     table:`<table class="sql-table"><tr><th>txn_id</th><th>account_id</th><th>amount</th></tr><tr><td>T1</td><td>ACC1</td><td>100</td></tr><tr><td>T2</td><td>ACC1</td><td>-30</td></tr><tr><td>T3</td><td>ACC1</td><td>50</td></tr><tr><td>T4</td><td>ACC2</td><td>200</td></tr></table>`,
     hint:'SELECT txn_id, account_id, amount, SUM(amount) OVER (PARTITION BY account_id ORDER BY txn_id) AS running_balance FROM transactions',
@@ -2143,13 +2243,25 @@ function shuffle(arr){
   return a;
 }
 
-let drillOrder = shuffle(drills.map((_,i)=>i));
+let drillPool = drills.filter(d=>!d.bonus);
+let drillOrder = shuffle(drillPool.map((_,i)=>i));
 let drillPos = 0;
 let drillScore = 0;
 let drillAttempts = 0;
 let drillAnswered = false;
 
-function currentDrill(){ return drills[drillOrder[drillPos % drillOrder.length]]; }
+function currentDrill(){ return drillPool[drillOrder[drillPos % drillOrder.length]]; }
+
+function toggleBonusDrills(){
+  const includeBonus = document.getElementById('drill-include-bonus').checked;
+  drillPool = includeBonus ? drills : drills.filter(d=>!d.bonus);
+  drillOrder = shuffle(drillPool.map((_,i)=>i));
+  drillPos = 0;
+  drillScore = 0;
+  drillAttempts = 0;
+  document.getElementById('drill-score').textContent = 'Score: 0 / 0';
+  loadDrill();
+}
 
 function loadDrill(){
   const d = currentDrill();
@@ -2199,7 +2311,7 @@ function hintDrill(){
 
 function nextDrill(){
   drillPos++;
-  if(drillPos % drillOrder.length === 0) drillOrder = shuffle(drills.map((_,i)=>i));
+  if(drillPos % drillOrder.length === 0) drillOrder = shuffle(drillPool.map((_,i)=>i));
   loadDrill();
 }
 

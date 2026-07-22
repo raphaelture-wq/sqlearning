@@ -36,19 +36,31 @@ The drill mode fires random questions across different domains. Use it daily. Te
 
 ---
 
-## What it covers
+## What it covers, and how hard to drill each part
+
+The technical comprehension round tests fluency with fundamentals under pressure, not SQL trivia — so effort is weighted accordingly.
+
+**Know cold** — these are the default learning path, in order:
 
 | Lesson | Concept |
 |--------|---------|
 | 1 | `SELECT` & `FROM` — picking columns and tables |
-| 2 | `WHERE` — filtering rows |
+| 2 | `WHERE` — filtering rows, plus `DISTINCT`, `CASE WHEN`, and date logic / `DATEDIFF` |
 | 3 | `GROUP BY` & aggregate functions — `COUNT`, `SUM`, `AVG`, `MAX`, `MIN` |
 | 4 | `HAVING` — filtering groups (the most commonly confused clause) |
 | 5 | `ORDER BY` & `LIMIT` — sorting and capping results |
 | 6 | `JOIN` — connecting two tables (`INNER`, `LEFT`) |
-| 7 | Read a table → answer a business question (the exact CodePair format) |
+| — | **Decomposition Framework** — turning a vague business ask into 2–4 concrete, data-answerable sub-questions before touching SQL. This is the other half of the interview, not an afterthought. |
 
-Plus **drill mode** with questions across NHS, HSE Ireland, Forest bikes, logistics, and finance domains.
+**Nice to have, not essential:**
+- Subqueries & CTEs — most of what they do can also be done with a JOIN or HAVING.
+
+**Don't bother drilling — included but marked optional in the app:**
+- Window functions (`RANK`, `ROW_NUMBER`, running totals) — too advanced for this round.
+- `UNION` / combining multiple sources — unlikely to come up.
+- The two-system capstone — a good decomposition exercise, but leans on UNION/CTE syntax that isn't core.
+
+Drill mode excludes window-function and UNION questions by default (toggle to include them if you want extra reps once the core is solid).
 
 ---
 
