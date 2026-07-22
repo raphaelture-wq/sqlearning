@@ -391,6 +391,57 @@
     <div class="feedback" id="fb-l1g"></div>
   </div>
 
+  <div class="section-header" style="margin-top:2rem"><p style="text-transform:uppercase;font-size:11px;letter-spacing:.08em;font-weight:600">Exercises — defense intelligence reports</p></div>
+
+  <div class="card">
+    <div class="card-label">The table you're working with</div>
+    <p>An intelligence unit logs incoming field reports in a table called <code style="color:var(--accent)">field_reports</code>.</p>
+    <table class="sql-table">
+      <tr><th>report_id</th><th>analyst</th><th>region</th><th>classification</th><th>priority_score</th></tr>
+      <tr><td>R001</td><td>Chen</td><td>Eastern Europe</td><td>Confidential</td><td>7</td></tr>
+      <tr><td>R002</td><td>Osei</td><td>Horn of Africa</td><td>Secret</td><td>9</td></tr>
+      <tr><td>R003</td><td>Chen</td><td>Eastern Europe</td><td>Confidential</td><td>4</td></tr>
+      <tr><td>R004</td><td>Reyes</td><td>South China Sea</td><td>Secret</td><td>8</td></tr>
+      <tr><td>R005</td><td>Osei</td><td>Horn of Africa</td><td>Unclassified</td><td>3</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice</div>
+    <p>Write a query that returns just the <code style="color:var(--accent)">analyst</code> and <code style="color:var(--accent)">region</code> columns from field_reports.</p>
+    <textarea id="q-l1z1" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l1z1')">Check answer</button>
+      <button class="btn" onclick="hint('l1z1')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l1z1">SELECT analyst, region FROM field_reports</div>
+    <div class="feedback" id="fb-l1z1"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice</div>
+    <p>Write a query that returns the distinct list of <code style="color:var(--accent)">classification</code> levels used in field_reports.</p>
+    <textarea id="q-l1z2" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l1z2')">Check answer</button>
+      <button class="btn" onclick="hint('l1z2')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l1z2">SELECT DISTINCT classification FROM field_reports</div>
+    <div class="feedback" id="fb-l1z2"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice</div>
+    <p>Write a query that returns <code style="color:var(--accent)">report_id</code> and <code style="color:var(--accent)">priority_score</code>, with <code style="color:var(--accent)">priority_score</code> aliased as <code style="color:var(--accent)">priority</code>.</p>
+    <textarea id="q-l1z3" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l1z3')">Check answer</button>
+      <button class="btn" onclick="hint('l1z3')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l1z3">SELECT report_id, priority_score AS priority FROM field_reports</div>
+    <div class="feedback" id="fb-l1z3"></div>
+  </div>
+
   <div class="btn-row"><button class="btn btn-primary" onclick="complete('l1','l2')">Next lesson →</button></div>
 </div>
 
@@ -526,6 +577,57 @@
     <div class="feedback" id="fb-l2d"></div>
   </div>
 
+  <div class="section-header" style="margin-top:2rem"><p style="text-transform:uppercase;font-size:11px;letter-spacing:.08em;font-weight:600">Exercises — military supply shipments</p></div>
+
+  <div class="card">
+    <div class="card-label">The table you're working with</div>
+    <p>A logistics unit tracks outbound cargo in a table called <code style="color:var(--accent)">supply_shipments</code>.</p>
+    <table class="sql-table">
+      <tr><th>shipment_id</th><th>base</th><th>cargo_type</th><th>weight_kg</th><th>status</th></tr>
+      <tr><td>SH001</td><td>Fort Liberty</td><td>Medical</td><td>320</td><td>Delayed</td></tr>
+      <tr><td>SH002</td><td>Ramstein</td><td>Ammunition</td><td>1450</td><td>In Transit</td></tr>
+      <tr><td>SH003</td><td>Fort Liberty</td><td>Fuel</td><td>900</td><td>Delivered</td></tr>
+      <tr><td>SH004</td><td>Yokota</td><td>Medical</td><td>210</td><td>Delayed</td></tr>
+      <tr><td>SH005</td><td>Ramstein</td><td>Rations</td><td>680</td><td>In Transit</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice</div>
+    <p>Write a query that returns all columns for shipments with a status of 'Delayed'.</p>
+    <textarea id="q-l2z1" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l2z1')">Check answer</button>
+      <button class="btn" onclick="hint('l2z1')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l2z1">SELECT * FROM supply_shipments WHERE status = 'Delayed'</div>
+    <div class="feedback" id="fb-l2z1"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice</div>
+    <p>Write a query that returns all columns for shipments from Ramstein weighing over 1000 kg.</p>
+    <textarea id="q-l2z2" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l2z2')">Check answer</button>
+      <button class="btn" onclick="hint('l2z2')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l2z2">SELECT * FROM supply_shipments WHERE base = 'Ramstein' AND weight_kg > 1000</div>
+    <div class="feedback" id="fb-l2z2"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice</div>
+    <p>Write a query that returns all columns for shipments where <code style="color:var(--accent)">cargo_type</code> is either 'Medical' or 'Fuel', using IN.</p>
+    <textarea id="q-l2z3" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l2z3')">Check answer</button>
+      <button class="btn" onclick="hint('l2z3')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l2z3">SELECT * FROM supply_shipments WHERE cargo_type IN ('Medical', 'Fuel')</div>
+    <div class="feedback" id="fb-l2z3"></div>
+  </div>
+
   <div class="btn-row"><button class="btn btn-primary" onclick="complete('l2','l3')">Next lesson →</button></div>
 </div>
 
@@ -655,6 +757,57 @@
     </div>
     <div class="hint" id="hint-l3e">SELECT city, COUNT(ride_id) AS ride_count, SUM(CASE WHEN duration_minutes > 20 THEN 1 ELSE 0 END) AS long_rides FROM rides GROUP BY city</div>
     <div class="feedback" id="fb-l3e"></div>
+  </div>
+
+  <div class="section-header" style="margin-top:2rem"><p style="text-transform:uppercase;font-size:11px;letter-spacing:.08em;font-weight:600">Exercises — border checkpoint crossings</p></div>
+
+  <div class="card">
+    <div class="card-label">The table you're working with</div>
+    <p>A border agency logs every vehicle crossing in a table called <code style="color:var(--accent)">border_crossings</code>. <code style="color:var(--accent)">flagged</code> is 1 if the vehicle was pulled aside for secondary inspection, 0 otherwise.</p>
+    <table class="sql-table">
+      <tr><th>crossing_id</th><th>checkpoint</th><th>vehicle_type</th><th>flagged</th><th>wait_minutes</th></tr>
+      <tr><td>X001</td><td>North Gate</td><td>Car</td><td>0</td><td>12</td></tr>
+      <tr><td>X002</td><td>North Gate</td><td>Truck</td><td>1</td><td>40</td></tr>
+      <tr><td>X003</td><td>South Gate</td><td>Car</td><td>0</td><td>8</td></tr>
+      <tr><td>X004</td><td>North Gate</td><td>Car</td><td>1</td><td>25</td></tr>
+      <tr><td>X005</td><td>South Gate</td><td>Truck</td><td>0</td><td>30</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice</div>
+    <p>Write a query showing each <code style="color:var(--accent)">checkpoint</code> and its total number of crossings, named <code style="color:var(--accent)">total_crossings</code>.</p>
+    <textarea id="q-l3z1" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l3z1')">Check answer</button>
+      <button class="btn" onclick="hint('l3z1')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l3z1">SELECT checkpoint, COUNT(crossing_id) AS total_crossings FROM border_crossings GROUP BY checkpoint</div>
+    <div class="feedback" id="fb-l3z1"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice</div>
+    <p>Write a query showing each <code style="color:var(--accent)">checkpoint</code> and its average <code style="color:var(--accent)">wait_minutes</code>, named <code style="color:var(--accent)">avg_wait</code>.</p>
+    <textarea id="q-l3z2" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l3z2')">Check answer</button>
+      <button class="btn" onclick="hint('l3z2')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l3z2">SELECT checkpoint, AVG(wait_minutes) AS avg_wait FROM border_crossings GROUP BY checkpoint</div>
+    <div class="feedback" id="fb-l3z2"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice — harder</div>
+    <p>Write a query showing each <code style="color:var(--accent)">checkpoint</code> and how many crossings were flagged (<code style="color:var(--accent)">flagged</code> = 1), named <code style="color:var(--accent)">flagged_count</code>, using SUM and CASE.</p>
+    <textarea id="q-l3z3" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l3z3')">Check answer</button>
+      <button class="btn" onclick="hint('l3z3')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l3z3">SELECT checkpoint, SUM(CASE WHEN flagged = 1 THEN 1 ELSE 0 END) AS flagged_count FROM border_crossings GROUP BY checkpoint</div>
+    <div class="feedback" id="fb-l3z3"></div>
   </div>
 
   <div class="btn-row"><button class="btn btn-primary" onclick="complete('l3','l4')">Next lesson →</button></div>
@@ -789,6 +942,57 @@
     <div class="feedback" id="fb-l4d"></div>
   </div>
 
+  <div class="section-header" style="margin-top:2rem"><p style="text-transform:uppercase;font-size:11px;letter-spacing:.08em;font-weight:600">Exercises — equipment maintenance faults</p></div>
+
+  <div class="card">
+    <div class="card-label">The table you're working with</div>
+    <p>A maintenance unit logs equipment faults across bases in a table called <code style="color:var(--accent)">equipment_faults</code>.</p>
+    <table class="sql-table">
+      <tr><th>fault_id</th><th>unit_id</th><th>base</th><th>severity</th><th>fault_date</th></tr>
+      <tr><td>F001</td><td>U12</td><td>Fort Liberty</td><td>High</td><td>2026-05-01</td></tr>
+      <tr><td>F002</td><td>U07</td><td>Ramstein</td><td>Low</td><td>2026-05-02</td></tr>
+      <tr><td>F003</td><td>U12</td><td>Fort Liberty</td><td>High</td><td>2026-05-04</td></tr>
+      <tr><td>F004</td><td>U19</td><td>Yokota</td><td>Medium</td><td>2026-05-05</td></tr>
+      <tr><td>F005</td><td>U12</td><td>Fort Liberty</td><td>Low</td><td>2026-05-06</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice</div>
+    <p>Write a query that shows only the bases with more than 2 recorded faults. Show <code style="color:var(--accent)">base</code> and <code style="color:var(--accent)">fault_count</code> (COUNT).</p>
+    <textarea id="q-l4z1" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l4z1')">Check answer</button>
+      <button class="btn" onclick="hint('l4z1')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l4z1">SELECT base, COUNT(fault_id) AS fault_count FROM equipment_faults GROUP BY base HAVING COUNT(fault_id) > 2</div>
+    <div class="feedback" id="fb-l4z1"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice</div>
+    <p>Write a query that shows only the units (<code style="color:var(--accent)">unit_id</code>) with more than 1 fault. Show <code style="color:var(--accent)">unit_id</code> and <code style="color:var(--accent)">fault_count</code>.</p>
+    <textarea id="q-l4z2" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l4z2')">Check answer</button>
+      <button class="btn" onclick="hint('l4z2')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l4z2">SELECT unit_id, COUNT(fault_id) AS fault_count FROM equipment_faults GROUP BY unit_id HAVING COUNT(fault_id) > 1</div>
+    <div class="feedback" id="fb-l4z2"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice — harder</div>
+    <p>Using WHERE and HAVING together, write a query showing <code style="color:var(--accent)">base</code> and <code style="color:var(--accent)">fault_count</code> (COUNT) for High severity faults only, keeping only bases with more than 1 such fault.</p>
+    <textarea id="q-l4z3" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l4z3')">Check answer</button>
+      <button class="btn" onclick="hint('l4z3')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l4z3">SELECT base, COUNT(fault_id) AS fault_count FROM equipment_faults WHERE severity = 'High' GROUP BY base HAVING COUNT(fault_id) > 1</div>
+    <div class="feedback" id="fb-l4z3"></div>
+  </div>
+
   <div class="btn-row"><button class="btn btn-primary" onclick="complete('l4','l5')">Next lesson →</button></div>
 </div>
 
@@ -916,6 +1120,57 @@
     </div>
     <div class="hint" id="hint-l5c">SELECT station_id, COUNT(ride_id) AS ride_count FROM rides GROUP BY station_id ORDER BY ride_count ASC LIMIT 1</div>
     <div class="feedback" id="fb-l5c"></div>
+  </div>
+
+  <div class="section-header" style="margin-top:2rem"><p style="text-transform:uppercase;font-size:11px;letter-spacing:.08em;font-weight:600">Exercises — power grid load readings</p></div>
+
+  <div class="card">
+    <div class="card-label">The table you're working with</div>
+    <p>A utility operator logs load readings from its substations in a table called <code style="color:var(--accent)">grid_load</code>.</p>
+    <table class="sql-table">
+      <tr><th>reading_id</th><th>substation</th><th>load_mw</th><th>reading_time</th></tr>
+      <tr><td>G001</td><td>Substation A</td><td>420</td><td>06:00</td></tr>
+      <tr><td>G002</td><td>Substation B</td><td>610</td><td>06:00</td></tr>
+      <tr><td>G003</td><td>Substation A</td><td>580</td><td>07:00</td></tr>
+      <tr><td>G004</td><td>Substation C</td><td>390</td><td>06:00</td></tr>
+      <tr><td>G005</td><td>Substation B</td><td>705</td><td>07:00</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice</div>
+    <p>Write a query that returns all readings ordered by <code style="color:var(--accent)">load_mw</code> from highest to lowest.</p>
+    <textarea id="q-l5z1" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l5z1')">Check answer</button>
+      <button class="btn" onclick="hint('l5z1')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l5z1">SELECT * FROM grid_load ORDER BY load_mw DESC</div>
+    <div class="feedback" id="fb-l5z1"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice</div>
+    <p>Write a query that returns the top 2 highest load readings, showing <code style="color:var(--accent)">reading_id</code> and <code style="color:var(--accent)">load_mw</code>.</p>
+    <textarea id="q-l5z2" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l5z2')">Check answer</button>
+      <button class="btn" onclick="hint('l5z2')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l5z2">SELECT reading_id, load_mw FROM grid_load ORDER BY load_mw DESC LIMIT 2</div>
+    <div class="feedback" id="fb-l5z2"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice</div>
+    <p>Write a query that skips the single highest reading and returns the next highest. Show <code style="color:var(--accent)">reading_id</code> and <code style="color:var(--accent)">load_mw</code>.</p>
+    <textarea id="q-l5z3" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l5z3')">Check answer</button>
+      <button class="btn" onclick="hint('l5z3')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l5z3">SELECT reading_id, load_mw FROM grid_load ORDER BY load_mw DESC LIMIT 1 OFFSET 1</div>
+    <div class="feedback" id="fb-l5z3"></div>
   </div>
 
   <div class="btn-row"><button class="btn btn-primary" onclick="complete('l5','l6')">Next lesson →</button></div>
@@ -1087,6 +1342,63 @@
     <div class="feedback" id="fb-l6g"></div>
   </div>
 
+  <div class="section-header" style="margin-top:2rem"><p style="text-transform:uppercase;font-size:11px;letter-spacing:.08em;font-weight:600">Exercises — government investigations</p></div>
+
+  <div class="card">
+    <div class="card-label">Two tables</div>
+    <p>A case management system tracks open investigations and which agent, if any, has been assigned.</p>
+    <table class="sql-table">
+      <tr><th>case_id</th><th>subject</th><th>region</th></tr>
+      <tr><td>INV001</td><td>Subject A</td><td>Northeast</td></tr>
+      <tr><td>INV002</td><td>Subject B</td><td>Midwest</td></tr>
+      <tr><td>INV003</td><td>Subject C</td><td>Northeast</td></tr>
+      <tr><td>INV004</td><td>Subject D</td><td>West</td></tr>
+    </table>
+    <p style="margin-top:.5rem;font-size:12px;color:var(--muted)">↑ investigations</p>
+    <table class="sql-table" style="margin-top:1rem">
+      <tr><th>case_id</th><th>agent_name</th></tr>
+      <tr><td>INV001</td><td>Agent Diaz</td></tr>
+      <tr><td>INV003</td><td>Agent Kim</td></tr>
+    </table>
+    <p style="margin-top:.5rem;font-size:12px;color:var(--muted)">↑ agents — notice INV002 and INV004 have no assigned agent.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice</div>
+    <p>Write a query showing each <code style="color:var(--accent)">case_id</code> and the <code style="color:var(--accent)">agent_name</code> assigned to it, using INNER JOIN (only assigned cases).</p>
+    <textarea id="q-l6z1" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l6z1')">Check answer</button>
+      <button class="btn" onclick="hint('l6z1')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l6z1">SELECT investigations.case_id, agents.agent_name FROM investigations INNER JOIN agents ON investigations.case_id = agents.case_id</div>
+    <div class="feedback" id="fb-l6z1"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice</div>
+    <p>Write a query showing every <code style="color:var(--accent)">case_id</code> and its <code style="color:var(--accent)">agent_name</code> (NULL if unassigned), using LEFT JOIN.</p>
+    <textarea id="q-l6z2" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l6z2')">Check answer</button>
+      <button class="btn" onclick="hint('l6z2')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l6z2">SELECT investigations.case_id, agents.agent_name FROM investigations LEFT JOIN agents ON investigations.case_id = agents.case_id</div>
+    <div class="feedback" id="fb-l6z2"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice — harder</div>
+    <p>Write a query showing each <code style="color:var(--accent)">region</code> and the count of assigned cases in it, named <code style="color:var(--accent)">assigned_count</code>, including regions with zero assigned cases.</p>
+    <textarea id="q-l6z3" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l6z3')">Check answer</button>
+      <button class="btn" onclick="hint('l6z3')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l6z3">SELECT investigations.region, COUNT(agents.case_id) AS assigned_count FROM investigations LEFT JOIN agents ON investigations.case_id = agents.case_id GROUP BY investigations.region</div>
+    <div class="feedback" id="fb-l6z3"></div>
+  </div>
+
   <div class="btn-row"><button class="btn btn-primary" onclick="complete('l6','l7')">Next lesson →</button></div>
 </div>
 
@@ -1226,6 +1538,45 @@
     <div class="feedback" id="fb-l7e"></div>
   </div>
 
+  <div class="section-header" style="margin-top:2rem"><p style="text-transform:uppercase;font-size:11px;letter-spacing:.08em;font-weight:600">Exercises — insurance fraud claims</p></div>
+
+  <div class="card">
+    <div class="card-label">The table you're working with</div>
+    <p>A fraud review team works from a table called <code style="color:var(--accent)">claims</code>.</p>
+    <table class="sql-table">
+      <tr><th>claim_id</th><th>customer_id</th><th>amount</th></tr>
+      <tr><td>CL01</td><td>CUST1</td><td>1200</td></tr>
+      <tr><td>CL02</td><td>CUST2</td><td>300</td></tr>
+      <tr><td>CL03</td><td>CUST1</td><td>900</td></tr>
+      <tr><td>CL04</td><td>CUST3</td><td>4500</td></tr>
+      <tr><td>CL05</td><td>CUST2</td><td>250</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice</div>
+    <p>Write a query that returns all claims where <code style="color:var(--accent)">amount</code> is greater than the average amount across all claims.</p>
+    <textarea id="q-l7z1" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l7z1')">Check answer</button>
+      <button class="btn" onclick="hint('l7z1')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l7z1">SELECT * FROM claims WHERE amount > (SELECT AVG(amount) FROM claims)</div>
+    <div class="feedback" id="fb-l7z1"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice — harder</div>
+    <p>Using a CTE named <code style="color:var(--accent)">customer_totals</code> that sums <code style="color:var(--accent)">amount</code> per <code style="color:var(--accent)">customer_id</code>, write a query returning <code style="color:var(--accent)">customer_id</code> and <code style="color:var(--accent)">total_amount</code> for customers whose total exceeds 1000.</p>
+    <textarea id="q-l7z2" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l7z2')">Check answer</button>
+      <button class="btn" onclick="hint('l7z2')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l7z2">WITH customer_totals AS (SELECT customer_id, SUM(amount) AS total_amount FROM claims GROUP BY customer_id) SELECT customer_id, total_amount FROM customer_totals WHERE total_amount > 1000</div>
+    <div class="feedback" id="fb-l7z2"></div>
+  </div>
+
   <div class="btn-row"><button class="btn btn-primary" onclick="complete('l7','l8')">Next lesson →</button></div>
 </div>
 
@@ -1339,6 +1690,45 @@
     </div>
     <div class="hint" id="hint-l8e">SELECT ride_id, city, duration_minutes, LAG(duration_minutes) OVER (PARTITION BY city ORDER BY ride_id) AS prev_duration FROM rides</div>
     <div class="feedback" id="fb-l8e"></div>
+  </div>
+
+  <div class="section-header" style="margin-top:2rem"><p style="text-transform:uppercase;font-size:11px;letter-spacing:.08em;font-weight:600">Exercises — security incident severity</p></div>
+
+  <div class="card">
+    <div class="card-label">The table you're working with</div>
+    <p>A security operations center logs incidents in a table called <code style="color:var(--accent)">incident_reports</code>.</p>
+    <table class="sql-table">
+      <tr><th>incident_id</th><th>region</th><th>severity_score</th><th>report_date</th></tr>
+      <tr><td>IN001</td><td>Northeast</td><td>8</td><td>2026-03-01</td></tr>
+      <tr><td>IN002</td><td>Northeast</td><td>5</td><td>2026-03-02</td></tr>
+      <tr><td>IN003</td><td>West</td><td>9</td><td>2026-03-01</td></tr>
+      <tr><td>IN004</td><td>West</td><td>6</td><td>2026-03-03</td></tr>
+      <tr><td>IN005</td><td>Northeast</td><td>9</td><td>2026-03-04</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice</div>
+    <p>Write a query showing each incident's <code style="color:var(--accent)">incident_id</code>, <code style="color:var(--accent)">region</code>, and <code style="color:var(--accent)">severity_score</code>, plus its rank within its own region by severity (highest = 1), named <code style="color:var(--accent)">severity_rank</code>, using RANK().</p>
+    <textarea id="q-l8z1" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l8z1')">Check answer</button>
+      <button class="btn" onclick="hint('l8z1')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l8z1">SELECT incident_id, region, severity_score, RANK() OVER (PARTITION BY region ORDER BY severity_score DESC) AS severity_rank FROM incident_reports</div>
+    <div class="feedback" id="fb-l8z1"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice — harder</div>
+    <p>Using a CTE named <code style="color:var(--accent)">ranked</code> with <code style="color:var(--accent)">ROW_NUMBER()</code>, write a query returning only the single highest-severity incident per region. Show <code style="color:var(--accent)">incident_id</code>, <code style="color:var(--accent)">region</code>, and <code style="color:var(--accent)">severity_score</code>.</p>
+    <textarea id="q-l8z2" placeholder="Write your SQL here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="check('l8z2')">Check answer</button>
+      <button class="btn" onclick="hint('l8z2')">Hint</button>
+    </div>
+    <div class="hint" id="hint-l8z2">WITH ranked AS (SELECT incident_id, region, severity_score, ROW_NUMBER() OVER (PARTITION BY region ORDER BY severity_score DESC) AS rn FROM incident_reports) SELECT incident_id, region, severity_score FROM ranked WHERE rn = 1</div>
+    <div class="feedback" id="fb-l8z2"></div>
   </div>
 
   <div class="btn-row"><button class="btn btn-primary" onclick="complete('l8','l9')">Next lesson →</button></div>
@@ -1905,6 +2295,9 @@ const answers = {
   l1e: ['select bike_id as bike, duration_minutes as minutes from rides'],
   l1f: ['select distinct station_id from rides'],
   l1g: ['select ride_id, city from rides'],
+  l1z1: ['select analyst, region from field_reports','select region, analyst from field_reports'],
+  l1z2: ['select distinct classification from field_reports'],
+  l1z3: ['select report_id, priority_score as priority from field_reports'],
   l2: ['select * from rides where duration_minutes > 15'],
   l2a2: ["select * from rides where city = 'manchester'"],
   l2a3: ["select * from rides where city = 'london' and duration_minutes > 10"],
@@ -1912,6 +2305,9 @@ const answers = {
   l2b3: ["select * from rides where city in ('london', 'manchester')"],
   l2c: ["select * from rides where city like 'lon%'"],
   l2d: ['select * from rides where bike_id is not null'],
+  l2z1: ["select * from supply_shipments where status = 'delayed'"],
+  l2z2: ["select * from supply_shipments where base = 'ramstein' and weight_kg > 1000"],
+  l2z3: ["select * from supply_shipments where cargo_type in ('medical', 'fuel')"],
   l3: ['select station_id, avg(duration_minutes) as avg_duration from rides group by station_id'],
   l3a2: ['select city, count(ride_id) as ride_count from rides group by city','select city, count(*) as ride_count from rides group by city'],
   l3b: ['select station_id, sum(case when duration_minutes > 20 then 1 else 0 end) as long_rides from rides group by station_id',
@@ -1923,6 +2319,10 @@ const answers = {
         'select city, count(*) as ride_count, sum(case when duration_minutes > 20 then 1 else 0 end) as long_rides from rides group by city',
         'select city, count(ride_id) as ride_count, count(case when duration_minutes > 20 then 1 end) as long_rides from rides group by city',
         'select city, count(*) as ride_count, count(case when duration_minutes > 20 then 1 end) as long_rides from rides group by city'],
+  l3z1: ['select checkpoint, count(crossing_id) as total_crossings from border_crossings group by checkpoint','select checkpoint, count(*) as total_crossings from border_crossings group by checkpoint'],
+  l3z2: ['select checkpoint, avg(wait_minutes) as avg_wait from border_crossings group by checkpoint'],
+  l3z3: ['select checkpoint, sum(case when flagged = 1 then 1 else 0 end) as flagged_count from border_crossings group by checkpoint',
+         'select checkpoint, count(case when flagged = 1 then 1 end) as flagged_count from border_crossings group by checkpoint'],
   l4: ['select station_id, avg(duration_minutes) as avg_duration from rides group by station_id having avg(duration_minutes) > 15'],
   l4a2: ['select station_id, count(ride_id) as total_rides from rides group by station_id having count(ride_id) > 1','select station_id, count(*) as total_rides from rides group by station_id having count(*) > 1'],
   l4a3: ['select bike_id, count(ride_id) as total_rides from rides group by bike_id having count(ride_id) > 1','select bike_id, count(*) as total_rides from rides group by bike_id having count(*) > 1'],
@@ -1930,6 +2330,9 @@ const answers = {
   l4b3: ['select city, avg(duration_minutes) as avg_duration from rides where duration_minutes > 5 group by city having avg(duration_minutes) > 15'],
   l4c: ['select station_id, max(duration_minutes) as max_duration from rides group by station_id having max(duration_minutes) > 20'],
   l4d: ["select city, count(ride_id) as ride_count from rides where city != 'manchester' group by city having count(ride_id) >= 2"],
+  l4z1: ['select base, count(fault_id) as fault_count from equipment_faults group by base having count(fault_id) > 2','select base, count(*) as fault_count from equipment_faults group by base having count(*) > 2'],
+  l4z2: ['select unit_id, count(fault_id) as fault_count from equipment_faults group by unit_id having count(fault_id) > 1','select unit_id, count(*) as fault_count from equipment_faults group by unit_id having count(*) > 1'],
+  l4z3: ["select base, count(fault_id) as fault_count from equipment_faults where severity = 'high' group by base having count(fault_id) > 1"],
   l5: ['select bike_id, count(ride_id) as ride_count from rides group by bike_id order by ride_count desc limit 1'],
   l5a2: ['select * from rides order by duration_minutes asc'],
   l5a3: ['select ride_id, duration_minutes from rides order by duration_minutes desc limit 2'],
@@ -1937,6 +2340,9 @@ const answers = {
   l5b2: ['select ride_id, city, duration_minutes from rides order by city asc, duration_minutes desc'],
   l5b3: ['select ride_id, duration_minutes from rides order by duration_minutes desc limit 2 offset 1'],
   l5c: ['select station_id, count(ride_id) as ride_count from rides group by station_id order by ride_count asc limit 1','select station_id, count(*) as ride_count from rides group by station_id order by ride_count asc limit 1'],
+  l5z1: ['select * from grid_load order by load_mw desc'],
+  l5z2: ['select reading_id, load_mw from grid_load order by load_mw desc limit 2'],
+  l5z3: ['select reading_id, load_mw from grid_load order by load_mw desc limit 1 offset 1'],
   l6: ['select rides.ride_id, stations.station_name, rides.duration_minutes from rides inner join stations on rides.station_id = stations.station_id'],
   l6a2: ['select rides.ride_id, stations.station_name, stations.borough from rides inner join stations on rides.station_id = stations.station_id'],
   l6b: ['select stations.station_name, count(rides.ride_id) as ride_count from stations left join rides on stations.station_id = rides.station_id group by stations.station_name'],
@@ -1946,6 +2352,9 @@ const answers = {
   l6e: ['select stations.borough, count(rides.ride_id) as ride_count from stations left join rides on stations.station_id = rides.station_id group by stations.borough'],
   l6f: ['select stations.station_name, avg(rides.duration_minutes) as avg_duration from rides inner join stations on rides.station_id = stations.station_id group by stations.station_name'],
   l6g: ['select stations.station_name, stations.borough, rides.ride_id from stations left join rides on stations.station_id = rides.station_id'],
+  l6z1: ['select investigations.case_id, agents.agent_name from investigations inner join agents on investigations.case_id = agents.case_id'],
+  l6z2: ['select investigations.case_id, agents.agent_name from investigations left join agents on investigations.case_id = agents.case_id'],
+  l6z3: ['select investigations.region, count(agents.case_id) as assigned_count from investigations left join agents on investigations.case_id = agents.case_id group by investigations.region'],
   l7a: ['select * from rides where duration_minutes > (select avg(duration_minutes) from rides)'],
   l7a2: ['select station_id, duration_minutes from rides where duration_minutes < (select avg(duration_minutes) from rides)'],
   l7a3: ['select ride_id, duration_minutes from rides where duration_minutes = (select max(duration_minutes) from rides)'],
@@ -1954,6 +2363,8 @@ const answers = {
   l7c: ['with bike_counts as (select bike_id, count(ride_id) as ride_count from rides group by bike_id) select bike_id from bike_counts where ride_count > 1'],
   l7d: ['select * from rides where station_id in (select station_id from rides group by station_id having avg(duration_minutes) > 15)'],
   l7e: ['select ride_id, duration_minutes from rides where duration_minutes > (select avg(duration_minutes) from rides)'],
+  l7z1: ['select * from claims where amount > (select avg(amount) from claims)'],
+  l7z2: ['with customer_totals as (select customer_id, sum(amount) as total_amount from claims group by customer_id) select customer_id, total_amount from customer_totals where total_amount > 1000'],
   l8a: ['select ride_id, station_id, duration_minutes, rank() over (partition by station_id order by duration_minutes desc) as duration_rank from rides'],
   l8a2: ['select ride_id, city, duration_minutes, rank() over (partition by city order by duration_minutes desc) as duration_rank from rides'],
   l8b: ['with ranked as (select ride_id, station_id, duration_minutes, row_number() over (partition by station_id order by duration_minutes desc) as rn from rides) select ride_id, station_id, duration_minutes from ranked where rn = 1'],
@@ -1961,6 +2372,8 @@ const answers = {
   l8c: ['select ride_id, station_id, duration_minutes, row_number() over (partition by station_id order by duration_minutes asc) as rn from rides'],
   l8d: ['with ranked as (select ride_id, station_id, duration_minutes, dense_rank() over (partition by station_id order by duration_minutes desc) as dr from rides) select ride_id, station_id, duration_minutes from ranked where dr = 2'],
   l8e: ['select ride_id, city, duration_minutes, lag(duration_minutes) over (partition by city order by ride_id) as prev_duration from rides'],
+  l8z1: ['select incident_id, region, severity_score, rank() over (partition by region order by severity_score desc) as severity_rank from incident_reports'],
+  l8z2: ['with ranked as (select incident_id, region, severity_score, row_number() over (partition by region order by severity_score desc) as rn from incident_reports) select incident_id, region, severity_score from ranked where rn = 1'],
   l9a: ['select order_id, customer, status, order_date from orders_og union all select order_id, customer, status, order_date from orders_bureau'],
   l9a2: ['select order_id, customer from orders_og union all select order_id, customer from orders_bureau'],
   l9b: ["select order_id, customer, status, order_date, 'office goods' as source_system from orders_og union all select order_id, customer, status, order_date, 'bureau sas' as source_system from orders_bureau"],
