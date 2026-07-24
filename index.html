@@ -103,6 +103,8 @@
   /* Buttons */
   .btn { padding: 8px 18px; font-size: 13px; font-weight: 500; border-radius: 7px; border: 1px solid var(--border); background: transparent; color: var(--text); cursor: pointer; font-family: var(--sans); transition: all .15s; }
   .btn:hover { background: var(--surface2); }
+  .btn:disabled { opacity: .4; cursor: not-allowed; }
+  .btn:disabled:hover { background: transparent; }
   .btn-primary { background: var(--accent); border-color: var(--accent); color: #000; }
   .btn-primary:hover { opacity: .85; }
   .btn-row { display: flex; gap: .75rem; margin-top: .75rem; flex-wrap: wrap; }
@@ -432,7 +434,7 @@
 
   <div class="card">
     <div class="card-label">Practice</div>
-    <p>Write a query that returns <code style="color:var(--accent)">report_id</code> and <code style="color:var(--accent)">priority_score</code>, with <code style="color:var(--accent)">priority_score</code> aliased as <code style="color:var(--accent)">priority</code>.</p>
+    <p>Write a query that returns <code style="color:var(--accent)">report_id</code> and <code style="color:var(--accent)">priority_score</code> from field_reports, with <code style="color:var(--accent)">priority_score</code> aliased as <code style="color:var(--accent)">priority</code>.</p>
     <textarea id="q-l1z3" placeholder="Write your SQL here..."></textarea>
     <div class="btn-row">
       <button class="btn btn-primary" onclick="check('l1z3')">Check answer</button>
@@ -594,7 +596,7 @@
 
   <div class="card">
     <div class="card-label">Practice</div>
-    <p>Write a query that returns all columns for shipments with a status of 'Delayed'.</p>
+    <p>Write a query that returns all columns from supply_shipments for rows with a status of 'Delayed'.</p>
     <textarea id="q-l2z1" placeholder="Write your SQL here..."></textarea>
     <div class="btn-row">
       <button class="btn btn-primary" onclick="check('l2z1')">Check answer</button>
@@ -606,7 +608,7 @@
 
   <div class="card">
     <div class="card-label">Practice</div>
-    <p>Write a query that returns all columns for shipments from Ramstein weighing over 1000 kg.</p>
+    <p>Write a query that returns all columns from supply_shipments for shipments from Ramstein weighing over 1000 kg.</p>
     <textarea id="q-l2z2" placeholder="Write your SQL here..."></textarea>
     <div class="btn-row">
       <button class="btn btn-primary" onclick="check('l2z2')">Check answer</button>
@@ -618,7 +620,7 @@
 
   <div class="card">
     <div class="card-label">Practice</div>
-    <p>Write a query that returns all columns for shipments where <code style="color:var(--accent)">cargo_type</code> is either 'Medical' or 'Fuel', using IN.</p>
+    <p>Write a query that returns all columns from supply_shipments where <code style="color:var(--accent)">cargo_type</code> is either 'Medical' or 'Fuel', using IN.</p>
     <textarea id="q-l2z3" placeholder="Write your SQL here..."></textarea>
     <div class="btn-row">
       <button class="btn btn-primary" onclick="check('l2z3')">Check answer</button>
@@ -776,7 +778,7 @@
 
   <div class="card">
     <div class="card-label">Practice</div>
-    <p>Write a query showing each <code style="color:var(--accent)">checkpoint</code> and its total number of crossings, named <code style="color:var(--accent)">total_crossings</code>.</p>
+    <p>Using border_crossings, write a query showing each <code style="color:var(--accent)">checkpoint</code> and its total number of crossings, named <code style="color:var(--accent)">total_crossings</code>.</p>
     <textarea id="q-l3z1" placeholder="Write your SQL here..."></textarea>
     <div class="btn-row">
       <button class="btn btn-primary" onclick="check('l3z1')">Check answer</button>
@@ -788,7 +790,7 @@
 
   <div class="card">
     <div class="card-label">Practice</div>
-    <p>Write a query showing each <code style="color:var(--accent)">checkpoint</code> and its average <code style="color:var(--accent)">wait_minutes</code>, named <code style="color:var(--accent)">avg_wait</code>.</p>
+    <p>Using border_crossings, write a query showing each <code style="color:var(--accent)">checkpoint</code> and its average <code style="color:var(--accent)">wait_minutes</code>, named <code style="color:var(--accent)">avg_wait</code>.</p>
     <textarea id="q-l3z2" placeholder="Write your SQL here..."></textarea>
     <div class="btn-row">
       <button class="btn btn-primary" onclick="check('l3z2')">Check answer</button>
@@ -800,7 +802,7 @@
 
   <div class="card">
     <div class="card-label">Practice — harder</div>
-    <p>Write a query showing each <code style="color:var(--accent)">checkpoint</code> and how many crossings were flagged (<code style="color:var(--accent)">flagged</code> = 1), named <code style="color:var(--accent)">flagged_count</code>, using SUM and CASE.</p>
+    <p>Using border_crossings, write a query showing each <code style="color:var(--accent)">checkpoint</code> and how many crossings were flagged (<code style="color:var(--accent)">flagged</code> = 1), named <code style="color:var(--accent)">flagged_count</code>, using SUM and CASE.</p>
     <textarea id="q-l3z3" placeholder="Write your SQL here..."></textarea>
     <div class="btn-row">
       <button class="btn btn-primary" onclick="check('l3z3')">Check answer</button>
@@ -959,7 +961,7 @@
 
   <div class="card">
     <div class="card-label">Practice</div>
-    <p>Write a query that shows only the bases with more than 2 recorded faults. Show <code style="color:var(--accent)">base</code> and <code style="color:var(--accent)">fault_count</code> (COUNT).</p>
+    <p>Using equipment_faults, write a query that shows only the bases with more than 2 recorded faults. Show <code style="color:var(--accent)">base</code> and <code style="color:var(--accent)">fault_count</code> (COUNT).</p>
     <textarea id="q-l4z1" placeholder="Write your SQL here..."></textarea>
     <div class="btn-row">
       <button class="btn btn-primary" onclick="check('l4z1')">Check answer</button>
@@ -971,7 +973,7 @@
 
   <div class="card">
     <div class="card-label">Practice</div>
-    <p>Write a query that shows only the units (<code style="color:var(--accent)">unit_id</code>) with more than 1 fault. Show <code style="color:var(--accent)">unit_id</code> and <code style="color:var(--accent)">fault_count</code>.</p>
+    <p>Using equipment_faults, write a query that shows only the units (<code style="color:var(--accent)">unit_id</code>) with more than 1 fault. Show <code style="color:var(--accent)">unit_id</code> and <code style="color:var(--accent)">fault_count</code>.</p>
     <textarea id="q-l4z2" placeholder="Write your SQL here..."></textarea>
     <div class="btn-row">
       <button class="btn btn-primary" onclick="check('l4z2')">Check answer</button>
@@ -983,7 +985,7 @@
 
   <div class="card">
     <div class="card-label">Practice — harder</div>
-    <p>Using WHERE and HAVING together, write a query showing <code style="color:var(--accent)">base</code> and <code style="color:var(--accent)">fault_count</code> (COUNT) for High severity faults only, keeping only bases with more than 1 such fault.</p>
+    <p>Using WHERE and HAVING together on equipment_faults, write a query showing <code style="color:var(--accent)">base</code> and <code style="color:var(--accent)">fault_count</code> (COUNT) for High severity faults only, keeping only bases with more than 1 such fault.</p>
     <textarea id="q-l4z3" placeholder="Write your SQL here..."></textarea>
     <div class="btn-row">
       <button class="btn btn-primary" onclick="check('l4z3')">Check answer</button>
@@ -1139,7 +1141,7 @@
 
   <div class="card">
     <div class="card-label">Practice</div>
-    <p>Write a query that returns all readings ordered by <code style="color:var(--accent)">load_mw</code> from highest to lowest.</p>
+    <p>Write a query that returns all rows from grid_load ordered by <code style="color:var(--accent)">load_mw</code> from highest to lowest.</p>
     <textarea id="q-l5z1" placeholder="Write your SQL here..."></textarea>
     <div class="btn-row">
       <button class="btn btn-primary" onclick="check('l5z1')">Check answer</button>
@@ -1151,7 +1153,7 @@
 
   <div class="card">
     <div class="card-label">Practice</div>
-    <p>Write a query that returns the top 2 highest load readings, showing <code style="color:var(--accent)">reading_id</code> and <code style="color:var(--accent)">load_mw</code>.</p>
+    <p>Write a query that returns the top 2 highest load readings from grid_load, showing <code style="color:var(--accent)">reading_id</code> and <code style="color:var(--accent)">load_mw</code>.</p>
     <textarea id="q-l5z2" placeholder="Write your SQL here..."></textarea>
     <div class="btn-row">
       <button class="btn btn-primary" onclick="check('l5z2')">Check answer</button>
@@ -1163,7 +1165,7 @@
 
   <div class="card">
     <div class="card-label">Practice</div>
-    <p>Write a query that skips the single highest reading and returns the next highest. Show <code style="color:var(--accent)">reading_id</code> and <code style="color:var(--accent)">load_mw</code>.</p>
+    <p>Write a query on grid_load that skips the single highest reading and returns the next highest. Show <code style="color:var(--accent)">reading_id</code> and <code style="color:var(--accent)">load_mw</code>.</p>
     <textarea id="q-l5z3" placeholder="Write your SQL here..."></textarea>
     <div class="btn-row">
       <button class="btn btn-primary" onclick="check('l5z3')">Check answer</button>
@@ -1365,7 +1367,7 @@
 
   <div class="card">
     <div class="card-label">Practice</div>
-    <p>Write a query showing each <code style="color:var(--accent)">case_id</code> and the <code style="color:var(--accent)">agent_name</code> assigned to it, using INNER JOIN (only assigned cases).</p>
+    <p>Write a query showing each <code style="color:var(--accent)">case_id</code> and the <code style="color:var(--accent)">agent_name</code> assigned to it, joining investigations to agents with INNER JOIN (only assigned cases).</p>
     <textarea id="q-l6z1" placeholder="Write your SQL here..."></textarea>
     <div class="btn-row">
       <button class="btn btn-primary" onclick="check('l6z1')">Check answer</button>
@@ -1377,7 +1379,7 @@
 
   <div class="card">
     <div class="card-label">Practice</div>
-    <p>Write a query showing every <code style="color:var(--accent)">case_id</code> and its <code style="color:var(--accent)">agent_name</code> (NULL if unassigned), using LEFT JOIN.</p>
+    <p>Write a query showing every <code style="color:var(--accent)">case_id</code> and its <code style="color:var(--accent)">agent_name</code> (NULL if unassigned), using LEFT JOIN from investigations to agents.</p>
     <textarea id="q-l6z2" placeholder="Write your SQL here..."></textarea>
     <div class="btn-row">
       <button class="btn btn-primary" onclick="check('l6z2')">Check answer</button>
@@ -1389,7 +1391,7 @@
 
   <div class="card">
     <div class="card-label">Practice — harder</div>
-    <p>Write a query showing each <code style="color:var(--accent)">region</code> and the count of assigned cases in it, named <code style="color:var(--accent)">assigned_count</code>, including regions with zero assigned cases.</p>
+    <p>Write a query joining investigations to agents (LEFT JOIN) showing each <code style="color:var(--accent)">region</code> and the count of assigned cases in it, named <code style="color:var(--accent)">assigned_count</code>, including regions with zero assigned cases.</p>
     <textarea id="q-l6z3" placeholder="Write your SQL here..."></textarea>
     <div class="btn-row">
       <button class="btn btn-primary" onclick="check('l6z3')">Check answer</button>
@@ -1555,7 +1557,7 @@
 
   <div class="card">
     <div class="card-label">Practice</div>
-    <p>Write a query that returns all claims where <code style="color:var(--accent)">amount</code> is greater than the average amount across all claims.</p>
+    <p>Write a query that returns all rows from claims where <code style="color:var(--accent)">amount</code> is greater than the average amount across all claims.</p>
     <textarea id="q-l7z1" placeholder="Write your SQL here..."></textarea>
     <div class="btn-row">
       <button class="btn btn-primary" onclick="check('l7z1')">Check answer</button>
@@ -1567,7 +1569,7 @@
 
   <div class="card">
     <div class="card-label">Practice — harder</div>
-    <p>Using a CTE named <code style="color:var(--accent)">customer_totals</code> that sums <code style="color:var(--accent)">amount</code> per <code style="color:var(--accent)">customer_id</code>, write a query returning <code style="color:var(--accent)">customer_id</code> and <code style="color:var(--accent)">total_amount</code> for customers whose total exceeds 1000.</p>
+    <p>Using a CTE named <code style="color:var(--accent)">customer_totals</code> that sums <code style="color:var(--accent)">amount</code> per <code style="color:var(--accent)">customer_id</code> from claims, write a query returning <code style="color:var(--accent)">customer_id</code> and <code style="color:var(--accent)">total_amount</code> for customers whose total exceeds 1000.</p>
     <textarea id="q-l7z2" placeholder="Write your SQL here..."></textarea>
     <div class="btn-row">
       <button class="btn btn-primary" onclick="check('l7z2')">Check answer</button>
@@ -1709,7 +1711,7 @@
 
   <div class="card">
     <div class="card-label">Practice</div>
-    <p>Write a query showing each incident's <code style="color:var(--accent)">incident_id</code>, <code style="color:var(--accent)">region</code>, and <code style="color:var(--accent)">severity_score</code>, plus its rank within its own region by severity (highest = 1), named <code style="color:var(--accent)">severity_rank</code>, using RANK().</p>
+    <p>Using incident_reports, write a query showing each incident's <code style="color:var(--accent)">incident_id</code>, <code style="color:var(--accent)">region</code>, and <code style="color:var(--accent)">severity_score</code>, plus its rank within its own region by severity (highest = 1), named <code style="color:var(--accent)">severity_rank</code>, using RANK().</p>
     <textarea id="q-l8z1" placeholder="Write your SQL here..."></textarea>
     <div class="btn-row">
       <button class="btn btn-primary" onclick="check('l8z1')">Check answer</button>
@@ -1721,7 +1723,7 @@
 
   <div class="card">
     <div class="card-label">Practice — harder</div>
-    <p>Using a CTE named <code style="color:var(--accent)">ranked</code> with <code style="color:var(--accent)">ROW_NUMBER()</code>, write a query returning only the single highest-severity incident per region. Show <code style="color:var(--accent)">incident_id</code>, <code style="color:var(--accent)">region</code>, and <code style="color:var(--accent)">severity_score</code>.</p>
+    <p>Using a CTE named <code style="color:var(--accent)">ranked</code> with <code style="color:var(--accent)">ROW_NUMBER()</code> over incident_reports, write a query returning only the single highest-severity incident per region. Show <code style="color:var(--accent)">incident_id</code>, <code style="color:var(--accent)">region</code>, and <code style="color:var(--accent)">severity_score</code>.</p>
     <textarea id="q-l8z2" placeholder="Write your SQL here..."></textarea>
     <div class="btn-row">
       <button class="btn btn-primary" onclick="check('l8z2')">Check answer</button>
@@ -2014,6 +2016,233 @@
     <div class="feedback" id="fb-fw1"></div>
   </div>
 
+  <div class="section-header" style="margin-top:1.5rem"><p style="text-transform:uppercase;font-size:11px;letter-spacing:.08em;font-weight:600">More scenarios to decompose</p><p style="margin-top:.4rem">15 more vague asks, spanning the kinds of operations Palantir customers actually run. For each: restate the goal, write 2–4 sub-questions, and sketch the data each would need — then reveal a model breakdown to compare.</p></div>
+
+  <div class="card">
+    <div class="card-label">Practice — decompose it yourself (Defense logistics)</div>
+    <p>A base commander says: <em>"We keep running low on spare parts right before deployments — help us understand why."</em></p>
+    <textarea id="q-fw-reflect2" placeholder="Restate the goal, list your sub-questions, and sketch the data each one would need..."></textarea>
+    <div class="btn-row">
+      <button class="btn" onclick="hint('fw-reflect2')">Reveal a model breakdown</button>
+    </div>
+    <div class="hint" id="hint-fw-reflect2">A possible breakdown — yours doesn't need to match, it just needs the same shape: <br><br>
+      <strong>Restate:</strong> they want to know why spare parts run short before deployments, and where to intervene — forecasting, fulfillment speed, or stocking policy.<br>
+      <strong>Sub-questions:</strong> Which parts run short most often? Do shortages correlate with specific bases or deployment cycles? Is it a demand-forecasting problem or a fulfillment-lag problem?<br>
+      <strong>Data:</strong> a requisitions table with part_id, base, quantity_on_hand, requested_date, fulfilled_date — group by part/base, look at the lag between requested and fulfilled, and compare against deployment schedules.<br>
+      <strong>Assumption to flag:</strong> whether "running low" means hitting zero stock, or falling under a safety-stock threshold — those imply different fixes.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice — decompose it yourself (Immigration casework)</div>
+    <p>The intake team says: <em>"Cases are taking too long to close — can you dig into what's slowing us down?"</em></p>
+    <textarea id="q-fw-reflect3" placeholder="Restate the goal, list your sub-questions, and sketch the data each one would need..."></textarea>
+    <div class="btn-row">
+      <button class="btn" onclick="hint('fw-reflect3')">Reveal a model breakdown</button>
+    </div>
+    <div class="hint" id="hint-fw-reflect3">A possible breakdown — yours doesn't need to match, it just needs the same shape: <br><br>
+      <strong>Restate:</strong> they want to know what's slowing case closures, to speed up the pipeline.<br>
+      <strong>Sub-questions:</strong> How long is the average case open, and is it rising? Do specific case types or officers take longer? Is the bottleneck at intake, review, or a specific approval stage?<br>
+      <strong>Data:</strong> a cases table with case_id, case_type, officer, opened_date, stage, closed_date — compute stage-to-stage durations, group by case_type/officer.<br>
+      <strong>Assumption to flag:</strong> whether "slow" cases are genuinely stuck, or waiting on the applicant to respond — that's not a process failure.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice — decompose it yourself (Healthcare)</div>
+    <p>A hospital ops director says: <em>"Readmissions are up this quarter — what's driving that?"</em></p>
+    <textarea id="q-fw-reflect4" placeholder="Restate the goal, list your sub-questions, and sketch the data each one would need..."></textarea>
+    <div class="btn-row">
+      <button class="btn" onclick="hint('fw-reflect4')">Reveal a model breakdown</button>
+    </div>
+    <div class="hint" id="hint-fw-reflect4">A possible breakdown — yours doesn't need to match, it just needs the same shape: <br><br>
+      <strong>Restate:</strong> understand what's driving rising readmissions, to target an intervention.<br>
+      <strong>Sub-questions:</strong> Which wards or diagnoses have the highest readmission rate? Is it concentrated in a specific time-after-discharge window? Has it changed for a specific patient group?<br>
+      <strong>Data:</strong> an admissions table with patient_id, ward, diagnosis, discharge_date, readmit_date — compute days-to-readmit, group by ward/diagnosis.<br>
+      <strong>Assumption to flag:</strong> what counts as a "readmission" — same diagnosis only, or any admission within a fixed window like 30 days.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice — decompose it yourself (Energy)</div>
+    <p>A grid operator says: <em>"We've had more outages this month — help us figure out where to focus."</em></p>
+    <textarea id="q-fw-reflect5" placeholder="Restate the goal, list your sub-questions, and sketch the data each one would need..."></textarea>
+    <div class="btn-row">
+      <button class="btn" onclick="hint('fw-reflect5')">Reveal a model breakdown</button>
+    </div>
+    <div class="hint" id="hint-fw-reflect5">A possible breakdown — yours doesn't need to match, it just needs the same shape: <br><br>
+      <strong>Restate:</strong> understand the cause and concentration of rising outages, to prioritize fixes.<br>
+      <strong>Sub-questions:</strong> Which substations or regions have the most outages? Do outages cluster around a specific cause — weather, equipment age, load? Is average outage duration also rising?<br>
+      <strong>Data:</strong> an outages table with outage_id, substation, region, cause, start_time, end_time — group by substation/cause, compute counts and durations over time.<br>
+      <strong>Assumption to flag:</strong> whether "outage" includes planned maintenance or only unplanned events — conflating them would distort the picture.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice — decompose it yourself (Manufacturing)</div>
+    <p>A plant manager says: <em>"Defect rates crept up over the last two weeks — what's going on?"</em></p>
+    <textarea id="q-fw-reflect6" placeholder="Restate the goal, list your sub-questions, and sketch the data each one would need..."></textarea>
+    <div class="btn-row">
+      <button class="btn" onclick="hint('fw-reflect6')">Reveal a model breakdown</button>
+    </div>
+    <div class="hint" id="hint-fw-reflect6">A possible breakdown — yours doesn't need to match, it just needs the same shape: <br><br>
+      <strong>Restate:</strong> understand what's driving increased defects, to fix the root cause on the line.<br>
+      <strong>Sub-questions:</strong> Which lines or parts have the highest defect rate? Did it start after a specific date — shift change, new supplier, equipment change? Is it one defect type or several?<br>
+      <strong>Data:</strong> a production_defects table with defect_id, line, part_id, defect_type, defect_date — group by line/defect_type, look at a date trend.<br>
+      <strong>Assumption to flag:</strong> whether "defect rate" is defects per unit produced or a raw count — raw counts can rise just because production volume rose.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice — decompose it yourself (Insurance)</div>
+    <p>A claims director says: <em>"Claim payout times are inconsistent across regions — can you look into it?"</em></p>
+    <textarea id="q-fw-reflect7" placeholder="Restate the goal, list your sub-questions, and sketch the data each one would need..."></textarea>
+    <div class="btn-row">
+      <button class="btn" onclick="hint('fw-reflect7')">Reveal a model breakdown</button>
+    </div>
+    <div class="hint" id="hint-fw-reflect7">A possible breakdown — yours doesn't need to match, it just needs the same shape: <br><br>
+      <strong>Restate:</strong> understand why claim payout times vary by region, to standardize the process.<br>
+      <strong>Sub-questions:</strong> Which regions are slowest? Is a specific claim type driving the gap? Is it adjuster workload, or a process step that's slower in some offices?<br>
+      <strong>Data:</strong> a claims table with claim_id, region, claim_type, filed_date, paid_date, adjuster — compute days-to-pay, group by region/claim_type.<br>
+      <strong>Assumption to flag:</strong> whether "payout time" starts at filing or at approval — those measure different things.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice — decompose it yourself (Telecom)</div>
+    <p>A network ops lead says: <em>"Customers in certain areas are complaining about dropped calls — where should we look?"</em></p>
+    <textarea id="q-fw-reflect8" placeholder="Restate the goal, list your sub-questions, and sketch the data each one would need..."></textarea>
+    <div class="btn-row">
+      <button class="btn" onclick="hint('fw-reflect8')">Reveal a model breakdown</button>
+    </div>
+    <div class="hint" id="hint-fw-reflect8">A possible breakdown — yours doesn't need to match, it just needs the same shape: <br><br>
+      <strong>Restate:</strong> identify where and why call quality is degrading, to prioritize network fixes.<br>
+      <strong>Sub-questions:</strong> Which cell towers or areas have the highest drop rate? Is it tied to time of day (congestion) or a specific tower (hardware)? Has it gotten worse recently?<br>
+      <strong>Data:</strong> a call_records table with call_id, tower_id, customer_id, dropped, call_time — group by tower, compute drop rate, trend over time.<br>
+      <strong>Assumption to flag:</strong> whether "dropped" includes calls the customer ended normally but briefly, versus a true involuntary disconnect — the flag's definition matters.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice — decompose it yourself (Aerospace)</div>
+    <p>A fleet maintenance chief says: <em>"Unscheduled maintenance events have gone up — help us understand the pattern."</em></p>
+    <textarea id="q-fw-reflect9" placeholder="Restate the goal, list your sub-questions, and sketch the data each one would need..."></textarea>
+    <div class="btn-row">
+      <button class="btn" onclick="hint('fw-reflect9')">Reveal a model breakdown</button>
+    </div>
+    <div class="hint" id="hint-fw-reflect9">A possible breakdown — yours doesn't need to match, it just needs the same shape: <br><br>
+      <strong>Restate:</strong> understand what's driving unplanned maintenance events, to shift more of them into planned cycles.<br>
+      <strong>Sub-questions:</strong> Which aircraft or fault types are recurring? Is it concentrated in a specific fleet or aircraft age? Is time-between-failures shrinking?<br>
+      <strong>Data:</strong> a maintenance_logs table with fault_id, aircraft_id, fault_code, severity, fault_date, scheduled — group by aircraft/fault_code, compute recurrence and trend.<br>
+      <strong>Assumption to flag:</strong> whether "unscheduled" strictly means unplanned/unexpected, or also includes maintenance moved up early — worth confirming the definition.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice — decompose it yourself (Banking / fraud)</div>
+    <p>A fraud team lead says: <em>"We're seeing more suspicious transactions lately — how would you approach this?"</em></p>
+    <textarea id="q-fw-reflect10" placeholder="Restate the goal, list your sub-questions, and sketch the data each one would need..."></textarea>
+    <div class="btn-row">
+      <button class="btn" onclick="hint('fw-reflect10')">Reveal a model breakdown</button>
+    </div>
+    <div class="hint" id="hint-fw-reflect10">A possible breakdown — yours doesn't need to match, it just needs the same shape: <br><br>
+      <strong>Restate:</strong> understand what's driving the rise in flagged transactions, to prioritize investigation.<br>
+      <strong>Sub-questions:</strong> Which accounts, merchants, or transaction types are flagged most? Is the rise concentrated in a time window or a specific channel (card-not-present, ATM)? Is the flag rate rising, or just raw volume?<br>
+      <strong>Data:</strong> a transactions table with txn_id, account_id, merchant, amount, flagged, txn_time — group by merchant/channel, compute flag rate over time.<br>
+      <strong>Assumption to flag:</strong> whether "flagged" means the fraud model triggered, or a human confirmed fraud — very different signal strength.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice — decompose it yourself (Retail / e-commerce)</div>
+    <p>A retail ops manager says: <em>"Cart abandonment is climbing — what would you look at first?"</em></p>
+    <textarea id="q-fw-reflect11" placeholder="Restate the goal, list your sub-questions, and sketch the data each one would need..."></textarea>
+    <div class="btn-row">
+      <button class="btn" onclick="hint('fw-reflect11')">Reveal a model breakdown</button>
+    </div>
+    <div class="hint" id="hint-fw-reflect11">A possible breakdown — yours doesn't need to match, it just needs the same shape: <br><br>
+      <strong>Restate:</strong> understand why more shoppers are abandoning carts, to recover lost sales.<br>
+      <strong>Sub-questions:</strong> Is abandonment concentrated at a specific checkout step? Does it correlate with product category, device type, or shipping cost shown? Did it start after a site change?<br>
+      <strong>Data:</strong> a checkout_events table with session_id, step, product_category, device, event_time — funnel through steps, group by category/device, look at a date trend.<br>
+      <strong>Assumption to flag:</strong> whether "abandoned" means never returning within the session, or within a longer window — they might complete the purchase later.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice — decompose it yourself (Workforce / HR)</div>
+    <p>An HR director says: <em>"Attrition has ticked up in a few departments — can you help us understand why?"</em></p>
+    <textarea id="q-fw-reflect12" placeholder="Restate the goal, list your sub-questions, and sketch the data each one would need..."></textarea>
+    <div class="btn-row">
+      <button class="btn" onclick="hint('fw-reflect12')">Reveal a model breakdown</button>
+    </div>
+    <div class="hint" id="hint-fw-reflect12">A possible breakdown — yours doesn't need to match, it just needs the same shape: <br><br>
+      <strong>Restate:</strong> understand which departments are losing people and why, to intervene before it spreads.<br>
+      <strong>Sub-questions:</strong> Which departments or roles have the highest attrition rate? Is tenure at exit unusually short (an onboarding problem) or long (burnout)? Did it start after a specific change — reorg, new manager?<br>
+      <strong>Data:</strong> an employees table with employee_id, department, role, hire_date, exit_date, manager — compute attrition rate and tenure-at-exit by department, trend over time.<br>
+      <strong>Assumption to flag:</strong> whether attrition includes involuntary departures like layoffs — mixing those in would misdiagnose a "people are leaving" problem as purely voluntary.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice — decompose it yourself (Border security)</div>
+    <p>A border operations chief says: <em>"Wait times at some checkpoints have spiked — help us figure out where and why."</em></p>
+    <textarea id="q-fw-reflect13" placeholder="Restate the goal, list your sub-questions, and sketch the data each one would need..."></textarea>
+    <div class="btn-row">
+      <button class="btn" onclick="hint('fw-reflect13')">Reveal a model breakdown</button>
+    </div>
+    <div class="hint" id="hint-fw-reflect13">A possible breakdown — yours doesn't need to match, it just needs the same shape: <br><br>
+      <strong>Restate:</strong> understand where and why checkpoint wait times are spiking, to reallocate staffing.<br>
+      <strong>Sub-questions:</strong> Which checkpoints or times of day have the worst wait times? Is it volume-driven or staffing-driven? Did something change — a new screening step, a lane closure?<br>
+      <strong>Data:</strong> a border_crossings table with crossing_id, checkpoint, wait_minutes, crossing_time — group by checkpoint/hour, trend over time.<br>
+      <strong>Assumption to flag:</strong> whether the spike is a genuine sustained shift or a short-term anomaly like one bad day — averaging over too short a window can mislead.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice — decompose it yourself (Public health)</div>
+    <p>A public health lead says: <em>"Case counts are trending up in a few regions — how would you dig into this?"</em></p>
+    <textarea id="q-fw-reflect14" placeholder="Restate the goal, list your sub-questions, and sketch the data each one would need..."></textarea>
+    <div class="btn-row">
+      <button class="btn" onclick="hint('fw-reflect14')">Reveal a model breakdown</button>
+    </div>
+    <div class="hint" id="hint-fw-reflect14">A possible breakdown — yours doesn't need to match, it just needs the same shape: <br><br>
+      <strong>Restate:</strong> understand whether this is a real outbreak signal and where it's concentrated, to direct a response.<br>
+      <strong>Sub-questions:</strong> Which regions have the sharpest increase? Is it concentrated in one age group or setting (school, workplace)? Is testing volume also up, which could just mean more detection rather than more spread?<br>
+      <strong>Data:</strong> a case_counts table with region, report_date, new_cases, tests_administered — compute a rate-per-test by region, trend over time.<br>
+      <strong>Assumption to flag:</strong> whether the rise is in raw case counts or a rate — a rise in raw counts alongside a rise in testing isn't necessarily a rise in actual spread.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice — decompose it yourself (Cybersecurity)</div>
+    <p>A SOC manager says: <em>"We've had a spike in flagged login attempts — what would you want to know first?"</em></p>
+    <textarea id="q-fw-reflect15" placeholder="Restate the goal, list your sub-questions, and sketch the data each one would need..."></textarea>
+    <div class="btn-row">
+      <button class="btn" onclick="hint('fw-reflect15')">Reveal a model breakdown</button>
+    </div>
+    <div class="hint" id="hint-fw-reflect15">A possible breakdown — yours doesn't need to match, it just needs the same shape: <br><br>
+      <strong>Restate:</strong> understand whether this is a real threat pattern (e.g. credential stuffing) or noise, to decide whether to escalate.<br>
+      <strong>Sub-questions:</strong> Are the attempts concentrated on a few accounts, or spread thin across many (a stuffing signature)? Are they coming from a small set of IPs or geographies? Is the failure rate on those attempts unusually high?<br>
+      <strong>Data:</strong> a login_attempts table with attempt_id, account_id, ip_address, success, attempt_time — group by account/IP, compute failure rate and concentration.<br>
+      <strong>Assumption to flag:</strong> whether "flagged" already reflects a security rule filtering out normal traffic, or is a raw count of all attempts — changes how alarming the spike really is.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Practice — decompose it yourself (Supply chain)</div>
+    <p>A supply chain director says: <em>"Lead times from certain suppliers have gotten worse — how would you investigate?"</em></p>
+    <textarea id="q-fw-reflect16" placeholder="Restate the goal, list your sub-questions, and sketch the data each one would need..."></textarea>
+    <div class="btn-row">
+      <button class="btn" onclick="hint('fw-reflect16')">Reveal a model breakdown</button>
+    </div>
+    <div class="hint" id="hint-fw-reflect16">A possible breakdown — yours doesn't need to match, it just needs the same shape: <br><br>
+      <strong>Restate:</strong> understand which suppliers are slipping and why, to fix sourcing risk before it hits production.<br>
+      <strong>Sub-questions:</strong> Which suppliers or parts have the biggest lead-time increase? Is it isolated to one supplier or industry-wide? Is it getting worse over recent orders, or was there one bad batch?<br>
+      <strong>Data:</strong> a purchase_orders table with po_id, supplier, part_id, order_date, promised_date, received_date — compute lead time as received minus order date, group by supplier, trend over recent orders.<br>
+      <strong>Assumption to flag:</strong> whether "lead time" should be measured against the promised date or the original order date — those tell different stories about who's at fault.
+    </div>
+  </div>
+
   <div class="btn-row"><button class="btn btn-primary" onclick="go('drill')">Go to drill mode →</button></div>
 </div>
 
@@ -2038,6 +2267,7 @@
     <div id="drill-table-wrap"></div>
     <textarea id="q-drill" placeholder="Write your SQL here..." style="margin-top:.75rem"></textarea>
     <div class="btn-row">
+      <button class="btn" id="drill-prev-btn" onclick="prevDrill()">← Previous</button>
       <button class="btn btn-primary" onclick="checkDrill()">Check answer</button>
       <button class="btn" onclick="hintDrill()">Hint</button>
       <button class="btn" onclick="nextDrill()">Skip →</button>
@@ -2428,119 +2658,119 @@ const drills = [
   {
     domain:'NHS', concept:'COUNT + GROUP BY',
     q:'An NHS trust wants to know how many appointments each ward had in total. Write a query to show each ward and its appointment count, named total_appointments.',
-    table:`<table class="sql-table"><tr><th>appointment_id</th><th>ward</th><th>attended</th><th>wait_days</th></tr><tr><td>A001</td><td>Cardiology</td><td>1</td><td>12</td></tr><tr><td>A002</td><td>Oncology</td><td>0</td><td>28</td></tr><tr><td>A003</td><td>Cardiology</td><td>1</td><td>8</td></tr><tr><td>A004</td><td>Neurology</td><td>0</td><td>45</td></tr></table>`,
+    table:`<table class="sql-table"><tr><th>appointment_id</th><th>ward</th><th>attended</th><th>wait_days</th></tr><tr><td>A001</td><td>Cardiology</td><td>1</td><td>12</td></tr><tr><td>A002</td><td>Oncology</td><td>0</td><td>28</td></tr><tr><td>A003</td><td>Cardiology</td><td>1</td><td>8</td></tr><tr><td>A004</td><td>Neurology</td><td>0</td><td>45</td></tr></table><p style="margin-top:.4rem;font-size:12px;color:var(--muted)">↑ appointments</p>`,
     hint:'SELECT ward, COUNT(appointment_id) AS total_appointments FROM appointments GROUP BY ward',
     answers:['select ward, count(appointment_id) as total_appointments from appointments group by ward','select ward, count(*) as total_appointments from appointments group by ward']
   },
   {
     domain:'Logistics', concept:'WHERE + ORDER BY',
     q:'A logistics company wants to see all deliveries that took more than 2 days, sorted from longest to shortest.',
-    table:`<table class="sql-table"><tr><th>delivery_id</th><th>destination</th><th>days_taken</th><th>on_time</th></tr><tr><td>D001</td><td>Manchester</td><td>1</td><td>1</td></tr><tr><td>D002</td><td>Birmingham</td><td>3</td><td>0</td></tr><tr><td>D003</td><td>Leeds</td><td>4</td><td>0</td></tr><tr><td>D004</td><td>London</td><td>2</td><td>1</td></tr></table>`,
+    table:`<table class="sql-table"><tr><th>delivery_id</th><th>destination</th><th>days_taken</th><th>on_time</th></tr><tr><td>D001</td><td>Manchester</td><td>1</td><td>1</td></tr><tr><td>D002</td><td>Birmingham</td><td>3</td><td>0</td></tr><tr><td>D003</td><td>Leeds</td><td>4</td><td>0</td></tr><tr><td>D004</td><td>London</td><td>2</td><td>1</td></tr></table><p style="margin-top:.4rem;font-size:12px;color:var(--muted)">↑ deliveries</p>`,
     hint:'SELECT * FROM deliveries WHERE days_taken > 2 ORDER BY days_taken DESC',
     answers:['select * from deliveries where days_taken > 2 order by days_taken desc']
   },
   {
     domain:'Finance', concept:'HAVING',
     q:'A bank wants to see only the account types where the average transaction value exceeds £500. Show account_type and avg_transaction.',
-    table:`<table class="sql-table"><tr><th>transaction_id</th><th>account_type</th><th>amount</th></tr><tr><td>T001</td><td>Current</td><td>200</td></tr><tr><td>T002</td><td>Savings</td><td>800</td></tr><tr><td>T003</td><td>Current</td><td>150</td></tr><tr><td>T004</td><td>ISA</td><td>1200</td></tr><tr><td>T005</td><td>Savings</td><td>600</td></tr></table>`,
+    table:`<table class="sql-table"><tr><th>transaction_id</th><th>account_type</th><th>amount</th></tr><tr><td>T001</td><td>Current</td><td>200</td></tr><tr><td>T002</td><td>Savings</td><td>800</td></tr><tr><td>T003</td><td>Current</td><td>150</td></tr><tr><td>T004</td><td>ISA</td><td>1200</td></tr><tr><td>T005</td><td>Savings</td><td>600</td></tr></table><p style="margin-top:.4rem;font-size:12px;color:var(--muted)">↑ transactions</p>`,
     hint:'SELECT account_type, AVG(amount) AS avg_transaction FROM transactions GROUP BY account_type HAVING AVG(amount) > 500',
     answers:['select account_type, avg(amount) as avg_transaction from transactions group by account_type having avg(amount) > 500']
   },
   {
     domain:'HSE Ireland', concept:'COUNT + WHERE',
     q:'HSE wants to know how many data breaches were reported in each region, but only for high severity breaches (severity = "high").',
-    table:`<table class="sql-table"><tr><th>breach_id</th><th>region</th><th>severity</th><th>reported_date</th></tr><tr><td>B001</td><td>Dublin</td><td>high</td><td>2024-01-05</td></tr><tr><td>B002</td><td>Cork</td><td>low</td><td>2024-01-06</td></tr><tr><td>B003</td><td>Dublin</td><td>high</td><td>2024-01-08</td></tr><tr><td>B004</td><td>Galway</td><td>high</td><td>2024-01-09</td></tr><tr><td>B005</td><td>Cork</td><td>high</td><td>2024-01-10</td></tr></table>`,
+    table:`<table class="sql-table"><tr><th>breach_id</th><th>region</th><th>severity</th><th>reported_date</th></tr><tr><td>B001</td><td>Dublin</td><td>high</td><td>2024-01-05</td></tr><tr><td>B002</td><td>Cork</td><td>low</td><td>2024-01-06</td></tr><tr><td>B003</td><td>Dublin</td><td>high</td><td>2024-01-08</td></tr><tr><td>B004</td><td>Galway</td><td>high</td><td>2024-01-09</td></tr><tr><td>B005</td><td>Cork</td><td>high</td><td>2024-01-10</td></tr></table><p style="margin-top:.4rem;font-size:12px;color:var(--muted)">↑ breaches</p>`,
     hint:"SELECT region, COUNT(breach_id) AS high_severity_breaches FROM breaches WHERE severity = 'high' GROUP BY region",
     answers:["select region, count(breach_id) as high_severity_breaches from breaches where severity = 'high' group by region","select region, count(*) as high_severity_breaches from breaches where severity = 'high' group by region"]
   },
   {
     domain:'Forest Bikes', concept:'AVG + ORDER BY + LIMIT',
     q:'Forest ops wants the top 3 stations by average ride duration. Show station_id and avg_duration, longest first.',
-    table:`<table class="sql-table"><tr><th>ride_id</th><th>station_id</th><th>duration_minutes</th></tr><tr><td>1</td><td>ST01</td><td>14</td></tr><tr><td>2</td><td>ST01</td><td>22</td></tr><tr><td>3</td><td>ST02</td><td>8</td></tr><tr><td>4</td><td>ST03</td><td>31</td></tr><tr><td>5</td><td>ST02</td><td>19</td></tr><tr><td>6</td><td>ST03</td><td>45</td></tr></table>`,
+    table:`<table class="sql-table"><tr><th>ride_id</th><th>station_id</th><th>duration_minutes</th></tr><tr><td>1</td><td>ST01</td><td>14</td></tr><tr><td>2</td><td>ST01</td><td>22</td></tr><tr><td>3</td><td>ST02</td><td>8</td></tr><tr><td>4</td><td>ST03</td><td>31</td></tr><tr><td>5</td><td>ST02</td><td>19</td></tr><tr><td>6</td><td>ST03</td><td>45</td></tr></table><p style="margin-top:.4rem;font-size:12px;color:var(--muted)">↑ rides</p>`,
     hint:'SELECT station_id, AVG(duration_minutes) AS avg_duration FROM rides GROUP BY station_id ORDER BY avg_duration DESC LIMIT 3',
     answers:['select station_id, avg(duration_minutes) as avg_duration from rides group by station_id order by avg_duration desc limit 3']
   },
   {
     domain:'NHS', concept:'INNER JOIN',
     q:'Join the appointments table to the wards table to show each appointment_id with its ward_name and wait_days.',
-    table:`<table class="sql-table" style="margin-bottom:.75rem"><tr><th>appointment_id</th><th>ward_id</th><th>wait_days</th></tr><tr><td>A001</td><td>W01</td><td>12</td></tr><tr><td>A002</td><td>W02</td><td>28</td></tr><tr><td>A003</td><td>W01</td><td>8</td></tr></table><table class="sql-table"><tr><th>ward_id</th><th>ward_name</th></tr><tr><td>W01</td><td>Cardiology</td></tr><tr><td>W02</td><td>Oncology</td></tr></table>`,
+    table:`<table class="sql-table" style="margin-bottom:.25rem"><tr><th>appointment_id</th><th>ward_id</th><th>wait_days</th></tr><tr><td>A001</td><td>W01</td><td>12</td></tr><tr><td>A002</td><td>W02</td><td>28</td></tr><tr><td>A003</td><td>W01</td><td>8</td></tr></table><p style="margin:0 0 .75rem;font-size:12px;color:var(--muted)">↑ appointments</p><table class="sql-table" style="margin-bottom:.25rem"><tr><th>ward_id</th><th>ward_name</th></tr><tr><td>W01</td><td>Cardiology</td></tr><tr><td>W02</td><td>Oncology</td></tr></table><p style="margin:0;font-size:12px;color:var(--muted)">↑ wards</p>`,
     hint:'SELECT appointments.appointment_id, wards.ward_name, appointments.wait_days FROM appointments INNER JOIN wards ON appointments.ward_id = wards.ward_id',
     answers:['select appointments.appointment_id, wards.ward_name, appointments.wait_days from appointments inner join wards on appointments.ward_id = wards.ward_id']
   },
   {
     domain:'E-commerce', concept:'Subquery in WHERE',
     q:'An e-commerce team wants to find every product priced above the average price of all products. Show product_name and price.',
-    table:`<table class="sql-table"><tr><th>product_id</th><th>product_name</th><th>price</th></tr><tr><td>P01</td><td>Notebook</td><td>4</td></tr><tr><td>P02</td><td>Desk Lamp</td><td>22</td></tr><tr><td>P03</td><td>Stapler</td><td>9</td></tr><tr><td>P04</td><td>Office Chair</td><td>85</td></tr></table>`,
+    table:`<table class="sql-table"><tr><th>product_id</th><th>product_name</th><th>price</th></tr><tr><td>P01</td><td>Notebook</td><td>4</td></tr><tr><td>P02</td><td>Desk Lamp</td><td>22</td></tr><tr><td>P03</td><td>Stapler</td><td>9</td></tr><tr><td>P04</td><td>Office Chair</td><td>85</td></tr></table><p style="margin-top:.4rem;font-size:12px;color:var(--muted)">↑ products</p>`,
     hint:'SELECT product_name, price FROM products WHERE price > (SELECT AVG(price) FROM products)',
     answers:['select product_name, price from products where price > (select avg(price) from products)']
   },
   {
     domain:'Retail', concept:'RANK() + PARTITION BY',
     q:"A retail chain wants to rank each employee's total sales within their own region (highest sales = rank 1). Show employee, region, total_sales, and sales_rank.",
-    table:`<table class="sql-table"><tr><th>employee</th><th>region</th><th>total_sales</th></tr><tr><td>Wei</td><td>North</td><td>12000</td></tr><tr><td>Sam</td><td>North</td><td>18500</td></tr><tr><td>Ana</td><td>South</td><td>9400</td></tr><tr><td>Leo</td><td>South</td><td>15200</td></tr></table>`,
+    table:`<table class="sql-table"><tr><th>employee</th><th>region</th><th>total_sales</th></tr><tr><td>Wei</td><td>North</td><td>12000</td></tr><tr><td>Sam</td><td>North</td><td>18500</td></tr><tr><td>Ana</td><td>South</td><td>9400</td></tr><tr><td>Leo</td><td>South</td><td>15200</td></tr></table><p style="margin-top:.4rem;font-size:12px;color:var(--muted)">↑ sales</p>`,
     hint:'SELECT employee, region, total_sales, RANK() OVER (PARTITION BY region ORDER BY total_sales DESC) AS sales_rank FROM sales',
     answers:['select employee, region, total_sales, rank() over (partition by region order by total_sales desc) as sales_rank from sales']
   },
   {
     domain:'Marketing', concept:'UNION ALL + CASE',
     q:"Marketing has leads in two exported tables that use different wording for the same two stages. Combine them into one list with a normalized status_clean column ('New' or 'Contacted') and a source column showing which table each lead came from.",
-    table:`<table class="sql-table" style="margin-bottom:.75rem"><tr><th>lead_id</th><th>name</th><th>status</th></tr><tr><td>L01</td><td>Priya K.</td><td>new</td></tr><tr><td>L02</td><td>Tom R.</td><td>contacted</td></tr></table><table class="sql-table"><tr><th>lead_id</th><th>name</th><th>stage</th></tr><tr><td>L03</td><td>Wei C.</td><td>open</td></tr><tr><td>L04</td><td>Ana M.</td><td>working</td></tr></table>`,
+    table:`<table class="sql-table" style="margin-bottom:.25rem"><tr><th>lead_id</th><th>name</th><th>status</th></tr><tr><td>L01</td><td>Priya K.</td><td>new</td></tr><tr><td>L02</td><td>Tom R.</td><td>contacted</td></tr></table><p style="margin:0 0 .75rem;font-size:12px;color:var(--muted)">↑ leads_hubspot</p><table class="sql-table" style="margin-bottom:.25rem"><tr><th>lead_id</th><th>name</th><th>stage</th></tr><tr><td>L03</td><td>Wei C.</td><td>open</td></tr><tr><td>L04</td><td>Ana M.</td><td>working</td></tr></table><p style="margin:0;font-size:12px;color:var(--muted)">↑ leads_salesforce</p>`,
     hint:"SELECT lead_id, name, CASE status WHEN 'new' THEN 'New' WHEN 'contacted' THEN 'Contacted' END AS status_clean, 'HubSpot' AS source FROM leads_hubspot UNION ALL SELECT lead_id, name, CASE stage WHEN 'open' THEN 'New' WHEN 'working' THEN 'Contacted' END AS status_clean, 'Salesforce' AS source FROM leads_salesforce",
     answers:["select lead_id, name, case status when 'new' then 'new' when 'contacted' then 'contacted' end as status_clean, 'hubspot' as source from leads_hubspot union all select lead_id, name, case stage when 'open' then 'new' when 'working' then 'contacted' end as status_clean, 'salesforce' as source from leads_salesforce"]
   },
   {
     domain:'Aerospace', concept:'WHERE + IN',
     q:"A fleet maintenance team wants every logged fault where severity is 'high' or 'critical'. Show aircraft_id and fault_code.",
-    table:`<table class="sql-table"><tr><th>fault_id</th><th>aircraft_id</th><th>fault_code</th><th>severity</th></tr><tr><td>F001</td><td>AC12</td><td>ENG-04</td><td>high</td></tr><tr><td>F002</td><td>AC07</td><td>HYD-11</td><td>low</td></tr><tr><td>F003</td><td>AC12</td><td>AVI-02</td><td>critical</td></tr><tr><td>F004</td><td>AC19</td><td>ENG-04</td><td>medium</td></tr><tr><td>F005</td><td>AC07</td><td>ENG-09</td><td>critical</td></tr></table>`,
+    table:`<table class="sql-table"><tr><th>fault_id</th><th>aircraft_id</th><th>fault_code</th><th>severity</th></tr><tr><td>F001</td><td>AC12</td><td>ENG-04</td><td>high</td></tr><tr><td>F002</td><td>AC07</td><td>HYD-11</td><td>low</td></tr><tr><td>F003</td><td>AC12</td><td>AVI-02</td><td>critical</td></tr><tr><td>F004</td><td>AC19</td><td>ENG-04</td><td>medium</td></tr><tr><td>F005</td><td>AC07</td><td>ENG-09</td><td>critical</td></tr></table><p style="margin-top:.4rem;font-size:12px;color:var(--muted)">↑ maintenance_logs</p>`,
     hint:"SELECT aircraft_id, fault_code FROM maintenance_logs WHERE severity IN ('high', 'critical')",
     answers:["select aircraft_id, fault_code from maintenance_logs where severity in ('high', 'critical')"]
   },
   {
     domain:'Immigration', concept:'LEFT JOIN',
     q:'A caseworker team wants every case_id alongside the officer assigned to it (officer_name) — including cases nobody has picked up yet.',
-    table:`<table class="sql-table" style="margin-bottom:.75rem"><tr><th>case_id</th><th>applicant</th></tr><tr><td>C001</td><td>Amara O.</td></tr><tr><td>C002</td><td>Diego R.</td></tr><tr><td>C003</td><td>Fatima N.</td></tr><tr><td>C004</td><td>Liam S.</td></tr></table><table class="sql-table"><tr><th>case_id</th><th>officer_name</th></tr><tr><td>C001</td><td>Officer Chen</td></tr><tr><td>C003</td><td>Officer Patel</td></tr></table>`,
+    table:`<table class="sql-table" style="margin-bottom:.25rem"><tr><th>case_id</th><th>applicant</th></tr><tr><td>C001</td><td>Amara O.</td></tr><tr><td>C002</td><td>Diego R.</td></tr><tr><td>C003</td><td>Fatima N.</td></tr><tr><td>C004</td><td>Liam S.</td></tr></table><p style="margin:0 0 .75rem;font-size:12px;color:var(--muted)">↑ cases</p><table class="sql-table" style="margin-bottom:.25rem"><tr><th>case_id</th><th>officer_name</th></tr><tr><td>C001</td><td>Officer Chen</td></tr><tr><td>C003</td><td>Officer Patel</td></tr></table><p style="margin:0;font-size:12px;color:var(--muted)">↑ case_assignments</p>`,
     hint:'SELECT cases.case_id, case_assignments.officer_name FROM cases LEFT JOIN case_assignments ON cases.case_id = case_assignments.case_id',
     answers:['select cases.case_id, case_assignments.officer_name from cases left join case_assignments on cases.case_id = case_assignments.case_id']
   },
   {
     domain:'Energy', concept:'CTE (WITH)',
     q:'Using a CTE named pipeline_avg that computes each pipeline\'s average pressure_psi, write a query returning readings above their own pipeline\'s average. Show reading_id, pipeline, and pressure_psi.',
-    table:`<table class="sql-table"><tr><th>reading_id</th><th>pipeline</th><th>pressure_psi</th></tr><tr><td>R001</td><td>Alpha</td><td>620</td></tr><tr><td>R002</td><td>Alpha</td><td>700</td></tr><tr><td>R003</td><td>Beta</td><td>450</td></tr><tr><td>R004</td><td>Beta</td><td>500</td></tr><tr><td>R005</td><td>Alpha</td><td>580</td></tr></table>`,
+    table:`<table class="sql-table"><tr><th>reading_id</th><th>pipeline</th><th>pressure_psi</th></tr><tr><td>R001</td><td>Alpha</td><td>620</td></tr><tr><td>R002</td><td>Alpha</td><td>700</td></tr><tr><td>R003</td><td>Beta</td><td>450</td></tr><tr><td>R004</td><td>Beta</td><td>500</td></tr><tr><td>R005</td><td>Alpha</td><td>580</td></tr></table><p style="margin-top:.4rem;font-size:12px;color:var(--muted)">↑ pipeline_readings</p>`,
     hint:'WITH pipeline_avg AS (SELECT pipeline, AVG(pressure_psi) AS avg_pressure FROM pipeline_readings GROUP BY pipeline) SELECT pipeline_readings.reading_id, pipeline_readings.pipeline, pipeline_readings.pressure_psi FROM pipeline_readings JOIN pipeline_avg ON pipeline_readings.pipeline = pipeline_avg.pipeline WHERE pipeline_readings.pressure_psi > pipeline_avg.avg_pressure',
     answers:['with pipeline_avg as (select pipeline, avg(pressure_psi) as avg_pressure from pipeline_readings group by pipeline) select pipeline_readings.reading_id, pipeline_readings.pipeline, pipeline_readings.pressure_psi from pipeline_readings join pipeline_avg on pipeline_readings.pipeline = pipeline_avg.pipeline where pipeline_readings.pressure_psi > pipeline_avg.avg_pressure']
   },
   {
     domain:'Manufacturing', concept:'GROUP BY + HAVING',
     q:'Quality control wants to flag production lines with more than 2 recorded defects. Show line and defect_count.',
-    table:`<table class="sql-table"><tr><th>defect_id</th><th>line</th><th>part_id</th></tr><tr><td>D001</td><td>Line-A</td><td>P100</td></tr><tr><td>D002</td><td>Line-B</td><td>P200</td></tr><tr><td>D003</td><td>Line-A</td><td>P101</td></tr><tr><td>D004</td><td>Line-A</td><td>P102</td></tr><tr><td>D005</td><td>Line-B</td><td>P201</td></tr></table>`,
+    table:`<table class="sql-table"><tr><th>defect_id</th><th>line</th><th>part_id</th></tr><tr><td>D001</td><td>Line-A</td><td>P100</td></tr><tr><td>D002</td><td>Line-B</td><td>P200</td></tr><tr><td>D003</td><td>Line-A</td><td>P101</td></tr><tr><td>D004</td><td>Line-A</td><td>P102</td></tr><tr><td>D005</td><td>Line-B</td><td>P201</td></tr></table><p style="margin-top:.4rem;font-size:12px;color:var(--muted)">↑ production_defects</p>`,
     hint:'SELECT line, COUNT(defect_id) AS defect_count FROM production_defects GROUP BY line HAVING COUNT(defect_id) > 2',
     answers:['select line, count(defect_id) as defect_count from production_defects group by line having count(defect_id) > 2','select line, count(*) as defect_count from production_defects group by line having count(*) > 2']
   },
   {
     domain:'Insurance', concept:'Subquery in WHERE',
     q:'Fraud review wants every claim filed by a customer who has filed more than 2 claims in total. Show claim_id and customer_id.',
-    table:`<table class="sql-table"><tr><th>claim_id</th><th>customer_id</th><th>amount</th></tr><tr><td>CL01</td><td>CUST1</td><td>500</td></tr><tr><td>CL02</td><td>CUST2</td><td>900</td></tr><tr><td>CL03</td><td>CUST1</td><td>700</td></tr><tr><td>CL04</td><td>CUST1</td><td>300</td></tr><tr><td>CL05</td><td>CUST3</td><td>1200</td></tr></table>`,
+    table:`<table class="sql-table"><tr><th>claim_id</th><th>customer_id</th><th>amount</th></tr><tr><td>CL01</td><td>CUST1</td><td>500</td></tr><tr><td>CL02</td><td>CUST2</td><td>900</td></tr><tr><td>CL03</td><td>CUST1</td><td>700</td></tr><tr><td>CL04</td><td>CUST1</td><td>300</td></tr><tr><td>CL05</td><td>CUST3</td><td>1200</td></tr></table><p style="margin-top:.4rem;font-size:12px;color:var(--muted)">↑ claims</p>`,
     hint:'SELECT claim_id, customer_id FROM claims WHERE customer_id IN (SELECT customer_id FROM claims GROUP BY customer_id HAVING COUNT(claim_id) > 2)',
     answers:['select claim_id, customer_id from claims where customer_id in (select customer_id from claims group by customer_id having count(claim_id) > 2)','select claim_id, customer_id from claims where customer_id in (select customer_id from claims group by customer_id having count(*) > 2)']
   },
   {
     domain:'Banking', concept:'Running total — SUM() OVER',
     q:'For every transaction, show txn_id, account_id, amount, and a running_balance column that sums amount for that account, ordered by txn_id.',
-    table:`<table class="sql-table"><tr><th>txn_id</th><th>account_id</th><th>amount</th></tr><tr><td>T1</td><td>ACC1</td><td>100</td></tr><tr><td>T2</td><td>ACC1</td><td>-30</td></tr><tr><td>T3</td><td>ACC1</td><td>50</td></tr><tr><td>T4</td><td>ACC2</td><td>200</td></tr></table>`,
+    table:`<table class="sql-table"><tr><th>txn_id</th><th>account_id</th><th>amount</th></tr><tr><td>T1</td><td>ACC1</td><td>100</td></tr><tr><td>T2</td><td>ACC1</td><td>-30</td></tr><tr><td>T3</td><td>ACC1</td><td>50</td></tr><tr><td>T4</td><td>ACC2</td><td>200</td></tr></table><p style="margin-top:.4rem;font-size:12px;color:var(--muted)">↑ transactions</p>`,
     hint:'SELECT txn_id, account_id, amount, SUM(amount) OVER (PARTITION BY account_id ORDER BY txn_id) AS running_balance FROM transactions',
     answers:['select txn_id, account_id, amount, sum(amount) over (partition by account_id order by txn_id) as running_balance from transactions']
   },
   {
     domain:'Telecom', concept:'COUNT(DISTINCT)',
     q:'The network team wants to know how many distinct cell towers each customer connected to. Show customer_id and tower_count.',
-    table:`<table class="sql-table"><tr><th>call_id</th><th>customer_id</th><th>tower_id</th></tr><tr><td>CL1</td><td>CUST1</td><td>T01</td></tr><tr><td>CL2</td><td>CUST1</td><td>T02</td></tr><tr><td>CL3</td><td>CUST1</td><td>T01</td></tr><tr><td>CL4</td><td>CUST2</td><td>T03</td></tr></table>`,
+    table:`<table class="sql-table"><tr><th>call_id</th><th>customer_id</th><th>tower_id</th></tr><tr><td>CL1</td><td>CUST1</td><td>T01</td></tr><tr><td>CL2</td><td>CUST1</td><td>T02</td></tr><tr><td>CL3</td><td>CUST1</td><td>T01</td></tr><tr><td>CL4</td><td>CUST2</td><td>T03</td></tr></table><p style="margin-top:.4rem;font-size:12px;color:var(--muted)">↑ call_records</p>`,
     hint:'SELECT customer_id, COUNT(DISTINCT tower_id) AS tower_count FROM call_records GROUP BY customer_id',
     answers:['select customer_id, count(distinct tower_id) as tower_count from call_records group by customer_id']
   },
   {
     domain:'Public Health', concept:'BETWEEN',
     q:"An epidemiology team wants daily counts between 100 and 500 (inclusive) to flag a 'moderate' outbreak window. Show region and new_cases for matching rows.",
-    table:`<table class="sql-table"><tr><th>region</th><th>report_date</th><th>new_cases</th></tr><tr><td>North</td><td>2024-01-01</td><td>80</td></tr><tr><td>South</td><td>2024-01-01</td><td>320</td></tr><tr><td>North</td><td>2024-01-02</td><td>450</td></tr><tr><td>South</td><td>2024-01-02</td><td>600</td></tr></table>`,
+    table:`<table class="sql-table"><tr><th>region</th><th>report_date</th><th>new_cases</th></tr><tr><td>North</td><td>2024-01-01</td><td>80</td></tr><tr><td>South</td><td>2024-01-01</td><td>320</td></tr><tr><td>North</td><td>2024-01-02</td><td>450</td></tr><tr><td>South</td><td>2024-01-02</td><td>600</td></tr></table><p style="margin-top:.4rem;font-size:12px;color:var(--muted)">↑ case_counts</p>`,
     hint:'SELECT region, new_cases FROM case_counts WHERE new_cases BETWEEN 100 AND 500',
     answers:['select region, new_cases from case_counts where new_cases between 100 and 500']
   }
@@ -2560,9 +2790,14 @@ let drillOrder = shuffle(drills.map((_,i)=>i));
 let drillPos = 0;
 let drillScore = 0;
 let drillAttempts = 0;
-let drillAnswered = false;
+let drillAttempted = false; // this question has been checked at least once (counts toward attempts)
+let drillCredited = false;  // this question has already earned a point (prevents double-counting)
 
 function currentDrill(){ return drills[drillOrder[drillPos % drillOrder.length]]; }
+
+function updateDrillScoreLabel(){
+  document.getElementById('drill-score').textContent = 'Score: '+drillScore+' / '+drillAttempts;
+}
 
 function loadDrill(){
   const d = currentDrill();
@@ -2575,8 +2810,11 @@ function loadDrill(){
   document.getElementById('fb-drill').className = 'feedback';
   document.getElementById('q-drill').value = '';
   document.getElementById('drill-next-wrap').style.display = 'none';
-  drillAnswered = false;
+  drillAttempted = false;
+  drillCredited = false;
   document.getElementById('drill-count').textContent = 'Question '+(drillPos+1);
+  const prevBtn = document.getElementById('drill-prev-btn');
+  if(prevBtn) prevBtn.disabled = (drillPos === 0);
 }
 
 function checkDrill(){
@@ -2591,12 +2829,15 @@ function checkDrill(){
   const input = normalise(raw);
   const correct = d.answers.some(a=>normalise(a)===input);
   fb.className = 'feedback show '+(correct?'correct':'wrong');
-  if(!drillAnswered){
-    drillAnswered = true;
+  if(!drillAttempted){
+    drillAttempted = true;
     drillAttempts++;
-    if(correct) drillScore++;
-    document.getElementById('drill-score').textContent = 'Score: '+drillScore+' / '+drillAttempts;
   }
+  if(correct && !drillCredited){
+    drillCredited = true;
+    drillScore++;
+  }
+  updateDrillScoreLabel();
   if(correct){
     fb.textContent = '✓ Correct.';
     document.getElementById('hint-drill').classList.remove('show');
@@ -2613,6 +2854,12 @@ function hintDrill(){
 function nextDrill(){
   drillPos++;
   if(drillPos % drillOrder.length === 0) drillOrder = shuffle(drills.map((_,i)=>i));
+  loadDrill();
+}
+
+function prevDrill(){
+  if(drillPos === 0) return;
+  drillPos--;
   loadDrill();
 }
 
